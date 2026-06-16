@@ -1,0 +1,11 @@
+* {
+	--foreground-color: #f8eaf3; /* oklch(0.95 0.02 340) */
+	--background-color: #2b0221; /* oklch(0.2 0.08 340) */
+}
+
+body {
+	color: var(--foreground-color);
+	background-color: var(--background-color);
+
+	font-family: Verdana, Geneva, sans-serif;
+}
