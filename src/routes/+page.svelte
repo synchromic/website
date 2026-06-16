@@ -42,11 +42,11 @@
 	}
 
 	.container {
+		padding: 1em;
+
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-
-		padding: 1em;
 	}
 
 	header {
@@ -67,8 +67,29 @@
 
 	main {
 		display: grid;
-		grid-template-columns: 400px 400px;
-		grid-template-rows: 300px 300px;
+		grid-template-columns: 1fr 1fr;
+		grid-auto-rows: 1fr;
 		gap: 1em;
+	}
+
+	@media (max-width: 850px) {
+		main {
+			grid-template-columns: 1fr;
+			grid-auto-rows: 1fr;
+		}
+	}
+
+	@media (max-width: 450px) {
+		.container {
+			padding-left: 0;
+			padding-right: 0;
+
+			width: 100%;
+		}
+
+		main {
+			width: 100%;
+			grid-template-columns: auto;
+		}
 	}
 </style>

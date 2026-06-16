@@ -13,6 +13,9 @@
 
 <style>
 	section {
+		width: 400px;
+		height: 300px;
+
 		border: 1px solid var(--foreground-color);
 		background-color: var(--background-color);
 	}
@@ -33,5 +36,12 @@
 		font-weight: normal;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
+	}
+
+	@media (max-width: 450px) {
+		section {
+			border-left: none;
+			border-right: none;
+		}
 	}
 </style>
