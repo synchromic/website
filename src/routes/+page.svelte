@@ -2,34 +2,51 @@
 	import TitleBox from "$lib/components/TitleBox.svelte";
 </script>
 
-<div class="container">
-	<header>
-		<h1>synchromic</h1>
-	</header>
+<div class="outer">
+	<div class="container">
+		<header>
+			<h1>synchromic</h1>
+		</header>
 
-	<main>
-		<TitleBox title="Quick Links">
-			<p>Hello, world!</p>
-		</TitleBox>
-		<TitleBox title="Latest Blog Posts">
-			<p>Hello, world!</p>
-		</TitleBox>
-		<TitleBox title="Featured Project">
-			<p>Hello, world!</p>
-		</TitleBox>
-		<TitleBox title="Random Cat Photo">
-			<p>Hello, world!</p>
-		</TitleBox>
-	</main>
+		<main>
+			<TitleBox title="Quick Links">
+				<p>Hello, world!</p>
+				<p>Paragraph two</p>
+			</TitleBox>
+			<TitleBox title="Latest Blog Posts">
+				<p>Hello, world!</p>
+			</TitleBox>
+			<TitleBox title="Featured Project">
+				<p>Hello, world!</p>
+			</TitleBox>
+			<TitleBox title="Random Cat Photo">
+				<p>Hello, world!</p>
+			</TitleBox>
+		</main>
+	</div>
 </div>
 
 <style>
+	.outer {
+		width: 100%;
+		min-height: 100%;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		background-image: url(./background.svg);
+		background-position: center center;
+		background-clip: border-box;
+	}
+
 	.container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		height: 100%;
-		justify-content: center;
+
+		padding: 1em;
 	}
 
 	header {
@@ -50,7 +67,8 @@
 
 	main {
 		display: grid;
-		grid-template-columns: 500px 500px;
+		grid-template-columns: 400px 400px;
+		grid-template-rows: 300px 300px;
 		gap: 1em;
 	}
 </style>
