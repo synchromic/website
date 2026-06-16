@@ -1,6 +1,16 @@
+/* roboto-mono-regular - latin */
+@font-face {
+	font-display: swap;
+	font-family: "Roboto Mono";
+	font-style: normal;
+	font-weight: 400;
+	src: url("/fonts/roboto-mono-v31-latin-regular.woff2") format("woff2");
+}
+
 * {
 	--foreground-color: #f8eaf3; /* oklch(0.95 0.02 340) */
 	--background-color: #2b0221; /* oklch(0.2 0.08 340) */
+	--background-color-l: #471b3a; /* oklch(0.3 0.08 340) */
 }
 
 body {

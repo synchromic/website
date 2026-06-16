@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+	import TitleBox from "$lib/components/TitleBox.svelte";
+</script>
+
+<h1>synchromic</h1>
+
+<TitleBox title="Quick Links">
+	<p>Hello, world!</p>
+</TitleBox>
