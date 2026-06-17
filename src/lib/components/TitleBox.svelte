@@ -43,6 +43,8 @@
 
 	@media (max-width: 450px) {
 		section {
+			width: 100%;
+			height: auto;
 			border-left: none;
 			border-right: none;
 		}

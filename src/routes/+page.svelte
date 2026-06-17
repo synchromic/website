@@ -129,6 +129,8 @@
 	}
 
 	.quick-links {
+		margin: 0.5em;
+
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		grid-auto-rows: 1fr;
