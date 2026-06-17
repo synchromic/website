@@ -16,6 +16,9 @@
 		width: 400px;
 		height: 300px;
 
+		display: flex;
+		flex-direction: column;
+
 		border: 1px solid var(--foreground-color);
 		background-color: var(--background-color);
 	}
@@ -23,8 +26,8 @@
 	header {
 		margin: 0;
 		padding: 0.3em;
-		border-bottom: 1px solid var(--foreground-color);
 
+		border-bottom: 1px solid var(--foreground-color);
 		background-color: var(--background-color-l);
 	}
 

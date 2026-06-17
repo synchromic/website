@@ -20,6 +20,7 @@
 	--foreground-color: #f8eaf3; /* oklch(0.95 0.02 340) */
 	--background-color: #2b0221; /* oklch(0.2 0.08 340) */
 	--background-color-l: #471b3a; /* oklch(0.3 0.08 340) */
+	--background-color-ll: #643555; /* oklch(0.4 0.08 340) */
 }
 
 html {

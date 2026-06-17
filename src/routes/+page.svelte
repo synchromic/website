@@ -1,4 +1,5 @@
 <script>
+	import QuickLink from "$lib/components/QuickLink.svelte";
 	import TitleBox from "$lib/components/TitleBox.svelte";
 </script>
 
@@ -10,8 +11,34 @@
 
 		<main>
 			<TitleBox title="Quick Links">
-				<p>Hello, world!</p>
-				<p>Paragraph two</p>
+				<div class="quick-links-container">
+					<div class="quick-links">
+						<QuickLink
+							title="Youtube"
+							alt="Youtube channel link"
+							href="https://www.youtube.com/@synchromic"
+							imgSrc="icons/youtube.svg"
+						/>
+						<QuickLink
+							title="Github"
+							alt="Github profile link"
+							href="https://github.com/synchromic"
+							imgSrc="icons/github.svg"
+						/>
+						<QuickLink
+							title="osu!"
+							alt="osu! profile link"
+							href="https://osu.ppy.sh/users/14201221"
+							imgSrc="icons/osu.svg"
+						/>
+						<QuickLink
+							title="Twitch"
+							alt="Twitch channel link"
+							href="https://www.twitch.tv/synchromic"
+							imgSrc="icons/twitch.svg"
+						/>
+					</div>
+				</div>
 			</TitleBox>
 			<TitleBox title="Latest Blog Posts">
 				<p>Hello, world!</p>
@@ -91,5 +118,22 @@
 			width: 100%;
 			grid-template-columns: auto;
 		}
+	}
+
+	.quick-links-container {
+		flex-grow: 1;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.quick-links {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-auto-rows: 1fr;
+		gap: 0.5em;
+
+		font-size: 1.5em;
 	}
 </style>
