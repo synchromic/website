@@ -3,6 +3,14 @@
 	import TitleBox from "$lib/components/TitleBox.svelte";
 </script>
 
+<svelte:head>
+	<title>synchromic's website</title>
+	<meta
+		name="description"
+		content="the personal website for synchromic - software engineer, osu! player"
+	/>
+</svelte:head>
+
 <div class="outer">
 	<div class="container">
 		<header>
