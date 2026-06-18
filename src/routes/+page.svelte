@@ -1,4 +1,8 @@
-<script>
+<script lang="ts">
+	import imgYoutube from "$lib/assets/icons/youtube.svg";
+	import imgGithub from "$lib/assets/icons/github.svg";
+	import imgOsu from "$lib/assets/icons/osu.svg";
+	import imgTwitch from "$lib/assets/icons/twitch.svg";
 	import QuickLink from "$lib/components/QuickLink.svelte";
 	import TitleBox from "$lib/components/TitleBox.svelte";
 </script>
@@ -25,25 +29,25 @@
 							title="Youtube"
 							alt="Youtube channel link"
 							href="https://www.youtube.com/@synchromic"
-							imgSrc="icons/youtube.svg"
+							imgSrc={imgYoutube}
 						/>
 						<QuickLink
 							title="Github"
 							alt="Github profile link"
 							href="https://github.com/synchromic"
-							imgSrc="icons/github.svg"
+							imgSrc={imgGithub}
 						/>
 						<QuickLink
 							title="osu!"
 							alt="osu! profile link"
 							href="https://osu.ppy.sh/users/14201221"
-							imgSrc="icons/osu.svg"
+							imgSrc={imgOsu}
 						/>
 						<QuickLink
 							title="Twitch"
 							alt="Twitch channel link"
 							href="https://www.twitch.tv/synchromic"
-							imgSrc="icons/twitch.svg"
+							imgSrc={imgTwitch}
 						/>
 					</div>
 				</div>

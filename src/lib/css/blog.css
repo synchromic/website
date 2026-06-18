@@ -1,0 +1,23 @@
+figure {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+figcaption {
+	font-style: italic;
+}
+
+img {
+	align-self: center;
+}
+
+img.landscape {
+	width: 80%;
+	height: auto;
+}
+
+img.portrait {
+	width: 40%;
+	height: auto;
+}
