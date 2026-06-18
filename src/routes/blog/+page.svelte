@@ -9,7 +9,7 @@
 
 <p>This will be my blog!</p>
 
-{#each data.pagesByDateRev as page}
+{#each data.pages as page}
 	<a href="/blog/{page.slug}">
 		{page.meta.title}
 	</a>

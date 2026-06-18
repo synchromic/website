@@ -1,38 +1,47 @@
+type Slug = string;
+
 export interface Metadata {
   title: string;
-  date: string;
+  date: Date;
 }
 
 export interface BlogPage {
-  slug: string;
+  slug: Slug;
   meta: Metadata;
 }
 
 class BlogPages {
-  pageMap: { [slug: string]: BlogPage };
-  dateSorted: string[];
-  indexMap: { [slug: string]: number };
+  pageMap: Map<Slug, BlogPage>;
+  sortedByDate: BlogPage[]; // sorted newest to oldest
+  indexMap: Map<Slug, number>; // 0 = newest, n-1 = oldest
 
   constructor(pages: BlogPage[]) {
-    this.pageMap = Object.fromEntries(pages.map(p => [p.slug, p]));
-    this.dateSorted = pages.sort((a, b) => a.meta.date.localeCompare(b.meta.date)).map(p => p.slug);
-    this.indexMap = Object.fromEntries(this.dateSorted.map((p, i) => [p, i]));
+    this.pageMap = new Map(pages.map(p => [p.slug, p]));
+    this.sortedByDate = [...pages]
+      .sort((a, b) => b.meta.date.getTime() - a.meta.date.getTime());
+    this.indexMap = new Map(this.sortedByDate.map((p, i) => [p.slug, i]));
   }
 
-  newerMeta(slug: string): BlogPage | null {
-    const index = this.indexMap[slug];
-    if (index === this.dateSorted.length - 1) {
+  newer(slug: Slug): BlogPage | null {
+    const index = this.indexMap.get(slug);
+    if (index === undefined) {
+      throw new Error(`could not find slug ${slug} in index map`);
+    }
+    if (index === this.sortedByDate.length - 1) {
       return null;
     }
-    return this.pageMap[this.dateSorted[index + 1]];
+    return this.sortedByDate[index + 1];
   }
 
-  olderMeta(slug: string): BlogPage | null {
-    const index = this.indexMap[slug];
+  older(slug: Slug): BlogPage | null {
+    const index = this.indexMap.get(slug);
+    if (index === undefined) {
+      throw new Error(`could not find slug ${slug} in index map`);
+    }
     if (index === 0) {
       return null;
     }
-    return this.pageMap[this.dateSorted[index - 1]];
+    return this.sortedByDate[index - 1];
   }
 }
 

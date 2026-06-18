@@ -3,7 +3,7 @@
 
 	export const metadata: Metadata = {
 		title: "Test post 1",
-		date: "2026-06-17"
+		date: new Date("2026-06-18T19:27:49.184Z")
 	};
 </script>
 
