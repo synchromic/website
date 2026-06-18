@@ -24,11 +24,12 @@
 </p>
 <p>
 	In terms of design, I wanted to keep things minimal. Flashy, animated websites can be cool, but I
-	want something accessible, fast, and easily browsable. I briefly looked at using some design tool
-	like Figma or Canva, but I decided that going by eye would be sufficient, and I wanted to avoid
-	looking too generic.
+	was looking for something accessible, fast, and easily browsable. I briefly considered using some
+	design tool like Figma or Canva, but I decided that going by eye would be sufficient, and I wanted
+	to avoid looking too generic.
 </p>
 <figure>
 	<img class="portrait" src={imgDesign} alt="Pen and paper design for main page" />
 	<figcaption>A quick drawing of my imagined design for the main page</figcaption>
 </figure>
+<p>I'll write more of this post later!</p>

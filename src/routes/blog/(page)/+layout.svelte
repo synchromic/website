@@ -45,7 +45,7 @@
 	}
 
 	.container {
-		width: 100%;
+		padding: 0 3vw;
 
 		display: flex;
 		flex-direction: column;
