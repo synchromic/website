@@ -1,9 +1,8 @@
 import type { PageLoad } from "./$types";
-import blogPages from "./blogPages";
+import blogIndex from "$lib/blogIndex";
 
 export const load: PageLoad = async () => {
-  const pages = await blogPages;
-  return {
-    pages: pages.sortedByDate,
-  }
+	return {
+		pages: blogIndex.sortedByDate
+	};
 };

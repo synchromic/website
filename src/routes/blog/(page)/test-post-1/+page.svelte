@@ -1,5 +1,5 @@
 <script module lang="ts">
-	import type { Metadata } from "../../blogPages";
+	import type { Metadata } from "$lib/blogIndex";
 
 	export const metadata: Metadata = {
 		title: "Test post 1",

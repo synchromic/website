@@ -1,12 +1,10 @@
-
 import { error } from "@sveltejs/kit";
-import blogPages from "../blogPages";
+import blogIndex from "$lib/blogIndex";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ route }) => {
 	const slug = route.id.split("/").at(-1)!;
-	const pages = await blogPages;
-	const page = pages.pageMap.get(slug);
+	const page = blogIndex.pageMap.get(slug);
 	if (page === undefined) {
 		error(404, {
 			message: "Not found"
@@ -14,7 +12,7 @@ export const load: LayoutLoad = async ({ route }) => {
 	}
 	return {
 		...page,
-		newer: pages.newer(slug),
-		older: pages.older(slug),
-	}
-}
+		newer: blogIndex.newer(slug),
+		older: blogIndex.older(slug)
+	};
+};
