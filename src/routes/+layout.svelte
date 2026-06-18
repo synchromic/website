@@ -32,17 +32,4 @@
 	nav {
 		text-transform: lowercase;
 	}
-
-	a {
-		color: var(--foreground-color-d);
-	}
-
-	a:visited {
-		color: var(--foreground-color-dd);
-	}
-
-	a:hover,
-	a:visited:hover {
-		color: var(--foreground-color);
-	}
 </style>
