@@ -5,6 +5,8 @@
 	import imgTwitch from "$lib/assets/icons/twitch.svg";
 	import QuickLink from "$lib/components/QuickLink.svelte";
 	import TitleBox from "$lib/components/TitleBox.svelte";
+
+	let { data } = $props();
 </script>
 
 <svelte:head>
@@ -53,7 +55,11 @@
 				</div>
 			</TitleBox>
 			<TitleBox title="Latest Blog Posts">
-				<p>Hello, world!</p>
+				<ul>
+					{#each data.recent as post}
+						<li><a href="/blog/{post.slug}">{post.meta.title}</a></li>
+					{/each}
+				</ul>
 			</TitleBox>
 			<TitleBox title="Featured Project">
 				<p>Hello, world!</p>
@@ -74,7 +80,8 @@
 		align-items: center;
 		justify-content: center;
 
-		background-image: url(./background.svg);
+		/* use https://yoksel.github.io/url-encoder/ */
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' viewBox='-0.5 -0.5 4 4'%3E%3Cg stroke='%23471b3a' stroke-width='0.2'%3E%3Cline x1='0' y1='0' x2='1' y2='1'%3E%3C/line%3E%3Cline x1='2' y1='3' x2='3' y2='2'%3E%3C/line%3E%3C/g%3E%3C/svg%3E%0A");
 		background-position: center center;
 		background-clip: border-box;
 	}

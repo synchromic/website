@@ -24,6 +24,11 @@
 	--background-color-l: oklch(0.3 0.08 340);
 	--background-color-ll: oklch(0.4 0.08 340);
 	--background-color-d: oklch(0.15 0.08 340);
+
+	--unvisited-link: oklch(0.75 0.08 260);
+	--unvisited-link-l: oklch(0.85 0.08 260);
+	--visited-link: oklch(0.75 0.08 340);
+	--visited-link-l: oklch(0.85 0.08 340);
 }
 
 html {
@@ -45,14 +50,17 @@ body {
 }
 
 a {
-	color: var(--foreground-color-d);
+	color: var(--unvisited-link);
+}
+
+a:hover {
+	color: var(--unvisited-link-l);
 }
 
 a:visited {
-	color: var(--foreground-color-dd);
+	color: var(--visited-link);
 }
 
-a:hover,
 a:visited:hover {
-	color: var(--foreground-color);
+	color: var(--visited-link-l);
 }

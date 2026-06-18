@@ -26,10 +26,10 @@ class BlogIndex {
 		if (index === undefined) {
 			throw new Error(`could not find slug ${slug} in index map`);
 		}
-		if (index === this.sortedByDate.length - 1) {
+		if (index === 0) {
 			return null;
 		}
-		return this.sortedByDate[index + 1];
+		return this.sortedByDate[index - 1];
 	}
 
 	older(slug: Slug): BlogPage | null {
@@ -37,10 +37,10 @@ class BlogIndex {
 		if (index === undefined) {
 			throw new Error(`could not find slug ${slug} in index map`);
 		}
-		if (index === 0) {
+		if (index === this.sortedByDate.length - 1) {
 			return null;
 		}
-		return this.sortedByDate[index - 1];
+		return this.sortedByDate[index + 1];
 	}
 }
 
