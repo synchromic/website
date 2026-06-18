@@ -17,45 +17,90 @@
 		</header>
 
 		{@render children()}
-	</article>
 
-	<footer>
-		<nav>
-			{#if data.newer !== null}
-				<a href="./{data.newer.slug}">
-					Newer post: {data.newer.meta.title}
-				</a>
-			{/if}
-			<a href="/blog">Back to blog index</a>
-			{#if data.older !== null}
-				<a href="./{data.older.slug}">
-					<div>&lt;</div>
-					<span>Older post: <br /> {data.older.meta.title}</span>
-				</a>
-			{/if}
-		</nav>
-	</footer>
+		<footer>
+			<nav>
+				<div class="footer footer-left">
+					{#if data.newer !== null}
+						<a href="./{data.newer.slug}">
+							Newer post:<br />
+							{data.newer.meta.title}
+						</a>
+					{/if}
+				</div>
+				<div class="footer footer-center">
+					<a href="/blog">Back to blog index</a>
+				</div>
+				<div class="footer footer-right">
+					{#if data.older !== null}
+						<a href="./{data.older.slug}">
+							Older post:<br />
+							{data.older.meta.title}
+						</a>
+					{/if}
+				</div>
+			</nav>
+		</footer>
+	</article>
 </div>
 
 <style>
-	a {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-	}
-
 	.container {
-		padding: 0 3vw;
-
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
 
 	article {
-		max-width: 1000px;
+		width: 1000px;
+		max-width: 94vw;
 
 		display: flex;
 		flex-direction: column;
+	}
+
+	footer {
+		width: 100%;
+		margin-bottom: 2em;
+	}
+
+	.footer {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.footer-left {
+		align-items: start;
+		text-align: left;
+		grid-area: left;
+	}
+
+	.footer-center {
+		align-items: center;
+		grid-area: center;
+	}
+
+	.footer-right {
+		align-items: end;
+		text-align: right;
+		grid-area: right;
+	}
+
+	nav {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		grid-template-areas: "left center right";
+		gap: 0.5em;
+	}
+
+	@media (max-width: 500px) {
+		nav {
+			grid-template-columns: 1fr 1fr;
+			grid-template-areas:
+				"left right"
+				"center center";
+		}
 	}
 </style>
