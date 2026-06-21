@@ -12,21 +12,23 @@
 </script>
 
 <p>
-	Well, I'm finally getting around to it. I just graduated college, and I have a long (but
-	ultimately too short) summer ahead of me. What better way to spend it than to write a blog? Oh,
-	but first I need a website, I guess. And I can write about that for my first blog! Perfect!
+	Hello! If you're reading this, it means I finally got around to publishing my blog on the web.
+	Good job, me!
 </p>
 <p>
-	This website was written using SvelteKit. I considered doing it in vanilla HTML, but I feel like I
-	would just end up writing a component framework anyways, and that's a bit too much of a project
-	for a pretty simple blog. I've been using Svelte for around 4 years so I feel pretty comfortable
-	with it.
+	Making a blog is a project that has been at the back of my mind for years, but I never thought of
+	a design that motivated me to code it up. Last year, I came up with the idea to make a blog themed
+	like the osu! song select, but it was a huge pain trying to wrangle the positioning of DOM
+	elements in a not-janky way. This time my goal was to not do anything too special, and just create
+	a simple, intuitive, decent-looking blog that still feels like it's
+	<i>mine</i>.
 </p>
 <p>
-	In terms of design, I wanted to keep things minimal. Flashy, animated websites can be cool, but I
-	was looking for something accessible, fast, and easily browsable. I briefly considered using some
-	design tool like Figma or Canva, but I decided that going by eye would be sufficient, and I wanted
-	to avoid looking too generic.
+	As I don't particularly enjoy writing (yet?), the coding part is the main attraction of this
+	project. That's why I'm not just using Wordpress or whatever blog template people are using
+	nowadays. That's also why I have decided to forgo using LLMs entirely for this project; it's a lot
+	of fun figuring this stuff out myself. (And writing code on my own helps me get accustomed to
+	using emacs as my main editor.)
 </p>
 <figure>
 	<img class="portrait" src={imgDesign} alt="Pen and paper design for main page" />
