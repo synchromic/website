@@ -9,56 +9,38 @@
 	<title>{data.meta.title}</title>
 </svelte:head>
 
-<div class="container">
-	<article>
-		<header>
-			<h1>{data.meta.title}</h1>
-			<p>{data.meta.date}</p>
-		</header>
+<header>
+	<h1>{data.meta.title}</h1>
+	<p>{data.meta.date}</p>
+</header>
 
-		{@render children()}
+{@render children()}
 
-		<footer>
-			<nav>
-				<div class="footer footer-left">
-					{#if data.newer !== null}
-						<a href="./{data.newer.slug}">
-							Newer post:<br />
-							{data.newer.meta.title}
-						</a>
-					{/if}
-				</div>
-				<div class="footer footer-center">
-					<a href="/blog">Back to blog index</a>
-				</div>
-				<div class="footer footer-right">
-					{#if data.older !== null}
-						<a href="./{data.older.slug}">
-							Older post:<br />
-							{data.older.meta.title}
-						</a>
-					{/if}
-				</div>
-			</nav>
-		</footer>
-	</article>
-</div>
+<footer>
+	<nav>
+		<div class="footer footer-left">
+			{#if data.newer !== null}
+				<a href="./{data.newer.slug}">
+					Newer post:<br />
+					{data.newer.meta.title}
+				</a>
+			{/if}
+		</div>
+		<div class="footer footer-center">
+			<a href="/blog">Back to blog index</a>
+		</div>
+		<div class="footer footer-right">
+			{#if data.older !== null}
+				<a href="./{data.older.slug}">
+					Older post:<br />
+					{data.older.meta.title}
+				</a>
+			{/if}
+		</div>
+	</nav>
+</footer>
 
 <style>
-	.container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	article {
-		width: 1000px;
-		max-width: 94vw;
-
-		display: flex;
-		flex-direction: column;
-	}
-
 	footer {
 		width: 100%;
 		margin-bottom: 2em;

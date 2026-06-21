@@ -17,7 +17,7 @@
 	/>
 </svelte:head>
 
-<div class="outer">
+<div class="outer bg-pattern">
 	<div class="container">
 		<header>
 			<h1>synchromic</h1>
@@ -79,11 +79,6 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-
-		/* use https://yoksel.github.io/url-encoder/ */
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' viewBox='-0.5 -0.5 4 4'%3E%3Cg stroke='%23471b3a' stroke-width='0.2'%3E%3Cline x1='0' y1='0' x2='1' y2='1'%3E%3C/line%3E%3Cline x1='2' y1='3' x2='3' y2='2'%3E%3C/line%3E%3C/g%3E%3C/svg%3E%0A");
-		background-position: center center;
-		background-clip: border-box;
 	}
 
 	.container {
