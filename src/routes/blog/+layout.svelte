@@ -21,11 +21,12 @@
 
 	article {
 		width: 1000px;
-		padding: 0 20px;
+		padding: 1em 20px;
 		margin: 20px 0;
 
 		display: flex;
 		flex-direction: column;
+    gap: 1em;
 
 		background-color: var(--background-color);
 		border: 1px solid var(--background-color-ll);

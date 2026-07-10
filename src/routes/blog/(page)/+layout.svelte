@@ -43,7 +43,6 @@
 <style>
 	footer {
 		width: 100%;
-		margin-bottom: 2em;
 	}
 
 	.footer {
