@@ -26,7 +26,7 @@
 
 		display: flex;
 		flex-direction: column;
-    gap: 1em;
+		gap: 1em;
 
 		background-color: var(--background-color);
 		border: 1px solid var(--background-color-ll);

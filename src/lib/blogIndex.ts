@@ -44,17 +44,25 @@ class BlogIndex {
 	}
 }
 
+const slugRegex = /\/src\/routes\/blog\/\(page\)\/(.+)\/\+page\.svelte/;
+
 function processPages() {
-	const modules = import.meta.glob("$routes/blog/*/*/+page.svelte", { eager: true });
+	const modules = import.meta.glob("$routes/blog/*/**/+page.svelte", { eager: true });
 	const pages: BlogPage[] = [];
 	for (const [key, value] of Object.entries(modules)) {
-		const slug = key.split("/").at(-2)!;
+		const slugMatch = slugRegex.exec(key);
+		if (slugMatch === null) {
+			console.warn(`Slug ${key} did not match regex, skipping!`);
+			continue;
+		}
+		const slug = slugMatch[1];
 		const module = value as { metadata: Metadata };
 		pages.push({
 			slug,
 			meta: module.metadata
 		});
 	}
+	console.log(`Found ${pages.length} pages`);
 	return new BlogIndex(pages);
 }
 

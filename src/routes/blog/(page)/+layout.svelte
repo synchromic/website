@@ -20,7 +20,7 @@
 	<nav>
 		<div class="footer footer-left">
 			{#if data.newer !== null}
-				<a href="./{data.newer.slug}">
+				<a href="/blog/{data.newer.slug}">
 					Newer post:<br />
 					{data.newer.meta.title}
 				</a>
@@ -31,7 +31,7 @@
 		</div>
 		<div class="footer footer-right">
 			{#if data.older !== null}
-				<a href="./{data.older.slug}">
+				<a href="/blog/{data.older.slug}">
 					Older post:<br />
 					{data.older.meta.title}
 				</a>
