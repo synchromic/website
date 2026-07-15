@@ -27,6 +27,10 @@
 			{/if}
 		</div>
 		<div class="footer footer-center">
+			{#if data.parent !== undefined}
+				<a href="/blog/{data.parent.slug}">Back to {data.parent.meta.title}</a>
+				<div style="height: 0.5em"></div>
+			{/if}
 			<a href="/blog">Back to blog index</a>
 		</div>
 		<div class="footer footer-right">

@@ -1,3 +1,8 @@
+hr {
+	width: 100%;
+	color: var(--foreground-color-dd);
+}
+
 figure {
 	margin: 0;
 
@@ -12,6 +17,11 @@ figcaption {
 
 img {
 	align-self: center;
+}
+
+img.fullwidth {
+	width: 100%;
+	height: auto;
 }
 
 img.landscape {

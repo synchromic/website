@@ -3,6 +3,7 @@ type Slug = string;
 export interface Metadata {
 	title: string;
 	date: Date;
+	parent?: Slug;
 }
 
 export interface BlogPage {

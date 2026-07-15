@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import blogIndex from "$lib/blogIndex";
+import blogIndex, { type BlogPage } from "$lib/blogIndex";
 import type { LayoutLoad } from "./$types";
 
 const slugRegex = /\/blog\/\(page\)\/(.+)/;
@@ -18,9 +18,14 @@ export const load: LayoutLoad = async ({ route }) => {
 			message: "Not found"
 		});
 	}
+	let parent: BlogPage | undefined = undefined;
+	if (page.meta.parent !== undefined) {
+		parent = blogIndex.pageMap.get(page.meta.parent);
+	}
 	return {
 		...page,
 		newer: blogIndex.newer(slug),
-		older: blogIndex.older(slug)
+		older: blogIndex.older(slug),
+		parent
 	};
 };
