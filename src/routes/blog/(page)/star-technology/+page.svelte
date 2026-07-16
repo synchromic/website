@@ -19,7 +19,8 @@
 	Minecraft modpack focused on technology and progression. If you've ever heard of
 	<a href="https://www.gtnewhorizons.com/">GregTech New Horizons</a>, Star Technology is essentially
 	an easier, more modern, and more streamlined version. So far, I consider this to be the single
-	most enjoyable Minecraft modpack I've ever played.
+	most enjoyable Minecraft modpack I've ever played, though it's definitely meant for a certain kind
+	of person.
 </p>
 <p>
 	This series of blog posts is meant to be a journal of my progress through the pack. I'm planning
@@ -28,9 +29,20 @@
 </p>
 
 <hr />
-<h1>
-	<a href="/blog/star-technology/initial-progress">Initial progress (to mid-LuV)</a>
-</h1>
-<a href="/blog/star-technology/initial-progress">
-	<img class="fullwidth" src={imgInitialOverview} alt="Screenshot of initial progress" />
-</a>
+
+<nav>
+	<h2>
+		<a href="/blog/star-technology/initial-progress">Initial progress (to mid-LuV)</a>
+	</h2>
+	<a href="/blog/star-technology/initial-progress">
+		<img class="full-width" src={imgInitialOverview} alt="Navigate to initial progress blog post" />
+	</a>
+</nav>
+
+<style>
+	nav {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+	}
+</style>
