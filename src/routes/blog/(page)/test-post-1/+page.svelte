@@ -5,6 +5,7 @@
 		title: "Test post 1",
 		date: new Date("2026-06-18T19:27:49.184Z"),
 		hidden: true,
+		description: "Test page because I needed something to put in my index.",
 	};
 </script>
 

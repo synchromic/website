@@ -2,6 +2,7 @@ type Slug = string;
 
 export interface Metadata {
 	title: string;
+	description: string;
 	date: Date;
 	parent?: Slug;
 	hidden?: boolean;

@@ -5,6 +5,8 @@
 		title: "Star Technology Initial Progress (LV-IV)",
 		date: new Date("2026-07-16T00:14:48-07:00"),
 		parent: "star-technology",
+		description:
+			"A journal of my playthrough of the Minecraft modpack Star Technology up through the IV voltage tier.",
 	};
 </script>
 

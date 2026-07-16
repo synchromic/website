@@ -5,6 +5,7 @@
 		title: "Creating this blog",
 		date: new Date("2026-06-20T20:00:00.000Z"),
 		hidden: true,
+		description: "Notes on how I created this blog.",
 	};
 </script>
 

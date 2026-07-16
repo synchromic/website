@@ -4,6 +4,8 @@
 	export const metadata: Metadata = {
 		title: "Star Technology index",
 		date: new Date("2026-07-14T20:00:00.000Z"),
+		description:
+			"Index page for all my Star Technology blog posts. Star Technology is a Minecraft modpack focused on technology and progression.",
 	};
 </script>
 
