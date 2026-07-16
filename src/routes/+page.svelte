@@ -56,14 +56,17 @@
 				</div>
 			</TitleBox>
 			<TitleBox title="Latest Blog Posts">
-				<nav>
-					<ul>
+				<nav class="blog-posts-container">
+					<ul class="blog-posts-list">
 						{#each data.recent as post}
 							<li>
 								<a href="/blog/{post.slug}">{formatShortDate(post.meta.date)}: {post.meta.title}</a>
 							</li>
 						{/each}
 					</ul>
+					<span class="bottom-right">
+						<a href="/blog">Blog index ></a>
+					</span>
 				</nav>
 			</TitleBox>
 			<!-- <TitleBox title="Featured Project"> -->
@@ -155,5 +158,21 @@
 		gap: 0.5em;
 
 		font-size: 1.5em;
+	}
+
+	.blog-posts-container {
+		margin: 1em;
+		flex-grow: 1;
+
+		display: flex;
+		flex-direction: column;
+	}
+
+	.blog-posts-list {
+		flex-grow: 1;
+	}
+
+	.bottom-right {
+		align-self: flex-end;
 	}
 </style>
