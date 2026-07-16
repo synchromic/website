@@ -5,7 +5,7 @@
 		src,
 		imgClass,
 		alt,
-		caption
+		caption,
 	}: {
 		imgClass: string;
 		alt: string;

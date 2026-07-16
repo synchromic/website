@@ -3,7 +3,7 @@
 		imgSrc,
 		href,
 		title,
-		alt
+		alt,
 	}: {
 		imgSrc: string;
 		href: string;

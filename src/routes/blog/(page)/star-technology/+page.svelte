@@ -3,7 +3,7 @@
 
 	export const metadata: Metadata = {
 		title: "Star Technology index",
-		date: new Date("2026-07-14T20:00:00.000Z")
+		date: new Date("2026-07-14T20:00:00.000Z"),
 	};
 </script>
 

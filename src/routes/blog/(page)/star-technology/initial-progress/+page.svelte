@@ -4,7 +4,7 @@
 	export const metadata: Metadata = {
 		title: "Star Technology Initial Progress (LV-IV)",
 		date: new Date("2026-07-16T00:14:48-07:00"),
-		parent: "star-technology"
+		parent: "star-technology",
 	};
 </script>
 
@@ -26,7 +26,7 @@
 
 <p>
 	We began our playthrough on June 21, 2026. I originally tried out the hard mode for an hour before
-	realizing it was much less complete than the normal mode, so we switched over.
+	realizing it was not very complete, so we switched over to the normal mode.
 </p>
 
 <BlogFigure
@@ -38,8 +38,8 @@
 
 <p>
 	Nothing too special happened at the start. Lots of manual crafting going on. In general, I tend to
-	work on progression while Mazerak works on automating stuff. Maz automated some Create crushers
-	while I set up our first few blast furnaces.
+	work on progression while Mazerak works on automating stuff. He crafted some Create crushers for
+	gravel, sand, and dust, while I set up our first few blast furnaces for steel.
 </p>
 
 <BlogFigure
@@ -63,11 +63,10 @@
 />
 
 <p>
-	No screenshots were taken for a while after this, but we kept progressing. MV, then HV, with
-	various small automations for rubber, chemicals, steel, ore processing, etc. Maz worked on getting
-	the ME storage system online, while I improved our circuit production. (We're keeping ME channels
-	unlimited for this playthrough, since both of us have dealt with limited channels before and we
-	don't think it's fun.)
+	We made it to MV, then HV, creating various small automations for rubber, chemicals, steel, ore
+	processing, etc. Maz worked on getting the ME storage system online, while I improved our circuit
+	production. Thankfully, the pack lets us keep ME channels unlimited for this playthrough; both of
+	us have dealt with limited channels before and we don't think it's fun.
 </p>
 
 <BlogFigure
@@ -77,8 +76,11 @@
 	caption="Mazerak discovers pneumatic tubes (June 28)"
 />
 
-As you can see, our base is just a lawnbase. I decided that I didn't have the motivation for
-building during this modpack. I also think highly compressed lawnbases can look pretty cool.
+<p>
+	Our base is rather flat and plain. I don't have the motivation to build anything fancy, though Maz
+	still does some decoration when he's bored. I also think highly compressed lawnbases like ours can
+	look pretty cool.
+</p>
 
 <BlogFigure
 	src="{data.slug}/upgraded-ores"
@@ -91,7 +93,7 @@ building during this modpack. I also think highly compressed lawnbases can look 
 	src="{data.slug}/chip-cube"
 	imgClass="landscape"
 	alt="Tiny cleanroom for making wafers"
-	caption="Trust me, I tried to convince him that cleanrooms are cheap (July 2)"
+	caption="Trust me, I tried to convince him that bigger cleanrooms are cheap (July 2)"
 />
 
 <BlogFigure
@@ -128,9 +130,9 @@ building during this modpack. I also think highly compressed lawnbases can look 
 />
 
 <p>
-	Again, I don't have many screenshots of this era, but there was plenty to do. We upgraded
-	production of lots of chemicals and alloys, fixed our power, and passived a variety of items.
-	Finally, we reached the end of the Automation Age chapter on July 10, 2026.
+	We made our way through EV and then IV, upgraded production of lots of chemicals and alloys, fixed
+	our power, and passived a variety of items. Finally, we reached the end of the Automation Age
+	chapter on July 10, 2026.
 </p>
 
 <BlogFigure

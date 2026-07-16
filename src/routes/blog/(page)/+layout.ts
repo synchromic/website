@@ -8,14 +8,14 @@ export const load: LayoutLoad = async ({ route }) => {
 	const slugMatch = slugRegex.exec(route.id);
 	if (slugMatch === null) {
 		error(404, {
-			message: "Not found"
+			message: "Not found",
 		});
 	}
 	const slug = slugMatch[1];
-	const page = blogIndex.pageMap.get(slug);
+	const page = blogIndex.pageMapInclHidden.get(slug);
 	if (page === undefined) {
 		error(404, {
-			message: "Not found"
+			message: "Not found",
 		});
 	}
 	let parent: BlogPage | undefined = undefined;
@@ -26,6 +26,6 @@ export const load: LayoutLoad = async ({ route }) => {
 		...page,
 		newer: blogIndex.newer(slug),
 		older: blogIndex.older(slug),
-		parent
+		parent,
 	};
 };

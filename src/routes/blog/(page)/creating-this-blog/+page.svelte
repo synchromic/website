@@ -3,7 +3,8 @@
 
 	export const metadata: Metadata = {
 		title: "Creating this blog",
-		date: new Date("2026-06-20T20:00:00.000Z")
+		date: new Date("2026-06-20T20:00:00.000Z"),
+		hidden: true,
 	};
 </script>
 

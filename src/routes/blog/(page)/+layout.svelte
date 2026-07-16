@@ -6,7 +6,7 @@
 
 	const formatter = new Intl.DateTimeFormat("en", {
 		dateStyle: "long",
-		timeStyle: "long"
+		timeStyle: "long",
 	});
 
 	function formatDate(date: Date) {
@@ -22,6 +22,15 @@
 	<h1>{data.meta.title}</h1>
 	<p>{formatDate(data.meta.date)}</p>
 </header>
+
+{#if data.meta.hidden}
+	<div class="warning">
+		<p>
+			This post is considered <i>hidden</i>. While you can still read it, please remember that it is
+			likely just a draft.
+		</p>
+	</div>
+{/if}
 
 {@render children()}
 
@@ -54,6 +63,15 @@
 </footer>
 
 <style>
+	.warning {
+		padding: 1em;
+
+		border: 2px dashed var(--foreground-color-warn);
+
+		color: var(--foreground-color-warn);
+		background-color: var(--background-color-warn);
+	}
+
 	footer {
 		width: 100%;
 	}

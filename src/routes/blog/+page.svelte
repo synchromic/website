@@ -3,7 +3,7 @@
 
 	const formatter = new Intl.DateTimeFormat("en", {
 		month: "2-digit",
-		day: "numeric"
+		day: "numeric",
 	});
 
 	function formatDate(date: Date) {
