@@ -3,29 +3,23 @@
 
 	export const metadata: Metadata = {
 		title: "Star Technology Initial Progress (LV-IV)",
-		date: new Date("2026-07-14T20:00:01.000Z"),
+		date: new Date("2026-07-16T00:14:48-07:00"),
 		parent: "star-technology"
 	};
 </script>
 
 <script lang="ts">
-	import imgStart from "$lib/assets/blog/star-technology/initial-progress/the-start.webp";
-	import imgNetwork from "$lib/assets/blog/star-technology/initial-progress/storage-network.webp";
-	import imgSieves from "$lib/assets/blog/star-technology/initial-progress/auto-sieves.webp";
-	import imgTubes from "$lib/assets/blog/star-technology/initial-progress/tubes.webp";
-	import imgCube from "$lib/assets/blog/star-technology/initial-progress/chip-cube.webp";
-	import imgOres from "$lib/assets/blog/star-technology/initial-progress/upgraded-ores.webp";
-	import imgUnderside from "$lib/assets/blog/star-technology/initial-progress/underside.webp";
-	import imgCircuitville from "$lib/assets/blog/star-technology/initial-progress/circuitville.webp";
-	import imgChemical from "$lib/assets/blog/star-technology/initial-progress/chemical-city.webp";
-	import imgIV from "$lib/assets/blog/star-technology/initial-progress/iv-base.webp";
+	import BlogFigure from "$lib/components/BlogFigure.svelte";
+	import type { PageProps } from "./$types";
+
+	let { data }: PageProps = $props();
 </script>
 
 <p>
 	I didn't think to start writing this blog until we already reached LuV (6 tiers in; the ones
-	before are LV, MV, HV, EV, IV). There is already a significant amount of progress to show off.
-	Since I basically never took any screenshots up to this point, I'll be using some from Mazerak
-	that I grabbed from our Discord chat.
+	before are LV, MV, HV, EV, IV). As a result, there is already a significant amount of progress to
+	show off. Since I basically never took any screenshots up to this point, I'll be using some from
+	Mazerak that I grabbed from our Discord chat.
 </p>
 
 <hr />
@@ -35,10 +29,12 @@
 	realizing it was much less complete than the normal mode, so we switched over.
 </p>
 
-<figure>
-	<img class="landscape" src={imgStart} alt="Very small base with sieves and a coke oven" />
-	<figcaption>"time capsule" -Mazerak (June 21)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/the-start"
+	imgClass="landscape"
+	alt="Very small base with sieves and a coke oven"
+	caption={'"time capsule" -Mazerak (June 21)'}
+/>
 
 <p>
 	Nothing too special happened at the start. Lots of manual crafting going on. In general, I tend to
@@ -46,10 +42,12 @@
 	while I set up our first few blast furnaces.
 </p>
 
-<figure>
-	<img class="landscape" src={imgNetwork} alt="Center shot of the expanded base" />
-	<figcaption>LV machines and storage network (June 22)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/storage-network"
+	imgClass="landscape"
+	alt="Center shot of the expanded base"
+	caption="LV machines and storage network (June 22)"
+/>
 
 <p>
 	We got to LV pretty quickly. Maz set up Simple Storage and decorated the base a bit while I
@@ -57,10 +55,12 @@
 	but the early game progresses fast enough that it didn't seem worth it.
 </p>
 
-<figure>
-	<img class="landscape" src={imgSieves} alt="Drawers with various sieved materials" />
-	<figcaption>Basic large sieve automation (June 22)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/auto-sieves"
+	imgClass="landscape"
+	alt="Drawers with various sieved materials"
+	caption="Basic large sieve automation (June 22)"
+/>
 
 <p>
 	No screenshots were taken for a while after this, but we kept progressing. MV, then HV, with
@@ -70,32 +70,36 @@
 	don't think it's fun.)
 </p>
 
-<figure>
-	<img
-		class="landscape"
-		src={imgTubes}
-		alt="Early HV base with Create pneumatic tubes everywhere"
-	/>
-	<figcaption>Mazerak discovers pneumatic tubes (June 28)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/tubes"
+	imgClass="landscape"
+	alt="Early HV base with Create pneumatic tubes everywhere"
+	caption="Mazerak discovers pneumatic tubes (June 28)"
+/>
 
 As you can see, our base is just a lawnbase. I decided that I didn't have the motivation for
 building during this modpack. I also think highly compressed lawnbases can look pretty cool.
 
-<figure>
-	<img class="landscape" src={imgOres} alt="Several ore processing factories in a row" />
-	<figcaption>Expanded ore processing setup (June 29)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/upgraded-ores"
+	imgClass="landscape"
+	alt="Several ore processing factories in a row"
+	caption="Expanded ore processing setup (June 29)"
+/>
 
-<figure>
-	<img class="landscape" src={imgCube} alt="Tiny cleanroom for making wafers" />
-	<figcaption>Trust me, I tried to convince him that cleanrooms are cheap (July 2)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/chip-cube"
+	imgClass="landscape"
+	alt="Tiny cleanroom for making wafers"
+	caption="Trust me, I tried to convince him that cleanrooms are cheap (July 2)"
+/>
 
-<figure>
-	<img class="landscape" src={imgUnderside} alt="Underside of platform with snaking cables" />
-	<figcaption>Pre-Flux Networks view of all the cables underneath (July 2)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/underside"
+	imgClass="landscape"
+	alt="Underside of platform with snaking cables"
+	caption="Pre-Flux Networks view of all the cables underneath (July 2)"
+/>
 
 <p>
 	Power has pretty consistently been a problem throughout the playthrough. We spent quite a while
@@ -104,20 +108,24 @@ building during this modpack. I also think highly compressed lawnbases can look 
 	setups.
 </p>
 
-<figure>
-	<img class="landscape" src={imgCircuitville} alt="Circuit automation" />
-	<figcaption>Circuitville! Automatic ULV through HV circuits. (July 2)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/circuitville"
+	imgClass="landscape"
+	alt="Circuit automation"
+	caption="Circuitville! Automatic ULV through HV circuits. (July 2)"
+/>
 
 <p>
 	We reached EV, and the pack's difficulty began to increase. I started working on platline while
 	Mazerak improved our AE2 infrastructure.
 </p>
 
-<figure>
-	<img class="landscape" src={imgChemical} alt="Lots of chemical reactors" />
-	<figcaption>Chemical City, with improved production of plastics and epoxy. (July 7)</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/chemical-city"
+	imgClass="landscape"
+	alt="Lots of chemical reactors"
+	caption="Chemical City, with improved production of plastics and epoxy. (July 7)"
+/>
 
 <p>
 	Again, I don't have many screenshots of this era, but there was plenty to do. We upgraded
@@ -125,14 +133,16 @@ building during this modpack. I also think highly compressed lawnbases can look 
 	Finally, we reached the end of the Automation Age chapter on July 10, 2026.
 </p>
 
-<figure>
-	<img class="full-width" src={imgIV} alt="" />
-	<figcaption>Base overview at the end of IV</figcaption>
-</figure>
+<BlogFigure
+	src="{data.slug}/iv-base"
+	imgClass="full-width"
+	alt=""
+	caption="Base overview at the end of IV"
+/>
 
 <hr />
 
 <p>
-	The next post will cover our progress to the end of LuV, and it will hopefully be more detailed
-	because I actually have this blog in mind.
+	I will add the next post once we reach the end of LuV. I'll start taking more screenshots so it
+	will hopefully be more detailed. See you soon!
 </p>

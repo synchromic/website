@@ -32,7 +32,7 @@
 
 <nav>
 	<h2>
-		<a href="/blog/star-technology/initial-progress">Initial progress (to mid-LuV)</a>
+		<a href="/blog/star-technology/initial-progress">Initial progress (LV-IV)</a>
 	</h2>
 	<a href="/blog/star-technology/initial-progress">
 		<img class="full-width" src={imgInitialOverview} alt="Navigate to initial progress blog post" />

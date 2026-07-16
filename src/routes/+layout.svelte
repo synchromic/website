@@ -11,6 +11,7 @@
 
 <header>
 	<nav>
+		synchromic ·
 		<a href="/">Home</a>
 		·
 		<a href="/blog">Blog</a>

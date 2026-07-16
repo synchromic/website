@@ -63,7 +63,6 @@ function processPages() {
 			meta: module.metadata
 		});
 	}
-	console.log(`Found ${pages.length} pages`);
 	return new BlogIndex(pages);
 }
 

@@ -3,6 +3,15 @@
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
+
+	const formatter = new Intl.DateTimeFormat("en", {
+		dateStyle: "long",
+		timeStyle: "long"
+	});
+
+	function formatDate(date: Date) {
+		return formatter.format(date);
+	}
 </script>
 
 <svelte:head>
@@ -11,7 +20,7 @@
 
 <header>
 	<h1>{data.meta.title}</h1>
-	<p>{data.meta.date}</p>
+	<p>{formatDate(data.meta.date)}</p>
 </header>
 
 {@render children()}

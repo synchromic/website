@@ -1,7 +1,7 @@
 <script lang="ts">
 	let { data } = $props();
 
-	const formatter = new Intl.DateTimeFormat(undefined, {
+	const formatter = new Intl.DateTimeFormat("en", {
 		month: "2-digit",
 		day: "numeric"
 	});
