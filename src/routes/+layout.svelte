@@ -11,12 +11,11 @@
 
 <header>
 	<nav>
-		synchromic ·
-		<a href="/">Home</a>
+		<a href="/">synchromic</a>
 		·
 		<a href="/blog">Blog</a>
-		·
-		<a href="/about">About</a>
+		<!-- · -->
+		<!-- <a href="/about">About</a> -->
 	</nav>
 </header>
 

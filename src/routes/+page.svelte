@@ -5,6 +5,7 @@
 	import imgTwitch from "$lib/assets/icons/twitch.svg";
 	import QuickLink from "$lib/components/QuickLink.svelte";
 	import TitleBox from "$lib/components/TitleBox.svelte";
+	import { formatShortDate } from "$lib/dates.js";
 
 	let { data } = $props();
 </script>
@@ -55,18 +56,22 @@
 				</div>
 			</TitleBox>
 			<TitleBox title="Latest Blog Posts">
-				<ul>
-					{#each data.recent as post}
-						<li><a href="/blog/{post.slug}">{post.meta.title}</a></li>
-					{/each}
-				</ul>
+				<nav>
+					<ul>
+						{#each data.recent as post}
+							<li>
+								<a href="/blog/{post.slug}">{formatShortDate(post.meta.date)}: {post.meta.title}</a>
+							</li>
+						{/each}
+					</ul>
+				</nav>
 			</TitleBox>
-			<TitleBox title="Featured Project">
-				<p>Hello, world!</p>
-			</TitleBox>
-			<TitleBox title="Random Cat Photo">
-				<p>Hello, world!</p>
-			</TitleBox>
+			<!-- <TitleBox title="Featured Project"> -->
+			<!-- 	<p>Hello, world!</p> -->
+			<!-- </TitleBox> -->
+			<!-- <TitleBox title="Random Cat Photo"> -->
+			<!-- 	<p>Hello, world!</p> -->
+			<!-- </TitleBox> -->
 		</main>
 	</div>
 </div>

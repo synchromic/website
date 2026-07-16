@@ -16,10 +16,9 @@
 </script>
 
 <p>
-	I didn't think to start writing this blog until we already reached LuV (6 tiers in; the ones
-	before are LV, MV, HV, EV, IV). As a result, there is already a significant amount of progress to
-	show off. Since I basically never took any screenshots up to this point, I'll be using some from
-	Mazerak that I grabbed from our Discord chat.
+	I didn't think to start writing this blog until we already reached LuV. As a result, there is
+	already a significant amount of progress to show off. Since I basically never took any screenshots
+	up to this point, I'll be using some from Mazerak that I grabbed from our Discord chat.
 </p>
 
 <hr />

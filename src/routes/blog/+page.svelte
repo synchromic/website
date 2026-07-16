@@ -1,15 +1,7 @@
 <script lang="ts">
+	import { formatShortDate } from "$lib/dates.js";
+
 	let { data } = $props();
-
-	const formatter = new Intl.DateTimeFormat("en", {
-		month: "2-digit",
-		day: "numeric",
-	});
-
-	function formatDate(date: Date) {
-		// TODO: in 2027 split this into multiple years and show year number
-		return formatter.format(date);
-	}
 </script>
 
 <svelte:head>
@@ -25,7 +17,7 @@
 	{#each data.pages as page}
 		<li>
 			<a href="/blog/{page.slug}">
-				{formatDate(page.meta.date)}: {page.meta.title}
+				{formatShortDate(page.meta.date)}: {page.meta.title}
 			</a>
 		</li>
 	{/each}

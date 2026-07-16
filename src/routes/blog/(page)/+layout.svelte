@@ -1,17 +1,9 @@
 <script lang="ts">
 	import "$lib/css/blog.css";
+	import { formatLongDate } from "$lib/dates";
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
-
-	const formatter = new Intl.DateTimeFormat("en", {
-		dateStyle: "long",
-		timeStyle: "long",
-	});
-
-	function formatDate(date: Date) {
-		return formatter.format(date);
-	}
 </script>
 
 <svelte:head>
@@ -20,7 +12,7 @@
 
 <header>
 	<h1>{data.meta.title}</h1>
-	<p>{formatDate(data.meta.date)}</p>
+	<p>{formatLongDate(data.meta.date)}</p>
 </header>
 
 {#if data.meta.hidden}

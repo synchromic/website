@@ -19,8 +19,7 @@
 	Minecraft modpack focused on technology and progression. If you've ever heard of
 	<a href="https://www.gtnewhorizons.com/">GregTech New Horizons</a>, Star Technology is essentially
 	an easier, more modern, and more streamlined version. So far, I consider this to be the single
-	most enjoyable Minecraft modpack I've ever played, though it's definitely meant for a certain kind
-	of person.
+	most enjoyable Minecraft modpack I've ever played.
 </p>
 <p>
 	This series of blog posts is meant to be a journal of my progress through the pack. I'm planning
