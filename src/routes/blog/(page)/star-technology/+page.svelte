@@ -10,7 +10,8 @@
 </script>
 
 <script lang="ts">
-	import imgInitialOverview from "$lib/assets/blog/star-technology/initial-overview.webp";
+	import imgIVBase from "$lib/assets/blog/star-technology/initial-progress/iv-base.webp";
+	import imgLuVBase from "$lib/assets/blog/star-technology/luv/luv-base.webp";
 </script>
 
 <p>
@@ -36,7 +37,16 @@
 		<a href="/blog/star-technology/initial-progress">Initial progress (LV-IV)</a>
 	</h2>
 	<a href="/blog/star-technology/initial-progress">
-		<img class="full-width" src={imgInitialOverview} alt="Navigate to initial progress blog post" />
+		<img class="full-width" src={imgIVBase} alt="Navigate to initial progress blog post" />
+	</a>
+
+	<hr />
+
+	<h2>
+		<a href="/blog/star-technology/luv">LuV</a>
+	</h2>
+	<a href="/blog/star-technology/luv">
+		<img class="full-width" src={imgLuVBase} alt="Navigate to LuV blog post" />
 	</a>
 </nav>
 
