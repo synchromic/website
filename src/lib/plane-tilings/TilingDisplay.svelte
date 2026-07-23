@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { TileVariant, topLeft, vertexOffsets, type PlaneTiling } from "./tiling";
 
-	let { tiling }: { tiling: PlaneTiling } = $props();
+	let { tiling, svgClass }: { tiling: PlaneTiling; svgClass?: string } = $props();
 
-	let svgWidth = $derived(tiling.width);
-	let svgHeight = $derived((tiling.height * Math.sqrt(3)) / 2);
+	const boundingBox = $derived(tiling.boundingBox());
 
 	function verticesToPoly(vertices: { x: number; y: number }[]): string {
 		const out = [];
@@ -26,7 +25,11 @@
 	}
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svgWidth} {svgHeight}">
+<svg
+	class={svgClass}
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 {boundingBox.width} {boundingBox.height}"
+>
 	<g style="display: none">
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
 			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant))} />

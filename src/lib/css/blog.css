@@ -15,21 +15,22 @@ figcaption {
 	font-style: italic;
 }
 
-img {
+img,
+svg {
 	align-self: center;
 }
 
-img.full-width {
+.full-width {
 	width: 100%;
 	height: auto;
 }
 
-img.landscape {
+.landscape {
 	width: 80%;
 	height: auto;
 }
 
-img.portrait {
+.portrait {
 	width: 400px;
 	max-width: 70vw;
 	height: auto;

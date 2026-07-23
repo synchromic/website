@@ -5,7 +5,9 @@
 
 	export const metadata: Metadata = {
 		title: "Plane tilings (literally!)",
-		date: new Date("2026-07-22T20:00:00.000Z")
+		date: new Date("2026-07-22T20:00:00.000Z"),
+		description:
+			"I noticed some interesting roof decorations while sleep deprived on a plane flight and looked into it a bit too much",
 	};
 </script>
 
@@ -27,4 +29,4 @@
 	actual ceiling tiles), and that it is rotationally symmetric about the center of the period.
 </p>
 
-<TilingDisplay tiling={testTiling} />
+<TilingDisplay svgClass="portrait" tiling={testTiling} />
