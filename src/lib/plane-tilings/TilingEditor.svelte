@@ -5,9 +5,13 @@
 
 	let { startCode }: { startCode?: string } = $props();
 
+	const sizeLimit = 100;
+	let width = $state(15);
+	let height = $state(44);
 	let tiling = new PlaneTiling(15, 44);
 	let reflecting = $state(true);
 	let hideOutlines = $state(false);
+	let scrolling = $state(false);
 	let code = $derived(tiling.getCode());
 
 	function onclick(r: number, c: number) {
@@ -20,6 +24,11 @@
 		}
 	}
 
+	$effect(() => {
+		tiling.width = Math.max(1, Math.min(sizeLimit, width));
+		tiling.height = Math.max(1, Math.min(sizeLimit, height));
+	});
+
 	onMount(() => {
 		if (startCode !== undefined) {
 			tiling.setCode(startCode);
@@ -27,12 +36,38 @@
 	});
 </script>
 
-<div class="container">
-	<div class="left">
-		<TilingDisplay svgClass="portrait" {tiling} {onclick} {reflecting} {hideOutlines} />
+<div class={{ container: true, scrolling }}>
+	<div class={{ left: true, scrolling }}>
+		<TilingDisplay {tiling} {onclick} {reflecting} {hideOutlines} {scrolling} />
 	</div>
 	<div class="right">
 		<h2>Tiling Editor</h2>
+		<p>
+			<label for="widthInput">Width:</label>
+			<input
+				id="widthInput"
+				type="number"
+				bind:value={width}
+				min={1}
+				max={100}
+				autocomplete="off"
+			/>
+		</p>
+		<p>
+			<label for="heightInput">Height:</label>
+			<input
+				id="heightInput"
+				type="number"
+				bind:value={height}
+				min={1}
+				max={100}
+				autocomplete="off"
+			/>
+		</p>
+		<p>
+			<label for="scrollingInput">Enable scrolling:</label>
+			<input id="scrollingInput" type="checkbox" bind:checked={scrolling} />
+		</p>
 		<p>
 			<label for="reflectingInput">Keep symmetry:</label>
 			<input id="reflectingInput" type="checkbox" bind:checked={reflecting} />
@@ -53,10 +88,17 @@
 		display: flex;
 		flex-direction: row;
 		gap: 1em;
+		&.scrolling {
+			max-height: 600px;
+		}
 	}
 
 	.left {
 		min-width: 40%;
+		max-width: 40%;
+		&.scrolling {
+			overflow: scroll;
+		}
 	}
 
 	.right {

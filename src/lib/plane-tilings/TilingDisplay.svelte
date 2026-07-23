@@ -7,12 +7,14 @@
 		onclick,
 		reflecting,
 		hideOutlines,
+		scrolling,
 	}: {
 		tiling: PlaneTiling;
 		svgClass?: string;
 		onclick?: (r: number, c: number) => void;
 		reflecting?: boolean;
 		hideOutlines?: boolean;
+		scrolling?: boolean;
 	} = $props();
 
 	const boundingBox = $derived(tiling.boundingBox());
@@ -62,7 +64,8 @@
 
 <svg
 	class={[svgClass, onclick !== undefined ? "interactive" : ""]}
-	style="--outline-color: {hideOutlines ? 'transparent' : 'var(--foreground-color-dd)'}"
+	style:width={scrolling ? Math.floor(boundingBox.width * 50) + "px" : "100%"}
+	style:--outline-color={hideOutlines ? "transparent" : "var(--foreground-color-dd)"}
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 {boundingBox.width} {boundingBox.height}"
 	role="grid"
@@ -72,8 +75,8 @@
 			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant, 0.85))} />
 		{/each}
 	</g>
-	{#each tiling.grid as row, r}
-		{#each row as val, c}
+	{#each { length: tiling.height } as _, r}
+		{#each { length: tiling.width } as _, c}
 			{const variant = tiling.variantOf(r, c)}
 			{const pos = tiling.rhombusCenter(r, c)}
 			{#if variant !== null && pos !== null}
@@ -95,7 +98,7 @@
 					onblur={() => endHover(r, c)}
 					tabindex="0"
 					role="gridcell"
-					class={[val ? "filled" : "empty", shouldShowHover(r, c) ? "hover" : ""]}
+					class={[tiling.get(r, c) ? "filled" : "empty", shouldShowHover(r, c) ? "hover" : ""]}
 					href="#{variantToId(variant)}"
 					x={pos.x}
 					y={pos.y}
@@ -106,10 +109,6 @@
 </svg>
 
 <style>
-	svg {
-		width: 100%;
-	}
-
 	polygon {
 		fill: var(--polygon-fill-color);
 		stroke: var(--polygon-stroke-color);

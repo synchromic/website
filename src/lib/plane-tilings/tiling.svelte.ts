@@ -3,13 +3,17 @@ const S3 = Math.sqrt(3);
 const boundingTable = [0, 1.5, 2, 3]
 
 export class PlaneTiling {
-  width: number;
-  height: number;
-  grid: boolean[][];
+  private _width: number;
+  private _height: number;
+  // if the user resizes, don't delete extra cells instantly
+  // wait until grid cell gets toggled first
+  needsShrink: boolean;
+  private grid: boolean[][];
 
   constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+    this._width = $state(width);
+    this._height = $state(height);
+    this.needsShrink = false;
     this.grid = $state([]);
     for (let r = 0; r < height; r++) {
       this.grid.push([]);
@@ -17,6 +21,52 @@ export class PlaneTiling {
         this.grid[r].push(false);
       }
     }
+  }
+
+  get width(): number {
+    return this._width;
+  }
+
+  get height(): number {
+    return this._height;
+  }
+
+  set width(width: number) {
+    if (this.grid[0].length > width) {
+      this.needsShrink = true;
+    } else if (this.grid[0].length < width) {
+      for (let r = 0; r < this.grid.length; r++) {
+        while (this.grid[r].length < width) {
+          this.grid[r].push(false);
+        }
+      }
+    }
+    this._width = width;
+  }
+
+  set height(height: number) {
+    if (this.grid.length > height) {
+      this.needsShrink = true;
+    } else if (this.grid.length < height) {
+      const trueWidth = this.grid[0].length;
+      for (let r = this.grid.length; r < height; r++) {
+        this.grid.push([]);
+        for (let c = 0; c < trueWidth; c++) {
+          this.grid[r].push(false);
+        }
+      }
+    }
+    this._height = height;
+  }
+
+  private shrink() {
+    if (!this.needsShrink) return;
+    // assume underlying array is always too large (never need to add elements) 
+    this.grid = this.grid.slice(0, this.height).map((row) => row.slice(0, this.width));
+  }
+
+  get(r: number, c: number): boolean {
+    return this.grid[r][c];
   }
 
   // returns null if not a valid tile
@@ -62,6 +112,7 @@ export class PlaneTiling {
     if (this.variantOf(r, c) === null) {
       return;
     }
+    this.shrink();
     this.grid[r][c] = !this.grid[r][c];
   }
 
