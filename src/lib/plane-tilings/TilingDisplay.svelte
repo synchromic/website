@@ -6,11 +6,13 @@
 		svgClass,
 		onclick,
 		reflecting,
+		hideOutlines,
 	}: {
 		tiling: PlaneTiling;
 		svgClass?: string;
 		onclick?: (r: number, c: number) => void;
 		reflecting?: boolean;
+		hideOutlines?: boolean;
 	} = $props();
 
 	const boundingBox = $derived(tiling.boundingBox());
@@ -60,6 +62,7 @@
 
 <svg
 	class={[svgClass, onclick !== undefined ? "interactive" : ""]}
+	style="--outline-color: {hideOutlines ? 'transparent' : 'var(--foreground-color-dd)'}"
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 {boundingBox.width} {boundingBox.height}"
 	role="grid"
@@ -117,15 +120,15 @@
 		--polygon-fill-color: var(--foreground-color);
 		--polygon-stroke-color: var(--foreground-color);
 		&.hover {
-			--polygon-fill-color: var(--foreground-color-d);
+			--polygon-fill-color: var(--foreground-color-dd);
 		}
 	}
 
 	use.empty {
 		--polygon-fill-color: var(--background-color);
-		--polygon-stroke-color: var(--foreground-color-dd);
+		--polygon-stroke-color: var(--outline-color);
 		&.hover {
-			--polygon-fill-color: var(--background-color-l);
+			--polygon-fill-color: var(--background-color-ll);
 		}
 	}
 

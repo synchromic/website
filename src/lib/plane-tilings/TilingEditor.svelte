@@ -7,6 +7,7 @@
 
 	let tiling = new PlaneTiling(15, 44);
 	let reflecting = $state(true);
+	let hideOutlines = $state(false);
 	let code = $derived(tiling.getCode());
 
 	function onclick(r: number, c: number) {
@@ -28,13 +29,17 @@
 
 <div class="container">
 	<div class="left">
-		<TilingDisplay svgClass="portrait" {tiling} {onclick} {reflecting} />
+		<TilingDisplay svgClass="portrait" {tiling} {onclick} {reflecting} {hideOutlines} />
 	</div>
 	<div class="right">
 		<h2>Tiling Editor</h2>
 		<p>
 			<label for="reflectingInput">Keep symmetry:</label>
 			<input id="reflectingInput" type="checkbox" bind:checked={reflecting} />
+		</p>
+		<p>
+			<label for="reflectingInput">Hide empty outlines:</label>
+			<input id="reflectingInput" type="checkbox" bind:checked={hideOutlines} />
 		</p>
 		<p>Code: <code>{code}</code></p>
 	</div>
@@ -57,6 +62,7 @@
 	.right {
 		display: flex;
 		flex-direction: column;
+		gap: 0.5em;
 
 		padding: 0.7em;
 
