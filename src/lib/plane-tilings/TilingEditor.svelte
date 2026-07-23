@@ -26,5 +26,45 @@
 	});
 </script>
 
-<TilingDisplay svgClass="portrait" {tiling} {onclick} {reflecting} />
-<p>Code: <code>{code}</code></p>
+<div class="container">
+	<div class="left">
+		<TilingDisplay svgClass="portrait" {tiling} {onclick} {reflecting} />
+	</div>
+	<div class="right">
+		<h2>Tiling Editor</h2>
+		<p>
+			<label for="reflectingInput">Keep symmetry:</label>
+			<input id="reflectingInput" type="checkbox" bind:checked={reflecting} />
+		</p>
+		<p>Code: <code>{code}</code></p>
+	</div>
+</div>
+
+<style>
+	.container {
+		align-self: center;
+		width: 90%;
+
+		display: flex;
+		flex-direction: row;
+		gap: 1em;
+	}
+
+	.left {
+		min-width: 40%;
+	}
+
+	.right {
+		display: flex;
+		flex-direction: column;
+
+		padding: 0.7em;
+
+		border: 1px solid var(--foreground-color-d);
+	}
+
+	code {
+		word-break: break-all;
+		overflow-wrap: anywhere;
+	}
+</style>

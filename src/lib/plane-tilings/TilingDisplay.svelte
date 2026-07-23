@@ -103,6 +103,10 @@
 </svg>
 
 <style>
+	svg {
+		width: 100%;
+	}
+
 	polygon {
 		fill: var(--polygon-fill-color);
 		stroke: var(--polygon-stroke-color);
