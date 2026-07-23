@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TileVariant, topLeft, vertexOffsets, type PlaneTiling } from "./tiling";
+	import { TileVariant, vertexOffsets, type PlaneTiling } from "./tiling";
 
 	let { tiling, svgClass }: { tiling: PlaneTiling; svgClass?: string } = $props();
 
@@ -32,15 +32,15 @@
 >
 	<g style="display: none">
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
-			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant))} />
+			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant, 0.9))} />
 		{/each}
 	</g>
 	{#each tiling.grid as row, r}
 		{#each row as val, c}
 			{const variant = tiling.variantOf(r, c)}
-			{const pos = topLeft(r, c)}
-			{#if val && variant !== null && pos !== null}
-				<use href="#{variantToId(variant)}" x={pos.x} y={pos.y} />
+			{const pos = tiling.rhombusCenter(r, c)}
+			{#if variant !== null && pos !== null}
+				<use class={val ? "filled" : "empty"} href="#{variantToId(variant)}" x={pos.x} y={pos.y} />
 			{/if}
 		{/each}
 	{/each}
@@ -48,8 +48,18 @@
 
 <style>
 	polygon {
-		fill: var(--foreground-color);
-		stroke: var(--background-color);
-		stroke-width: 0.1;
+		fill: var(--polygon-fill-color);
+		stroke: var(--polygon-stroke-color);
+		stroke-width: 0.03;
+	}
+
+	use.filled {
+		--polygon-fill-color: var(--foreground-color);
+		--polygon-stroke-color: var(--foreground-color);
+	}
+
+	use.empty {
+		--polygon-fill-color: var(--background-color);
+		--polygon-stroke-color: var(--foreground-color-dd);
 	}
 </style>

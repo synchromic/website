@@ -36,6 +36,16 @@ export class PlaneTiling {
     };
   }
 
+  // assumes rhombi have side length 1
+  rhombusCenter(r: number, c: number): { x: number, y: number } | null {
+    const variant = this.variantOf(r, c);
+    if (variant === null) return null;
+    return {
+      x: 3 / 4 * (c + 1),
+      y: S3 / 2 * r + (variant === TileVariant.Vertical ? S3 / 2 : S3 / 4),
+    };
+  }
+
   // code is a base64-encoded binary string, each byte represents 8 tile states
   // ordered top-to-bottom left-to-right, bits are little-endian within bytes
   setCode(code: string) {
@@ -90,42 +100,37 @@ export enum TileVariant {
   Vertical, // the other one
 }
 
-// assumes rhombi have side length 1
-export function vertexOffsets(variant: TileVariant): { x: number, y: number }[] {
+function offsetsFromCenter(variant: TileVariant): { x: number, y: number }[] {
   switch (variant) {
     case TileVariant.Forward:
       return [
-        { x: 0.5, y: 0 },
-        { x: 1.5, y: 0 },
-        { x: 1, y: S3 / 2 },
-        { x: 0, y: S3 / 2 },
+        { x: -1 / 4, y: -S3 / 4 },
+        { x: 3 / 4, y: -S3 / 4 },
+        { x: 1 / 4, y: S3 / 4 },
+        { x: -3 / 4, y: S3 / 4 },
       ];
     case TileVariant.Backward:
       return [
-        { x: 0, y: 0 },
-        { x: 1, y: 0 },
-        { x: 1.5, y: S3 / 2 },
-        { x: 0.5, y: S3 / 2 },
+        { x: -3 / 4, y: -S3 / 4 },
+        { x: 1 / 4, y: -S3 / 4 },
+        { x: 3 / 4, y: S3 / 4 },
+        { x: -1 / 4, y: S3 / 4 },
       ];
     case TileVariant.Vertical:
       return [
-        { x: 0.5, y: 0 },
-        { x: 1, y: S3 / 2 },
-        { x: 0.5, y: S3 },
+        { x: 0, y: -S3 / 2 },
+        { x: 1 / 2, y: 0 },
         { x: 0, y: S3 / 2 },
+        { x: -1 / 2, y: 0 },
       ];
   }
 }
 
-const offsetTable = [[0, 1, 1.5, null], [0, null, 1.5, 2.5]];
-
-// assumes rhombi have side length 1
-export function topLeft(r: number, c: number): { x: number, y: number } | null {
-  const offsetX = offsetTable[r % 2][c % 4];
-  if (offsetX === null) return null; // corresponds to invalid tile position
-  // left side of shape bounding box
-  return {
-    x: 3 * Math.floor(c / 4) + offsetX,
-    y: S3 / 2 * r,
-  };
+export function vertexOffsets(variant: TileVariant, size: number = 1): { x: number, y: number }[] {
+  return offsetsFromCenter(variant).map(({ x, y }) => {
+    return {
+      x: x * size,
+      y: y * size,
+    };
+  });
 }
