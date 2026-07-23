@@ -1,7 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import { PlaneTiling } from "$lib/plane-tilings/tiling";
-	import TilingDisplay from "$lib/plane-tilings/TilingDisplay.svelte";
+	import TilingEditor from "$lib/plane-tilings/TilingEditor.svelte";
 
 	export const metadata: Metadata = {
 		title: "Plane tilings (literally!)",
@@ -9,11 +8,6 @@
 		description:
 			"I noticed some interesting roof decorations while sleep deprived on a plane flight and looked into it a bit too much",
 	};
-</script>
-
-<script lang="ts">
-	const testTiling = new PlaneTiling(10, 10);
-	testTiling.grid = testTiling.grid.map((a) => a.map((_) => Math.random() < 0.7));
 </script>
 
 <p>
@@ -29,4 +23,4 @@
 	actual ceiling tiles), and that it is rotationally symmetric about the center of the period.
 </p>
 
-<TilingDisplay svgClass="portrait" tiling={testTiling} />
+<TilingEditor svgClass="portrait" />

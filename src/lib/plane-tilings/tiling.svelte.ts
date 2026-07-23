@@ -10,7 +10,7 @@ export class PlaneTiling {
   constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
-    this.grid = [];
+    this.grid = $state([]);
     for (let r = 0; r < height; r++) {
       this.grid.push([]);
       for (let c = 0; c < width; c++) {
@@ -46,6 +46,20 @@ export class PlaneTiling {
     };
   }
 
+  // if given an invalid tile, tries to see if it's actually the "bottom half"
+  // of a valid tile
+  toggle(r: number, c: number) {
+    const variant = this.variantOf(r, c);
+    if (variant === null) {
+      const topHalf = this.variantOf(r - 1, c);
+      if (topHalf !== null) {
+        this.toggle(r - 1, c);
+      }
+      return;
+    }
+    this.grid[r][c] = !this.grid[r][c];
+  }
+
   // code is a base64-encoded binary string, each byte represents 8 tile states
   // ordered top-to-bottom left-to-right, bits are little-endian within bytes
   setCode(code: string) {
@@ -67,6 +81,7 @@ export class PlaneTiling {
           if (!nextIndex()) return;
         }
         this.grid[r][c] = (byte & (1 << bit)) !== 0;
+        nextIndex();
       }
     }
     // fill in remainder with 0
