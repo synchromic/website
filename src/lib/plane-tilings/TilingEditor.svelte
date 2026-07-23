@@ -38,8 +38,8 @@
 			<input id="reflectingInput" type="checkbox" bind:checked={reflecting} />
 		</p>
 		<p>
-			<label for="reflectingInput">Hide empty outlines:</label>
-			<input id="reflectingInput" type="checkbox" bind:checked={hideOutlines} />
+			<label for="outlineInput">Hide empty outlines:</label>
+			<input id="outlineInput" type="checkbox" bind:checked={hideOutlines} />
 		</p>
 		<p>Code: <code>{code}</code></p>
 	</div>
