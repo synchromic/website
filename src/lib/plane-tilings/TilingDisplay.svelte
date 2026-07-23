@@ -5,13 +5,16 @@
 		tiling,
 		svgClass,
 		onclick,
+		reflecting,
 	}: {
 		tiling: PlaneTiling;
 		svgClass?: string;
 		onclick?: (r: number, c: number) => void;
+		reflecting?: boolean;
 	} = $props();
 
 	const boundingBox = $derived(tiling.boundingBox());
+	let hoveredTile: { r: number; c: number } | null = $state(null);
 
 	function verticesToPoly(vertices: { x: number; y: number }[]): string {
 		const out = [];
@@ -31,6 +34,28 @@
 				return "vertical";
 		}
 	}
+
+	function startHover(r: number, c: number) {
+		hoveredTile = { r, c };
+	}
+
+	function endHover(r: number, c: number) {
+		if (hoveredTile?.r === r && hoveredTile?.c === c) {
+			hoveredTile = null;
+		}
+	}
+
+	function shouldShowHover(r: number, c: number) {
+		if (hoveredTile === null) return false;
+		if (hoveredTile.r === r && hoveredTile.c === c) {
+			return true;
+		}
+		if (reflecting) {
+			const { r: refR, c: refC } = tiling.reflected(hoveredTile.r, hoveredTile.c);
+			if (r === refR && c === refC) return true;
+		}
+		return false;
+	}
 </script>
 
 <svg
@@ -41,7 +66,7 @@
 >
 	<g style="display: none">
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
-			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant, 0.9))} />
+			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant, 0.85))} />
 		{/each}
 	</g>
 	{#each tiling.grid as row, r}
@@ -61,9 +86,13 @@
 							onclick(r, c);
 						}
 					}}
+					onmouseover={() => startHover(r, c)}
+					onfocus={() => startHover(r, c)}
+					onmouseout={() => endHover(r, c)}
+					onblur={() => endHover(r, c)}
 					tabindex="0"
 					role="gridcell"
-					class={val ? "filled" : "empty"}
+					class={[val ? "filled" : "empty", shouldShowHover(r, c) ? "hover" : ""]}
 					href="#{variantToId(variant)}"
 					x={pos.x}
 					y={pos.y}
@@ -83,7 +112,7 @@
 	use.filled {
 		--polygon-fill-color: var(--foreground-color);
 		--polygon-stroke-color: var(--foreground-color);
-		&:hover {
+		&.hover {
 			--polygon-fill-color: var(--foreground-color-d);
 		}
 	}
@@ -91,7 +120,7 @@
 	use.empty {
 		--polygon-fill-color: var(--background-color);
 		--polygon-stroke-color: var(--foreground-color-dd);
-		&:hover {
+		&.hover {
 			--polygon-fill-color: var(--background-color-l);
 		}
 	}

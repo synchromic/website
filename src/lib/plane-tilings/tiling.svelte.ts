@@ -27,6 +27,18 @@ export class PlaneTiling {
     return [TileVariant.Forward, TileVariant.Vertical, TileVariant.Backward, null][offset];
   }
 
+  // checks if an otherwise invalid tile is the bottom half of a valid tile
+  bottomHalf(r: number, c: number): boolean {
+    return this.variantOf(r, c) === null && this.variantOf(r - 1, c) === TileVariant.Vertical;
+  }
+
+  reflected(r: number, c: number): { r: number, c: number } {
+    let refR = this.height - 1 - r;
+    let refC = this.width - 1 - c;
+    if (this.bottomHalf(refR, refC)) refR--;
+    return { r: refR, c: refC };
+  }
+
   // returns width/height of tiling if each rhombus has side length 1
   boundingBox(): { width: number, height: number } {
     const extraWidth = boundingTable[this.width % 4];
@@ -46,15 +58,8 @@ export class PlaneTiling {
     };
   }
 
-  // if given an invalid tile, tries to see if it's actually the "bottom half"
-  // of a valid tile
   toggle(r: number, c: number) {
-    const variant = this.variantOf(r, c);
-    if (variant === null) {
-      const topHalf = this.variantOf(r - 1, c);
-      if (topHalf !== null) {
-        this.toggle(r - 1, c);
-      }
+    if (this.variantOf(r, c) === null) {
       return;
     }
     this.grid[r][c] = !this.grid[r][c];
@@ -81,7 +86,7 @@ export class PlaneTiling {
           if (!nextIndex()) return;
         }
         this.grid[r][c] = (byte & (1 << bit)) !== 0;
-        nextIndex();
+        if (!nextIndex()) return;
       }
     }
     // fill in remainder with 0
@@ -105,6 +110,7 @@ export class PlaneTiling {
         }
       }
     }
+    if (curBit > 0) bytes.push(curByte);
     return new Uint8Array(bytes).toBase64();
   }
 }
