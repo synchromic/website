@@ -64,7 +64,7 @@
 
 <svg
 	class={[svgClass, onclick !== undefined ? "interactive" : ""]}
-	style:width={scrolling ? Math.floor(boundingBox.width * 50) + "px" : "100%"}
+	style:width={scrolling ? Math.floor(boundingBox.width * 40) + "px" : "100%"}
 	style:--outline-color={hideOutlines ? "transparent" : "var(--foreground-color-dd)"}
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 {boundingBox.width} {boundingBox.height}"
@@ -77,8 +77,8 @@
 	</g>
 	{#each { length: tiling.height } as _, r}
 		{#each { length: tiling.width } as _, c}
-			{const variant = tiling.variantOf(r, c)}
-			{const pos = tiling.rhombusCenter(r, c)}
+			{let variant = $derived(tiling.variantOf(r, c))}
+			{let pos = $derived(tiling.rhombusCenter(r, c))}
 			{#if variant !== null && pos !== null}
 				<!-- TODO: accessibility 
              https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/grid_role#keyboard_interactions 

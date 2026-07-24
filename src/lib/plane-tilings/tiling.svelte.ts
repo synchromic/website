@@ -10,7 +10,7 @@ export class PlaneTiling {
   needsShrink: boolean;
   private grid: boolean[][];
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, startCode?: string) {
     this._width = $state(width);
     this._height = $state(height);
     this.needsShrink = false;
@@ -20,6 +20,9 @@ export class PlaneTiling {
       for (let c = 0; c < width; c++) {
         this.grid[r].push(false);
       }
+    }
+    if (startCode !== undefined) {
+      this.setCode(startCode);
     }
   }
 
@@ -162,6 +165,9 @@ export class PlaneTiling {
       }
     }
     if (curBit > 0) bytes.push(curByte);
+    // strip trailing zeros
+    const lastNonzero = bytes.findLastIndex((b) => b > 0);
+    bytes = bytes.slice(0, lastNonzero + 1);
     return new Uint8Array(bytes).toBase64();
   }
 }

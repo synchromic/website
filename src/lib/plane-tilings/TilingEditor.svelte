@@ -3,16 +3,45 @@
 	import { PlaneTiling } from "./tiling.svelte";
 	import TilingDisplay from "./TilingDisplay.svelte";
 
-	let { startCode }: { startCode?: string } = $props();
-
-	const sizeLimit = 100;
+	const defaultCode =
+		"Xa2cN0T1219L6v9afirsmy8vVftoenV9fH31UfGuO0f3xllx3nnXejtu21was+Wr74nx+/hvxM333VDVVp12";
+	const sizeLimit = { width: 40, height: 80 };
 	let width = $state(15);
 	let height = $state(44);
-	let tiling = new PlaneTiling(15, 44);
+	let tiling = new PlaneTiling(15, 44, defaultCode);
 	let reflecting = $state(true);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
+
 	let code = $derived(tiling.getCode());
+	let codeInput = $state(defaultCode);
+
+	function onCodeChange() {
+		const oldCode = code;
+		try {
+			tiling.setCode(codeInput);
+		} catch (error) {
+			console.warn(error);
+			tiling.setCode(oldCode);
+		}
+	}
+
+	let widthInput = $state(15);
+	let heightInput = $state(44);
+
+	function onWidthChange() {
+		widthInput = Math.max(1, Math.min(sizeLimit.width, widthInput));
+		width = widthInput;
+		tiling.width = width;
+		codeInput = code;
+	}
+
+	function onHeightChange() {
+		heightInput = Math.max(1, Math.min(sizeLimit.height, heightInput));
+		height = heightInput;
+		tiling.height = height;
+		codeInput = code;
+	}
 
 	function onclick(r: number, c: number) {
 		tiling.toggle(r, c);
@@ -22,18 +51,8 @@
 				tiling.toggle(refR, refC);
 			}
 		}
+		codeInput = code;
 	}
-
-	$effect(() => {
-		tiling.width = Math.max(1, Math.min(sizeLimit, width));
-		tiling.height = Math.max(1, Math.min(sizeLimit, height));
-	});
-
-	onMount(() => {
-		if (startCode !== undefined) {
-			tiling.setCode(startCode);
-		}
-	});
 </script>
 
 <div class={{ container: true, scrolling }}>
@@ -47,9 +66,10 @@
 			<input
 				id="widthInput"
 				type="number"
-				bind:value={width}
+				bind:value={widthInput}
+				onchange={onWidthChange}
 				min={1}
-				max={100}
+				max={sizeLimit.width}
 				autocomplete="off"
 			/>
 		</p>
@@ -58,9 +78,10 @@
 			<input
 				id="heightInput"
 				type="number"
-				bind:value={height}
+				bind:value={heightInput}
+				onchange={onHeightChange}
 				min={1}
-				max={100}
+				max={sizeLimit.height}
 				autocomplete="off"
 			/>
 		</p>
@@ -76,7 +97,10 @@
 			<label for="outlineInput">Hide empty outlines:</label>
 			<input id="outlineInput" type="checkbox" bind:checked={hideOutlines} />
 		</p>
-		<p>Code: <code>{code}</code></p>
+		<p>
+			<label for="codeInput">Code:</label>
+			<input id="codeInput" type="text" bind:value={codeInput} onchange={onCodeChange} />
+		</p>
 	</div>
 </div>
 
@@ -102,17 +126,14 @@
 	}
 
 	.right {
+		flex-grow: 1;
+		padding: 0.7em;
+		min-height: 600px;
+
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;
 
-		padding: 0.7em;
-
 		border: 1px solid var(--foreground-color-d);
-	}
-
-	code {
-		word-break: break-all;
-		overflow-wrap: anywhere;
 	}
 </style>

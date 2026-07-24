@@ -23,6 +23,4 @@
 	actual ceiling tiles), and that it is rotationally symmetric about the center of the period.
 </p>
 
-<TilingEditor
-	startCode="Xa2cN0T1219L6v9afirsmy8vVftoenV9fH31UfGuO0f3xllx3nnXejtu21was+Wr74nx+/hvxM333VDVVp12"
-/>
+<TilingEditor />
