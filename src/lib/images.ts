@@ -1,12 +1,15 @@
-const urls = import.meta.glob(["/src/lib/assets/**/*.png", "/src/lib/assets/**/*.webp"], {
+const urls = import.meta.glob(["/src/lib/assets/**/*.png", "/src/lib/assets/**/*.jpg", "/src/lib/assets/**/*.webp"], {
 	query: "?url",
 	import: "default",
 	eager: true,
 });
 
 export function getUrls(path: string) {
+	const extension = path.endsWith(".jpg") ? "jpg" : "png";
+	const fixedPath = path.endsWith(".jpg") ? path.slice(0, -4) : path;
+	const fullPath = `/src/lib/assets/blog/${fixedPath}`;
 	return {
-		png: urls[`/src/lib/assets/blog/${path}.png`] as string,
-		webp: urls[`/src/lib/assets/blog/${path}.webp`] as string,
+		original: urls[`${fullPath}.${extension}`] as string,
+		webp: urls[`${fullPath}.webp`] as string,
 	};
 }

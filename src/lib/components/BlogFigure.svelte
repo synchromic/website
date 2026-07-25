@@ -9,7 +9,7 @@
 	}: {
 		imgClass: string;
 		alt: string;
-		caption: string;
+		caption?: string;
 		src: string;
 	} = $props();
 
@@ -18,5 +18,9 @@
 
 <figure>
 	<img class={imgClass} src={urls.webp} {alt} />
-	<figcaption>{caption} · <a href={urls.png}>View original</a></figcaption>
+	{#if caption === undefined}
+		<figcaption><a href={urls.original}>View original</a></figcaption>
+	{:else}
+		<figcaption>{caption} · <a href={urls.original}>View original</a></figcaption>
+	{/if}
 </figure>

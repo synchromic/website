@@ -82,7 +82,8 @@ a:visited:hover {
 	background-clip: border-box;
 }
 
-ul {
+ul,
+ol {
 	margin: 0;
 	padding-left: 1.2em;
 }

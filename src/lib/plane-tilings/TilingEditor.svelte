@@ -121,6 +121,11 @@
 				autocomplete="off"
 			/>
 		</p>
+		<noscript>
+			<p style="color: red">
+				Javascript is disabled, so the editor won't work, but you can still look at it!
+			</p>
+		</noscript>
 	</div>
 </div>
 
@@ -138,8 +143,8 @@
 	}
 
 	.left {
-		min-width: 40%;
-		max-width: 40%;
+		min-width: 50%;
+		max-width: 50%;
 		&.scrolling {
 			overflow: scroll;
 		}
@@ -147,9 +152,9 @@
 
 	.right {
 		flex-grow: 1;
-		padding: 0.7em;
 		min-height: 600px;
 
+		padding: 0.7em;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;

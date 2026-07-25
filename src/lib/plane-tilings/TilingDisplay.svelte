@@ -165,7 +165,8 @@
 
 	use.filled {
 		--polygon-fill-color: var(--foreground-color);
-		&.hover {
+		&.hover,
+		&:hover {
 			--polygon-fill-color: var(--foreground-color-dd);
 		}
 	}
@@ -173,7 +174,8 @@
 	use.empty {
 		--polygon-fill-color: transparent;
 		--polygon-stroke-color: var(--outline-color);
-		&.hover {
+		&.hover,
+		&:hover {
 			--polygon-fill-color: var(--background-color-ll);
 		}
 	}
