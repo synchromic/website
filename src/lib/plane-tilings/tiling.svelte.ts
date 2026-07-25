@@ -173,6 +173,15 @@ export class PlaneTiling {
 		bytes = bytes.slice(0, lastNonzero + 1);
 		return new Uint8Array(bytes).toBase64();
 	}
+
+	setAll(value: boolean) {
+		this.shrink();
+		for (let r = 0; r < this.grid.length; r++) {
+			for (let c = 0; c < this.grid[r].length; c++) {
+				this.grid[r][c] = value;
+			}
+		}
+	}
 }
 
 export enum TileVariant {

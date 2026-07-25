@@ -11,8 +11,9 @@
 </script>
 
 <p>
-	As someone chronically unable to sleep on airplane flights, I spent a lot of time staring up at
-	this pattern on the ceiling of <!-- TODO: insert plane type here -->:
+	This week, I flew to New York for an apartment hunting trip. As someone chronically unable to
+	sleep on airplane flights, I spent a lot of time staring up at this pattern on the ceiling of this
+	Delta flight's Airbus A320neo:
 </p>
 
 <!-- TODO: insert image of tiles here -->

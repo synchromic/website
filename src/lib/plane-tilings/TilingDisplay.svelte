@@ -115,7 +115,7 @@
 
 <svg
 	class={[onclick !== undefined ? "interactive" : ""]}
-	style:width={scrolling ? Math.floor(boundingBox.width * 40) + "px" : "100%"}
+	style:width={scrolling ? Math.floor((boundingBox.width * 40) / scale) + "px" : "100%"}
 	style:--outline-color={hideOutlines ? "transparent" : "var(--foreground-color-dd)"}
 	style:stroke-width={0.03 * scale}
 	xmlns="http://www.w3.org/2000/svg"
