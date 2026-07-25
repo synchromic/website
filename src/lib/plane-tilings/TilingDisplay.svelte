@@ -17,7 +17,8 @@
 		scrolling?: boolean;
 	} = $props();
 
-	const boundingBox = $derived(tiling.boundingBox());
+	const scale = 20;
+	const boundingBox = $derived(tiling.boundingBox(scale));
 	let hoveredTile: { r: number; c: number } | null = $state(null);
 
 	let polygons: { [key: string]: SVGElement } = $state({});
@@ -118,19 +119,23 @@
 	class={[svgClass, onclick !== undefined ? "interactive" : ""]}
 	style:width={scrolling ? Math.floor(boundingBox.width * 40) + "px" : "100%"}
 	style:--outline-color={hideOutlines ? "transparent" : "var(--foreground-color-dd)"}
+	style:stroke-width={0.03 * scale}
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 {boundingBox.width} {boundingBox.height}"
 	role="grid"
 >
 	<g style="display: none">
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
-			<polygon id={variantToId(variant)} points={verticesToPoly(vertexOffsets(variant, 0.85))} />
+			<polygon
+				id={variantToId(variant)}
+				points={verticesToPoly(vertexOffsets(variant, 0.85 * scale))}
+			/>
 		{/each}
 	</g>
 	{#each { length: tiling.height } as _, r}
 		{#each { length: tiling.width } as _, c}
 			{let variant = $derived(tiling.variantOf(r, c))}
-			{let pos = $derived(tiling.rhombusCenter(r, c))}
+			{let pos = $derived(tiling.rhombusCenter(r, c, scale))}
 			{#if variant !== null && pos !== null}
 				<use
 					bind:this={polygons[r + "," + c]}
@@ -158,19 +163,17 @@
 	polygon {
 		fill: var(--polygon-fill-color);
 		stroke: var(--polygon-stroke-color);
-		stroke-width: 0.03;
 	}
 
 	use.filled {
 		--polygon-fill-color: var(--foreground-color);
-		--polygon-stroke-color: var(--foreground-color);
 		&.hover {
 			--polygon-fill-color: var(--foreground-color-dd);
 		}
 	}
 
 	use.empty {
-		--polygon-fill-color: var(--background-color);
+		--polygon-fill-color: transparent;
 		--polygon-stroke-color: var(--outline-color);
 		&.hover {
 			--polygon-fill-color: var(--background-color-ll);

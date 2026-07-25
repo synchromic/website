@@ -1,6 +1,6 @@
 
 const S3 = Math.sqrt(3);
-const boundingTable = [0, 1.5, 2, 3]
+const boundingTable = [0.5, 1.5, 2, 3]
 
 export class PlaneTiling {
   private _width: number;
@@ -94,21 +94,22 @@ export class PlaneTiling {
   }
 
   // returns width/height of tiling if each rhombus has side length 1
-  boundingBox(): { width: number, height: number } {
+  boundingBox(scale: number = 1): { width: number, height: number } {
     const extraWidth = boundingTable[this.width % 4];
     return {
-      width: 3 * Math.floor(this.width / 4) + extraWidth,
-      height: S3 / 2 * this.height,
+      width: (3 * Math.floor(this.width / 4) + extraWidth) * scale,
+      height: S3 / 2 * this.height * scale,
     };
   }
 
   // assumes rhombi have side length 1
-  rhombusCenter(r: number, c: number): { x: number, y: number } | null {
+  rhombusCenter(r: number, c: number, scale: number = 1): { x: number, y: number } | null {
     const variant = this.variantOf(r, c);
     if (variant === null) return null;
+    const verticalOffset = (variant === TileVariant.Vertical ? S3 / 2 : S3 / 4);
     return {
-      x: 3 / 4 * (c + 1),
-      y: S3 / 2 * r + (variant === TileVariant.Vertical ? S3 / 2 : S3 / 4),
+      x: 3 / 4 * (c + 1) * scale,
+      y: (S3 / 2 * r + verticalOffset) * scale,
     };
   }
 
