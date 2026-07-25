@@ -1,216 +1,217 @@
-
 const S3 = Math.sqrt(3);
-const boundingTable = [0.5, 1.5, 2, 3]
+const boundingTable = [0.5, 1.5, 2, 3];
 
 export class PlaneTiling {
-  private _width: number;
-  private _height: number;
-  // if the user resizes, don't delete extra cells instantly
-  // wait until grid cell gets toggled first
-  needsShrink: boolean;
-  private grid: boolean[][];
+	private _width: number;
+	private _height: number;
+	// if the user resizes, don't delete extra cells instantly
+	// wait until grid cell gets toggled first
+	needsShrink: boolean;
+	private grid: boolean[][];
 
-  constructor(width: number, height: number, startCode?: string) {
-    this._width = $state(width);
-    this._height = $state(height);
-    this.needsShrink = false;
-    this.grid = $state([]);
-    for (let r = 0; r < height; r++) {
-      this.grid.push([]);
-      for (let c = 0; c < width; c++) {
-        this.grid[r].push(false);
-      }
-    }
-    if (startCode !== undefined) {
-      this.setCode(startCode);
-    }
-  }
+	constructor(width: number, height: number, startCode?: string) {
+		this._width = $state(width);
+		this._height = $state(height);
+		this.needsShrink = false;
+		this.grid = $state([]);
+		for (let r = 0; r < height; r++) {
+			this.grid.push([]);
+			for (let c = 0; c < width; c++) {
+				this.grid[r].push(false);
+			}
+		}
+		if (startCode !== undefined) {
+			this.setCode(startCode);
+		}
+	}
 
-  get width(): number {
-    return this._width;
-  }
+	get width(): number {
+		return this._width;
+	}
 
-  get height(): number {
-    return this._height;
-  }
+	get height(): number {
+		return this._height;
+	}
 
-  set width(width: number) {
-    if (this.grid[0].length > width) {
-      this.needsShrink = true;
-    } else if (this.grid[0].length < width) {
-      for (let r = 0; r < this.grid.length; r++) {
-        while (this.grid[r].length < width) {
-          this.grid[r].push(false);
-        }
-      }
-    }
-    this._width = width;
-  }
+	set width(width: number) {
+		if (this.grid[0].length > width) {
+			this.needsShrink = true;
+		} else if (this.grid[0].length < width) {
+			for (let r = 0; r < this.grid.length; r++) {
+				while (this.grid[r].length < width) {
+					this.grid[r].push(false);
+				}
+			}
+		}
+		this._width = width;
+	}
 
-  set height(height: number) {
-    if (this.grid.length > height) {
-      this.needsShrink = true;
-    } else if (this.grid.length < height) {
-      const trueWidth = this.grid[0].length;
-      for (let r = this.grid.length; r < height; r++) {
-        this.grid.push([]);
-        for (let c = 0; c < trueWidth; c++) {
-          this.grid[r].push(false);
-        }
-      }
-    }
-    this._height = height;
-  }
+	set height(height: number) {
+		if (this.grid.length > height) {
+			this.needsShrink = true;
+		} else if (this.grid.length < height) {
+			const trueWidth = this.grid[0].length;
+			for (let r = this.grid.length; r < height; r++) {
+				this.grid.push([]);
+				for (let c = 0; c < trueWidth; c++) {
+					this.grid[r].push(false);
+				}
+			}
+		}
+		this._height = height;
+	}
 
-  private shrink() {
-    if (!this.needsShrink) return;
-    // assume underlying array is always too large (never need to add elements) 
-    this.grid = this.grid.slice(0, this.height).map((row) => row.slice(0, this.width));
-  }
+	private shrink() {
+		if (!this.needsShrink) return;
+		// assume underlying array is always too large (never need to add elements)
+		this.grid = this.grid.slice(0, this.height).map((row) => row.slice(0, this.width));
+	}
 
-  get(r: number, c: number): boolean {
-    return this.grid[r][c];
-  }
+	get(r: number, c: number): boolean {
+		return this.grid[r][c];
+	}
 
-  // returns null if not a valid tile
-  variantOf(r: number, c: number): TileVariant | null {
-    if (r < 0 || r >= this.height || c < 0 || c >= this.width) return null;
-    const offset = (2 * r + c) % 4;
-    // special case: bottom of grid
-    if (offset == 1 && r == this.height - 1) return null;
-    return [TileVariant.Forward, TileVariant.Vertical, TileVariant.Backward, null][offset];
-  }
+	// returns null if not a valid tile
+	variantOf(r: number, c: number): TileVariant | null {
+		if (r < 0 || r >= this.height || c < 0 || c >= this.width) return null;
+		const offset = (2 * r + c) % 4;
+		// special case: bottom of grid
+		if (offset == 1 && r == this.height - 1) return null;
+		return [TileVariant.Forward, TileVariant.Vertical, TileVariant.Backward, null][offset];
+	}
 
-  // checks if an otherwise invalid tile is the bottom half of a valid tile
-  bottomHalf(r: number, c: number): boolean {
-    return this.variantOf(r, c) === null && this.variantOf(r - 1, c) === TileVariant.Vertical;
-  }
+	// checks if an otherwise invalid tile is the bottom half of a valid tile
+	bottomHalf(r: number, c: number): boolean {
+		return this.variantOf(r, c) === null && this.variantOf(r - 1, c) === TileVariant.Vertical;
+	}
 
-  reflected(r: number, c: number): { r: number, c: number } {
-    let refR = this.height - 1 - r;
-    let refC = this.width - 1 - c;
-    if (this.bottomHalf(refR, refC)) refR--;
-    return { r: refR, c: refC };
-  }
+	reflected(r: number, c: number): { r: number; c: number } {
+		let refR = this.height - 1 - r;
+		let refC = this.width - 1 - c;
+		if (this.bottomHalf(refR, refC)) refR--;
+		return { r: refR, c: refC };
+	}
 
-  // returns width/height of tiling if each rhombus has side length 1
-  boundingBox(scale: number = 1): { width: number, height: number } {
-    const extraWidth = boundingTable[this.width % 4];
-    return {
-      width: (3 * Math.floor(this.width / 4) + extraWidth) * scale,
-      height: S3 / 2 * this.height * scale,
-    };
-  }
+	// returns width/height of tiling if each rhombus has side length 1
+	boundingBox(scale: number = 1): { width: number; height: number } {
+		const extraWidth = boundingTable[this.width % 4];
+		return {
+			width: (3 * Math.floor(this.width / 4) + extraWidth) * scale,
+			height: (S3 / 2) * this.height * scale,
+		};
+	}
 
-  // assumes rhombi have side length 1
-  rhombusCenter(r: number, c: number, scale: number = 1): { x: number, y: number } | null {
-    const variant = this.variantOf(r, c);
-    if (variant === null) return null;
-    const verticalOffset = (variant === TileVariant.Vertical ? S3 / 2 : S3 / 4);
-    return {
-      x: 3 / 4 * (c + 1) * scale,
-      y: (S3 / 2 * r + verticalOffset) * scale,
-    };
-  }
+	// assumes rhombi have side length 1
+	rhombusCenter(r: number, c: number, scale: number = 1): { x: number; y: number } | null {
+		const variant = this.variantOf(r, c);
+		if (variant === null) return null;
+		const verticalOffset = variant === TileVariant.Vertical ? S3 / 2 : S3 / 4;
+		return {
+			x: (3 / 4) * (c + 1) * scale,
+			y: ((S3 / 2) * r + verticalOffset) * scale,
+		};
+	}
 
-  toggle(r: number, c: number) {
-    if (this.variantOf(r, c) === null) {
-      return;
-    }
-    this.shrink();
-    this.grid[r][c] = !this.grid[r][c];
-  }
+	toggle(r: number, c: number) {
+		if (this.variantOf(r, c) === null) {
+			return;
+		}
+		this.shrink();
+		this.grid[r][c] = !this.grid[r][c];
+	}
 
-  // code is a base64-encoded binary string, each byte represents 8 tile states
-  // ordered top-to-bottom left-to-right, bits are little-endian within bytes
-  setCode(code: string) {
-    const bytes = Uint8Array.fromBase64(code);
-    let r = 0, c = 0;
-    // returns false if out of indices
-    let nextIndex = () => {
-      c++;
-      if (c >= this.width) {
-        r++;
-        c = 0;
-      }
-      return r < this.height;
-    }
-    for (const byte of bytes) {
-      for (let bit = 0; bit < 8; bit++) {
-        // find next non-null cell
-        while (this.variantOf(r, c) === null) {
-          if (!nextIndex()) return;
-        }
-        this.grid[r][c] = (byte & (1 << bit)) !== 0;
-        if (!nextIndex()) return;
-      }
-    }
-    // fill in remainder with 0
-    while (nextIndex()) this.grid[r][c] = false;
-  }
+	// code is a base64-encoded binary string, each byte represents 8 tile states
+	// ordered top-to-bottom left-to-right, bits are little-endian within bytes
+	setCode(code: string) {
+		const bytes = Uint8Array.fromBase64(code);
+		let r = 0,
+			c = 0;
+		// returns false if out of indices
+		let nextIndex = () => {
+			c++;
+			if (c >= this.width) {
+				r++;
+				c = 0;
+			}
+			return r < this.height;
+		};
+		for (const byte of bytes) {
+			for (let bit = 0; bit < 8; bit++) {
+				// find next non-null cell
+				while (this.variantOf(r, c) === null) {
+					if (!nextIndex()) return;
+				}
+				this.grid[r][c] = (byte & (1 << bit)) !== 0;
+				if (!nextIndex()) return;
+			}
+		}
+		// fill in remainder with 0
+		while (nextIndex()) this.grid[r][c] = false;
+	}
 
-  getCode() {
-    let bytes = [];
-    let curByte = 0, curBit = 0;
-    for (let r = 0; r < this.height; r++) {
-      for (let c = 0; c < this.width; c++) {
-        if (this.variantOf(r, c) !== null) {
-          if (this.grid[r][c]) {
-            curByte += 1 << curBit;
-          }
-          curBit++;
-          if (curBit >= 8) {
-            bytes.push(curByte);
-            curByte = curBit = 0;
-          }
-        }
-      }
-    }
-    if (curBit > 0) bytes.push(curByte);
-    // strip trailing zeros
-    const lastNonzero = bytes.findLastIndex((b) => b > 0);
-    bytes = bytes.slice(0, lastNonzero + 1);
-    return new Uint8Array(bytes).toBase64();
-  }
+	getCode() {
+		let bytes = [];
+		let curByte = 0,
+			curBit = 0;
+		for (let r = 0; r < this.height; r++) {
+			for (let c = 0; c < this.width; c++) {
+				if (this.variantOf(r, c) !== null) {
+					if (this.grid[r][c]) {
+						curByte += 1 << curBit;
+					}
+					curBit++;
+					if (curBit >= 8) {
+						bytes.push(curByte);
+						curByte = curBit = 0;
+					}
+				}
+			}
+		}
+		if (curBit > 0) bytes.push(curByte);
+		// strip trailing zeros
+		const lastNonzero = bytes.findLastIndex((b) => b > 0);
+		bytes = bytes.slice(0, lastNonzero + 1);
+		return new Uint8Array(bytes).toBase64();
+	}
 }
 
 export enum TileVariant {
-  Forward, // shaped like //
-  Backward, // shaped like \\
-  Vertical, // the other one
+	Forward, // shaped like //
+	Backward, // shaped like \\
+	Vertical, // the other one
 }
 
-function offsetsFromCenter(variant: TileVariant): { x: number, y: number }[] {
-  switch (variant) {
-    case TileVariant.Forward:
-      return [
-        { x: -1 / 4, y: -S3 / 4 },
-        { x: 3 / 4, y: -S3 / 4 },
-        { x: 1 / 4, y: S3 / 4 },
-        { x: -3 / 4, y: S3 / 4 },
-      ];
-    case TileVariant.Backward:
-      return [
-        { x: -3 / 4, y: -S3 / 4 },
-        { x: 1 / 4, y: -S3 / 4 },
-        { x: 3 / 4, y: S3 / 4 },
-        { x: -1 / 4, y: S3 / 4 },
-      ];
-    case TileVariant.Vertical:
-      return [
-        { x: 0, y: -S3 / 2 },
-        { x: 1 / 2, y: 0 },
-        { x: 0, y: S3 / 2 },
-        { x: -1 / 2, y: 0 },
-      ];
-  }
+function offsetsFromCenter(variant: TileVariant): { x: number; y: number }[] {
+	switch (variant) {
+		case TileVariant.Forward:
+			return [
+				{ x: -1 / 4, y: -S3 / 4 },
+				{ x: 3 / 4, y: -S3 / 4 },
+				{ x: 1 / 4, y: S3 / 4 },
+				{ x: -3 / 4, y: S3 / 4 },
+			];
+		case TileVariant.Backward:
+			return [
+				{ x: -3 / 4, y: -S3 / 4 },
+				{ x: 1 / 4, y: -S3 / 4 },
+				{ x: 3 / 4, y: S3 / 4 },
+				{ x: -1 / 4, y: S3 / 4 },
+			];
+		case TileVariant.Vertical:
+			return [
+				{ x: 0, y: -S3 / 2 },
+				{ x: 1 / 2, y: 0 },
+				{ x: 0, y: S3 / 2 },
+				{ x: -1 / 2, y: 0 },
+			];
+	}
 }
 
-export function vertexOffsets(variant: TileVariant, size: number = 1): { x: number, y: number }[] {
-  return offsetsFromCenter(variant).map(({ x, y }) => {
-    return {
-      x: x * size,
-      y: y * size,
-    };
-  });
+export function vertexOffsets(variant: TileVariant, size: number = 1): { x: number; y: number }[] {
+	return offsetsFromCenter(variant).map(({ x, y }) => {
+		return {
+			x: x * size,
+			y: y * size,
+		};
+	});
 }

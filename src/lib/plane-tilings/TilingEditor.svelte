@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from "svelte";
 	import { PlaneTiling } from "./tiling.svelte";
 	import TilingDisplay from "./TilingDisplay.svelte";
 

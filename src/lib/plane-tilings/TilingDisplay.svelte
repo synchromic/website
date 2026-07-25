@@ -3,14 +3,12 @@
 
 	let {
 		tiling,
-		svgClass,
 		onclick,
 		reflecting,
 		hideOutlines,
 		scrolling,
 	}: {
 		tiling: PlaneTiling;
-		svgClass?: string;
 		onclick?: (r: number, c: number) => void;
 		reflecting?: boolean;
 		hideOutlines?: boolean;
@@ -116,7 +114,7 @@
 </script>
 
 <svg
-	class={[svgClass, onclick !== undefined ? "interactive" : ""]}
+	class={[onclick !== undefined ? "interactive" : ""]}
 	style:width={scrolling ? Math.floor(boundingBox.width * 40) + "px" : "100%"}
 	style:--outline-color={hideOutlines ? "transparent" : "var(--foreground-color-dd)"}
 	style:stroke-width={0.03 * scale}
