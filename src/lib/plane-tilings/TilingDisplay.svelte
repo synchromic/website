@@ -20,6 +20,8 @@
 	const boundingBox = $derived(tiling.boundingBox());
 	let hoveredTile: { r: number; c: number } | null = $state(null);
 
+	let polygons: { [key: string]: SVGElement } = $state({});
+
 	function verticesToPoly(vertices: { x: number; y: number }[]): string {
 		const out = [];
 		for (const vertex of vertices) {
@@ -60,6 +62,56 @@
 		}
 		return false;
 	}
+
+	let bottomHalfFocus = false;
+
+	function handleInput(event: KeyboardEvent, r: number, c: number) {
+		if (event.key === "Enter") {
+			if (onclick !== undefined) onclick(r, c);
+			return;
+		}
+		const variant = tiling.variantOf(r, c);
+		if (variant === null) return;
+		let nr = r,
+			nc = c;
+		switch (event.key) {
+			case "ArrowUp":
+				nr = variant === TileVariant.Vertical ? r - 2 : r - 1;
+				break;
+			case "ArrowDown":
+				nr = variant === TileVariant.Vertical ? r + 2 : r + 1;
+				break;
+			case "ArrowLeft":
+				// skip past empty spots on top/bottom rows
+				if (tiling.variantOf(r, c - 1) === null && tiling.variantOf(r - 1, c - 1) === null) {
+					nc = c - 2;
+				} else {
+					nc = c - 1;
+					if (variant === TileVariant.Vertical && bottomHalfFocus) nr = r + 1;
+				}
+				break;
+			case "ArrowRight":
+				// skip past empty spots on top/bottom rows
+				if (tiling.variantOf(r, c + 1) === null && tiling.variantOf(r - 1, c + 1) === null) {
+					nc = c + 2;
+				} else {
+					nc = c + 1;
+					if (variant === TileVariant.Vertical && bottomHalfFocus) nr = r + 1;
+				}
+				break;
+			default:
+				return;
+		}
+		if (tiling.bottomHalf(nr, nc)) {
+			bottomHalfFocus = true;
+			nr--;
+		} else {
+			bottomHalfFocus = false;
+		}
+		if (tiling.variantOf(nr, nc) === null) return;
+		event.preventDefault();
+		polygons[nr + "," + nc].focus();
+	}
 </script>
 
 <svg
@@ -80,23 +132,17 @@
 			{let variant = $derived(tiling.variantOf(r, c))}
 			{let pos = $derived(tiling.rhombusCenter(r, c))}
 			{#if variant !== null && pos !== null}
-				<!-- TODO: accessibility 
-             https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/grid_role#keyboard_interactions 
-        -->
 				<use
+					bind:this={polygons[r + "," + c]}
 					onclick={() => {
 						if (onclick !== undefined) onclick(r, c);
 					}}
-					onkeydown={(event) => {
-						if (onclick !== undefined && event.key === "Enter") {
-							onclick(r, c);
-						}
-					}}
+					onkeydown={(event) => handleInput(event, r, c)}
 					onmouseover={() => startHover(r, c)}
 					onfocus={() => startHover(r, c)}
 					onmouseout={() => endHover(r, c)}
 					onblur={() => endHover(r, c)}
-					tabindex="0"
+					tabindex={r === 0 && c === 0 ? 0 : -1}
 					role="gridcell"
 					class={[tiling.get(r, c) ? "filled" : "empty", shouldShowHover(r, c) ? "hover" : ""]}
 					href="#{variantToId(variant)}"

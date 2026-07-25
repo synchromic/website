@@ -74,6 +74,7 @@ export class PlaneTiling {
 
   // returns null if not a valid tile
   variantOf(r: number, c: number): TileVariant | null {
+    if (r < 0 || r >= this.height || c < 0 || c >= this.width) return null;
     const offset = (2 * r + c) % 4;
     // special case: bottom of grid
     if (offset == 1 && r == this.height - 1) return null;
