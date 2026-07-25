@@ -9,6 +9,8 @@
 	let reflecting = $state(false);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
+	let randomizeP = $state(0.5);
+	let tileCounts = $derived(tiling.countTiles());
 
 	let code = $derived(tiling.getCode());
 	let codeError = $state(false);
@@ -62,6 +64,11 @@
 	</div>
 	<div class="right">
 		<h2>Tiling Editor</h2>
+		<noscript>
+			<p style="color: red">
+				Javascript is disabled, so the editor won't work, but you can still look at it!
+			</p>
+		</noscript>
 		<p>
 			<button onclick={() => tiling.setAll(false)}>Clear</button>
 			<button onclick={() => tiling.setAll(true)}>Fill</button>
@@ -72,6 +79,18 @@
 					tiling.setCode(defaultCode);
 				}}>Default</button
 			>
+		</p>
+		<p>
+			<button onclick={() => tiling.randomize(randomizeP, reflecting)}>Randomize</button>
+			<input
+				id="randomizePInput"
+				type="range"
+				bind:value={randomizeP}
+				min={0}
+				max={1}
+				step={0.01}
+			/>
+			<label for="randomizePInput">p: {randomizeP}</label>
 		</p>
 		<p>
 			<label for="widthInput">Width:</label>
@@ -121,11 +140,9 @@
 				autocomplete="off"
 			/>
 		</p>
-		<noscript>
-			<p style="color: red">
-				Javascript is disabled, so the editor won't work, but you can still look at it!
-			</p>
-		</noscript>
+		<h3>Stats</h3>
+		<p>Filled: {tileCounts.filled} ({Math.round((tileCounts.filled / tileCounts.total) * 100)}%)</p>
+		<p>Empty: {tileCounts.empty} ({Math.round((tileCounts.empty / tileCounts.total) * 100)}%)</p>
 	</div>
 </div>
 

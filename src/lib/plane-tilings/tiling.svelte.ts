@@ -182,6 +182,38 @@ export class PlaneTiling {
 			}
 		}
 	}
+
+	randomize(p: number, symmetric: boolean = false) {
+		this.shrink();
+		const rowLimit = symmetric ? Math.ceil((this.height + 1) / 2) : this.height;
+		for (let r = 0; r < rowLimit; r++) {
+			for (let c = 0; c < this.width; c++) {
+				if (this.variantOf(r, c) === null) continue;
+				this.grid[r][c] = Math.random() < p;
+				if (symmetric) {
+					const { r: refR, c: refC } = this.reflected(r, c);
+					this.grid[refR][refC] = this.grid[r][c];
+				}
+			}
+		}
+	}
+
+	countTiles() {
+		let count = 0;
+		let total = 0;
+		for (let r = 0; r < this.height; r++) {
+			for (let c = 0; c < this.width; c++) {
+				if (this.variantOf(r, c) === null) continue;
+				total++;
+				if (this.grid[r][c]) count++;
+			}
+		}
+		return {
+			filled: count,
+			empty: total - count,
+			total,
+		};
+	}
 }
 
 export enum TileVariant {
