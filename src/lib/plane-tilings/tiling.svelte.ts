@@ -176,33 +176,20 @@ export class PlaneTiling {
 	// ordered top-to-bottom left-to-right, bits are little-endian within bytes
 	setCode(code: string) {
 		const bytes = Uint8Array.fromBase64(code);
-		let r = 0,
-			c = 0;
-		// returns false if out of indices
-		let nextIndex = () => {
-			c++;
-			if (c >= this.columns) {
-				r++;
-				c = 0;
-			}
-			return r < this.rows;
-		};
-		for (const byte of bytes) {
-			for (let bit = 0; bit < 8; bit++) {
-				// find next non-null cell
-				let tile = this.tile(r, c, false);
-				while (tile === null) {
-					if (!nextIndex()) return;
-					tile = this.tile(r, c, false);
+		let curByte = 0, curBit = 0;
+		this.setAll(false);
+		for (let r = 0; r < this.rows; r++) {
+			for (let c = 0; c < this.columns; c++) {
+				const tile = this.tile(r, c, false);
+				if (tile === null) continue;
+				if (curBit >= 8) {
+					curBit = 0;
+					curByte++;
 				}
-				this.grid.set(tile, (byte & (1 << bit)) !== 0);
-				if (!nextIndex()) return;
+				if (curByte >= bytes.length) return;
+				this.grid.set(tile, (bytes[curByte] & (1 << curBit)) !== 0);
+				curBit++;
 			}
-		}
-		// fill in remainder with 0
-		while (nextIndex()) {
-			const tile = this.tile(r, c, false);
-			if (tile !== null) this.grid.set(tile, false);
 		}
 	}
 
