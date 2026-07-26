@@ -4,16 +4,22 @@
 	let {
 		tiling,
 		onclick,
-		onhoverstart: onhoverstart,
-		onhoverend: onhoverend,
+		onkeydown,
+		onhoverstart,
+		onhoverend,
+		onfocus,
+		onblur,
 		tileHighlighted,
 		hideOutlines,
 		scrolling,
 	}: {
 		tiling: PlaneTiling;
 		onclick?: (tile: Tile) => void;
+		onkeydown?: (tile: Tile, event: KeyboardEvent) => void;
 		onhoverstart?: (tile: Tile) => void;
 		onhoverend?: () => void;
+		onfocus?: (tile: Tile) => void;
+		onblur?: () => void;
 		tileHighlighted?: (tile: Tile) => boolean;
 		hideOutlines?: boolean;
 		scrolling?: boolean;
@@ -23,6 +29,12 @@
 	const boundingBox = $derived(tiling.boundingBox(scale));
 
 	let polygons: { [key: string]: SVGElement } = $state({});
+
+	export function getPolygon(tile: Tile): SVGElement {
+		const polygon = polygons[tile.r + "," + tile.c];
+		if (polygon === undefined) throw new Error(`Polygon not found: ${tile.r},${tile.c}`);
+		return polygon;
+	}
 
 	function verticesToPoly(vertices: { x: number; y: number }[]): string {
 		const out = [];
@@ -55,49 +67,6 @@
 			fn(tile, event);
 		}
 	}
-
-	// TODO: move focus control stuff to the editor
-	let focusedCell: { r: number; c: number } | null = $state(null);
-
-	function onfocus(tile: Tile) {
-		focusedCell = { r: tile.r, c: tile.c };
-		onhoverstart?.(tile);
-	}
-
-	function onblur() {
-		focusedCell = null;
-		onhoverend?.();
-	}
-
-	function shouldSkip(r: number, c: number) {
-		return tiling.tile(r, c, true) === null;
-	}
-
-	function handleInput(tile: Tile, event: KeyboardEvent) {
-		if (event.key === "Enter") {
-			onclick?.(tile);
-			return;
-		}
-		if (!event.key.startsWith("Arrow")) return;
-		// use focused row/column for source of truth here
-		if (focusedCell === null) return;
-		const r = focusedCell.r;
-		const c = focusedCell.c;
-		let [dr, dc] = {
-			ArrowUp: [-1, 0],
-			ArrowDown: [1, 0],
-			ArrowLeft: [0, -1],
-			ArrowRight: [0, 1],
-		}[event.key]!;
-		if (shouldSkip(r + dr, c + dc)) dc *= 2;
-		if (tiling.tile(r, c, true)?.variant() === TileVariant.Vertical) dr *= 2;
-		const newTile = tiling.tile(r + dr, c + dc, true);
-		if (newTile === null) return; // out of bounds or something
-		event.preventDefault();
-		polygons[newTile.r + "," + newTile.c].focus();
-		// focusedCell must be set after polygon focus else it gets overridden
-		focusedCell = { r: r + dr, c: c + dc };
-	}
 </script>
 
 <svg
@@ -110,7 +79,7 @@
 	role="grid"
 	tabindex="-1"
 	onclick={(e) => attachData(e, onclick)}
-	onkeydown={(e) => attachData(e, handleInput)}
+	onkeydown={(e) => attachData(e, onkeydown)}
 	onmouseover={(e) => attachData(e, onhoverstart)}
 	onmouseout={(e) => attachData(e, onhoverend)}
 	// aria tells us we need an onfocus/onblur

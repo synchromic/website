@@ -6,6 +6,8 @@
 		"Xa2cN0T1219L6v9afirsmy8vVftoenV9fH31UfGuO0f3xllx3nnXejtu21was+Wr74nx+/hvxM333VDVVp12";
 	const sizeLimit = { columns: 40, rows: 80 };
 	let tiling = new PlaneTiling(15, 44, defaultCode);
+	let display: TilingDisplay;
+
 	let symmetric = $state(false);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
@@ -51,7 +53,7 @@
 		tiling.toggle(tile);
 		if (symmetric) {
 			const newTile = tiling.symmetricTile(tile);
-			if (newTile.r !== tile.r || newTile.c !== tile.c) {
+			if (!tile.equalTo(newTile)) {
 				tiling.toggle(newTile);
 			}
 		}
@@ -69,22 +71,69 @@
 
 	function tileHighlighted(tile: Tile) {
 		if (hoveredTile === null) return false;
-		if (hoveredTile.r === tile.r && hoveredTile.c === tile.c) {
+		if (hoveredTile.equalTo(tile)) {
 			return true;
 		}
 		if (symmetric) {
 			const newTile = tiling.symmetricTile(hoveredTile);
-			if (tile.r === newTile.r && tile.c === newTile.c) return true;
+			if (tile.equalTo(newTile)) return true;
 		}
 		return false;
+	}
+
+	let focusedCell: { r: number; c: number } | null = $state(null);
+
+	function onfocus(tile: Tile) {
+		focusedCell = { r: tile.r, c: tile.c };
+		onhoverstart?.(tile);
+	}
+
+	function onblur() {
+		focusedCell = null;
+		onhoverend?.();
+	}
+
+	function onkeydown(tile: Tile, event: KeyboardEvent) {
+		if (event.key === "Enter") {
+			onclick?.(tile);
+			return;
+		}
+		if (!event.key.startsWith("Arrow")) return;
+		// use focused row/column for source of truth here
+		if (focusedCell === null) return;
+		event.preventDefault(); // cancel event to prevent scrolling when hitting top/bottom
+		const r = focusedCell.r;
+		const c = focusedCell.c;
+		let [dr, dc] = {
+			ArrowUp: [-1, 0],
+			ArrowDown: [1, 0],
+			ArrowLeft: [0, -1],
+			ArrowRight: [0, 1],
+		}[event.key]!;
+		if (tiling.tile(r + dr, c + dc, true) === null) dc *= 2;
+		if (
+			tiling.tile(r, c, true)?.equalTo(tiling.tile(r + dr, c + dc, true)) &&
+			tiling.tile(r + 2 * dr, c + dc, true) !== null // if at top/bottom, snaps to wall
+		) {
+			dr *= 2;
+		}
+		const newTile = tiling.tile(r + dr, c + dc, true);
+		if (newTile === null) return; // out of bounds or something
+		display.getPolygon(newTile).focus();
+		// focusedCell must be set after polygon focus else it gets overridden
+		focusedCell = { r: r + dr, c: c + dc };
 	}
 </script>
 
 <div class={{ container: true, scrolling }}>
 	<div class={{ left: true, scrolling }}>
 		<TilingDisplay
+			bind:this={display}
 			{tiling}
 			{onclick}
+			{onfocus}
+			{onblur}
+			{onkeydown}
 			{hideOutlines}
 			{scrolling}
 			{onhoverstart}

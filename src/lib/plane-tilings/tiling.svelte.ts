@@ -13,19 +13,18 @@ export class Tile {
 		this.c = c;
 	}
 
+	equalTo(other: any) {
+		return other instanceof Tile && this.r === other.r && this.c === other.c;
+	}
+
 	variant(): TileVariant {
 		const offset = (2 * this.r + this.c) % 4;
-		const variant = [
-			TileVariant.Forward,
-			TileVariant.Vertical,
-			TileVariant.Backward,
-			null
-		][offset];
+		const variant = [TileVariant.Forward, TileVariant.Vertical, TileVariant.Backward, null][offset];
 		if (variant === null) throw new Error(`Invalid tile: ${this.r}, ${this.c}`);
 		return variant;
 	}
 
-	centerPos(scale: number = 1): { x: number, y: number } {
+	centerPos(scale: number = 1): { x: number; y: number } {
 		const variant = this.variant();
 		const verticalOffset = variant === TileVariant.Vertical ? S3 / 2 : S3 / 4;
 		return {
@@ -146,7 +145,6 @@ export class PlaneTiling {
 	}
 
 	// checks if a tile is the bottom half of a valid tile
-	// kinda 
 	bottomHalf(r: number, c: number): boolean {
 		if (r <= 0 || r >= this.rows || c < 0 || c >= this.columns) return false;
 		return (2 * r + c) % 4 === 3;
