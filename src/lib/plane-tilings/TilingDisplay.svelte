@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TileVariant, vertexOffsets, type PlaneTiling } from "./tiling.svelte";
+	import { Tile, TileVariant, vertexOffsets, type PlaneTiling } from "./tiling.svelte";
 
 	let {
 		tiling,
@@ -11,10 +11,10 @@
 		scrolling,
 	}: {
 		tiling: PlaneTiling;
-		onclick?: (r: number, c: number) => void;
-		onhoverstart?: (r: number, c: number) => void;
+		onclick?: (tile: Tile) => void;
+		onhoverstart?: (tile: Tile) => void;
 		onhoverend?: () => void;
-		tileHighlighted?: (r: number, c: number) => boolean;
+		tileHighlighted?: (tile: Tile) => boolean;
 		hideOutlines?: boolean;
 		scrolling?: boolean;
 	} = $props();
@@ -44,22 +44,24 @@
 	}
 
 	// lets us use fewer event listeners by grabbing row/column from event target dataset
-	function attachData<E extends Event>(event: E, fn?: (r: number, c: number, event: E) => any) {
+	function attachData<E extends Event>(event: E, fn?: (tile: Tile, event: E) => any) {
 		if (fn === undefined || !event.target) return;
 		if (event.target instanceof SVGUseElement) {
 			const r = event.target.dataset["r"];
 			const c = event.target.dataset["c"];
 			if (r === undefined || c === undefined) return;
-			fn(parseInt(r), parseInt(c), event);
+			const tile = tiling.tile(parseInt(r), parseInt(c), false);
+			if (tile === null) throw new Error(`Event tile ${r},${c} not in tiling`);
+			fn(tile, event);
 		}
 	}
 
 	// TODO: move focus control stuff to the editor
 	let focusedCell: { r: number; c: number } | null = $state(null);
 
-	function onfocus(r: number, c: number) {
-		focusedCell = { r, c };
-		onhoverstart?.(r, c);
+	function onfocus(tile: Tile) {
+		focusedCell = { r: tile.r, c: tile.c };
+		onhoverstart?.(tile);
 	}
 
 	function onblur() {
@@ -68,19 +70,19 @@
 	}
 
 	function shouldSkip(r: number, c: number) {
-		return tiling.variantOf(r, c) === null && tiling.variantOf(r - 1, c) === null;
+		return tiling.tile(r, c, true) === null;
 	}
 
-	function handleInput(r: number, c: number, event: KeyboardEvent) {
+	function handleInput(tile: Tile, event: KeyboardEvent) {
 		if (event.key === "Enter") {
-			onclick?.(r, c);
+			onclick?.(tile);
 			return;
 		}
 		if (!event.key.startsWith("Arrow")) return;
 		// use focused row/column for source of truth here
 		if (focusedCell === null) return;
-		r = focusedCell.r;
-		c = focusedCell.c;
+		const r = focusedCell.r;
+		const c = focusedCell.c;
 		let [dr, dc] = {
 			ArrowUp: [-1, 0],
 			ArrowDown: [1, 0],
@@ -88,12 +90,11 @@
 			ArrowRight: [0, 1],
 		}[event.key]!;
 		if (shouldSkip(r + dr, c + dc)) dc *= 2;
-		if (tiling.variantOf(r, c, true) === TileVariant.Vertical) dr *= 2;
-		let tr = tiling.bottomHalf(r + dr, c + dc) ? r + dr - 1 : r + dr;
-		let tc = c + dc;
-		if (tiling.variantOf(tr, tc) === null) return; // out of bounds or something
+		if (tiling.tile(r, c, true)?.variant() === TileVariant.Vertical) dr *= 2;
+		const newTile = tiling.tile(r + dr, c + dc, true);
+		if (newTile === null) return; // out of bounds or something
 		event.preventDefault();
-		polygons[tr + "," + tc].focus();
+		polygons[newTile.r + "," + newTile.c].focus();
 		// focusedCell must be set after polygon focus else it gets overridden
 		focusedCell = { r: r + dr, c: c + dc };
 	}
@@ -129,16 +130,20 @@
 	</g>
 	{#each { length: tiling.rows } as _, r}
 		{#each { length: tiling.columns } as _, c}
-			{let variant = $derived(tiling.variantOf(r, c))}
-			{let pos = $derived(tiling.rhombusCenter(r, c, scale))}
-			{#if variant !== null && pos !== null}
+			{let tile = $derived(tiling.tile(r, c, false))}
+			{#if tile !== null}
+				{let variant = $derived(tile.variant())}
+				{let pos = $derived(tile.centerPos(scale))}
 				<use
 					data-r={r}
 					data-c={c}
 					bind:this={polygons[r + "," + c]}
 					tabindex={r === 0 && c === 0 ? 0 : -1}
 					role="gridcell"
-					class={[tiling.get(r, c) ? "filled" : "empty", tileHighlighted?.(r, c) ? "hover" : ""]}
+					class={[
+						tiling.grid.get(tile) ? "filled" : "empty",
+						tileHighlighted?.(tile) ? "hover" : "",
+					]}
 					href="#{variantToId(variant)}"
 					x={pos.x}
 					y={pos.y}

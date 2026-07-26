@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PlaneTiling } from "./tiling.svelte";
+	import { PlaneTiling, Tile } from "./tiling.svelte";
 	import TilingDisplay from "./TilingDisplay.svelte";
 
 	const defaultCode =
@@ -47,34 +47,34 @@
 		tiling.rows = rowsInput;
 	}
 
-	function onclick(r: number, c: number) {
-		tiling.toggle(r, c);
+	function onclick(tile: Tile) {
+		tiling.toggle(tile);
 		if (symmetric) {
-			const { r: refR, c: refC } = tiling.symmetricTile(r, c);
-			if (refR !== r || refC !== c) {
-				tiling.toggle(refR, refC);
+			const newTile = tiling.symmetricTile(tile);
+			if (newTile.r !== tile.r || newTile.c !== tile.c) {
+				tiling.toggle(newTile);
 			}
 		}
 	}
 
-	let hoveredTile: { r: number; c: number } | null = $state(null);
+	let hoveredTile: Tile | null = $state(null);
 
-	function onhoverstart(r: number, c: number) {
-		hoveredTile = { r, c };
+	function onhoverstart(tile: Tile) {
+		hoveredTile = tile;
 	}
 
 	function onhoverend() {
 		hoveredTile = null;
 	}
 
-	function tileHighlighted(r: number, c: number) {
+	function tileHighlighted(tile: Tile) {
 		if (hoveredTile === null) return false;
-		if (hoveredTile.r === r && hoveredTile.c === c) {
+		if (hoveredTile.r === tile.r && hoveredTile.c === tile.c) {
 			return true;
 		}
 		if (symmetric) {
-			const { r: refR, c: refC } = tiling.symmetricTile(hoveredTile.r, hoveredTile.c);
-			if (r === refR && c === refC) return true;
+			const newTile = tiling.symmetricTile(hoveredTile);
+			if (tile.r === newTile.r && tile.c === newTile.c) return true;
 		}
 		return false;
 	}

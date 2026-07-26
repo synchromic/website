@@ -1,18 +1,48 @@
 const S3 = Math.sqrt(3);
 const boundingTable = [0.5, 1.5, 2, 3];
 
-export class PlaneTiling {
-	private _columns: number;
-	private _rows: number;
+// always represents a VALID tile
+// tiles for one PlaneTiling may be invalid for another! idk how to make that typesafe tho
+// TODO: figure that out lol
+export class Tile {
+	r: number;
+	c: number;
+
+	constructor(r: number, c: number) {
+		this.r = r;
+		this.c = c;
+	}
+
+	variant(): TileVariant {
+		const offset = (2 * this.r + this.c) % 4;
+		const variant = [
+			TileVariant.Forward,
+			TileVariant.Vertical,
+			TileVariant.Backward,
+			null
+		][offset];
+		if (variant === null) throw new Error(`Invalid tile: ${this.r}, ${this.c}`);
+		return variant;
+	}
+
+	centerPos(scale: number = 1): { x: number, y: number } {
+		const variant = this.variant();
+		const verticalOffset = variant === TileVariant.Vertical ? S3 / 2 : S3 / 4;
+		return {
+			x: (3 / 4) * (this.c + 1) * scale,
+			y: ((S3 / 2) * this.r + verticalOffset) * scale,
+		};
+	}
+}
+
+class TilingGrid {
 	// if the user resizes, don't delete extra cells instantly
 	// wait until grid cell gets toggled first
-	needsShrink: boolean;
+	shrinkRows: number | null = null;
+	shrinkColumns: number | null = null;
 	private grid: boolean[][];
 
-	constructor(columns: number, rows: number, startCode?: string) {
-		this._columns = $state(columns);
-		this._rows = $state(rows);
-		this.needsShrink = false;
+	constructor(columns: number, rows: number) {
 		this.grid = $state([]);
 		for (let r = 0; r < rows; r++) {
 			this.grid.push([]);
@@ -20,6 +50,67 @@ export class PlaneTiling {
 				this.grid[r].push(false);
 			}
 		}
+	}
+
+	setColumns(columns: number) {
+		if (this.grid[0].length > columns) {
+			this.shrinkColumns = columns;
+		} else if (this.grid[0].length < columns) {
+			this.shrinkColumns = null;
+			for (let r = 0; r < this.grid.length; r++) {
+				while (this.grid[r].length < columns) {
+					this.grid[r].push(false);
+				}
+			}
+		}
+	}
+
+	setRows(rows: number) {
+		if (this.grid.length > rows) {
+			this.shrinkRows = rows;
+		} else if (this.grid.length < rows) {
+			this.shrinkRows = null;
+			const trueColumns = this.grid[0].length;
+			for (let r = this.grid.length; r < rows; r++) {
+				this.grid.push([]);
+				for (let c = 0; c < trueColumns; c++) {
+					this.grid[r].push(false);
+				}
+			}
+		}
+	}
+
+	private shrink() {
+		if (this.shrinkRows !== null) {
+			this.grid = this.grid.slice(0, this.shrinkRows);
+			this.shrinkRows = null;
+		}
+		if (this.shrinkColumns !== null) {
+			const cols = this.shrinkColumns; // typescript won't let me use shrinkColumns directly?
+			this.grid = this.grid.map((row) => row.slice(0, cols));
+			this.shrinkColumns = null;
+		}
+	}
+
+	get(tile: Tile): boolean {
+		return this.grid[tile.r][tile.c];
+	}
+
+	set(tile: Tile, filled: boolean) {
+		this.shrink();
+		this.grid[tile.r][tile.c] = filled;
+	}
+}
+
+export class PlaneTiling {
+	private _columns: number;
+	private _rows: number;
+	grid: TilingGrid;
+
+	constructor(columns: number, rows: number, startCode?: string) {
+		this._columns = $state(columns);
+		this._rows = $state(rows);
+		this.grid = new TilingGrid(columns, rows);
 		if (startCode !== undefined) {
 			this.setCode(startCode);
 		}
@@ -34,68 +125,40 @@ export class PlaneTiling {
 	}
 
 	set columns(columns: number) {
-		if (this.grid[0].length > columns) {
-			this.needsShrink = true;
-		} else if (this.grid[0].length < columns) {
-			for (let r = 0; r < this.grid.length; r++) {
-				while (this.grid[r].length < columns) {
-					this.grid[r].push(false);
-				}
-			}
-		}
+		this.grid.setColumns(columns);
 		this._columns = columns;
 	}
 
 	set rows(rows: number) {
-		if (this.grid.length > rows) {
-			this.needsShrink = true;
-		} else if (this.grid.length < rows) {
-			const trueColumns = this.grid[0].length;
-			for (let r = this.grid.length; r < rows; r++) {
-				this.grid.push([]);
-				for (let c = 0; c < trueColumns; c++) {
-					this.grid[r].push(false);
-				}
-			}
-		}
+		this.grid.setRows(rows);
 		this._rows = rows;
 	}
 
-	private shrink() {
-		if (!this.needsShrink) return;
-		// assume underlying array is always too large (never need to add elements)
-		this.grid = this.grid.slice(0, this.rows).map((row) => row.slice(0, this.columns));
-	}
-
-	get(r: number, c: number): boolean {
-		return this.grid[r][c];
-	}
-
-	// returns null if not a valid tile
-	variantOf(r: number, c: number, fix: boolean = false): TileVariant | null {
+	// if fix is true, returns the top half if (r, c) is a bottom half of vertical rhombus
+	tile(r: number, c: number, fix: boolean): Tile | null {
 		if (r < 0 || r >= this.rows || c < 0 || c >= this.columns) return null;
 		const offset = (2 * r + c) % 4;
 		// special cases: bottom/top of grid
 		if (r === 0 && offset === 3) return null;
 		if (r === this.rows - 1 && offset === 1) return null;
-		return [
-			TileVariant.Forward,
-			TileVariant.Vertical,
-			TileVariant.Backward,
-			fix ? TileVariant.Vertical : null,
-		][offset];
+		if (offset === 3) return fix ? new Tile(r - 1, c) : null;
+		return new Tile(r, c);
 	}
 
-	// checks if an otherwise invalid tile is the bottom half of a valid tile
+	// checks if a tile is the bottom half of a valid tile
+	// kinda 
 	bottomHalf(r: number, c: number): boolean {
-		return this.variantOf(r, c) === null && this.variantOf(r - 1, c) === TileVariant.Vertical;
+		if (r <= 0 || r >= this.rows || c < 0 || c >= this.columns) return false;
+		return (2 * r + c) % 4 === 3;
 	}
 
-	symmetricTile(r: number, c: number): { r: number; c: number } {
-		let refR = this.rows - 1 - r;
-		let refC = this.columns - 1 - c;
-		if (this.bottomHalf(refR, refC)) refR--;
-		return { r: refR, c: refC };
+	// TODO: figure out wtf to do if grid isn't symmetric :p
+	symmetricTile(tile: Tile): Tile {
+		const newR = this.rows - 1 - tile.r;
+		const newC = this.columns - 1 - tile.c;
+		const newTile = this.tile(newR, newC, true);
+		if (newTile === null) throw new Error("screwed up finding symmetric tile");
+		return newTile;
 	}
 
 	// returns width/height of tiling if each rhombus has side length 1
@@ -107,23 +170,8 @@ export class PlaneTiling {
 		};
 	}
 
-	// assumes rhombi have side length 1
-	rhombusCenter(r: number, c: number, scale: number = 1): { x: number; y: number } | null {
-		const variant = this.variantOf(r, c);
-		if (variant === null) return null;
-		const verticalOffset = variant === TileVariant.Vertical ? S3 / 2 : S3 / 4;
-		return {
-			x: (3 / 4) * (c + 1) * scale,
-			y: ((S3 / 2) * r + verticalOffset) * scale,
-		};
-	}
-
-	toggle(r: number, c: number) {
-		if (this.variantOf(r, c) === null) {
-			return;
-		}
-		this.shrink();
-		this.grid[r][c] = !this.grid[r][c];
+	toggle(tile: Tile) {
+		this.grid.set(tile, !this.grid.get(tile));
 	}
 
 	// code is a base64-encoded binary string, each byte represents 8 tile states
@@ -144,15 +192,20 @@ export class PlaneTiling {
 		for (const byte of bytes) {
 			for (let bit = 0; bit < 8; bit++) {
 				// find next non-null cell
-				while (this.variantOf(r, c) === null) {
+				let tile = this.tile(r, c, false);
+				while (tile === null) {
 					if (!nextIndex()) return;
+					tile = this.tile(r, c, false);
 				}
-				this.grid[r][c] = (byte & (1 << bit)) !== 0;
+				this.grid.set(tile, (byte & (1 << bit)) !== 0);
 				if (!nextIndex()) return;
 			}
 		}
 		// fill in remainder with 0
-		while (nextIndex()) this.grid[r][c] = false;
+		while (nextIndex()) {
+			const tile = this.tile(r, c, false);
+			if (tile !== null) this.grid.set(tile, false);
+		}
 	}
 
 	getCode() {
@@ -161,15 +214,15 @@ export class PlaneTiling {
 			curBit = 0;
 		for (let r = 0; r < this.rows; r++) {
 			for (let c = 0; c < this.columns; c++) {
-				if (this.variantOf(r, c) !== null) {
-					if (this.grid[r][c]) {
-						curByte += 1 << curBit;
-					}
-					curBit++;
-					if (curBit >= 8) {
-						bytes.push(curByte);
-						curByte = curBit = 0;
-					}
+				const tile = this.tile(r, c, false);
+				if (tile === null) continue;
+				if (this.grid.get(tile)) {
+					curByte += 1 << curBit;
+				}
+				curBit++;
+				if (curBit >= 8) {
+					bytes.push(curByte);
+					curByte = curBit = 0;
 				}
 			}
 		}
@@ -181,24 +234,23 @@ export class PlaneTiling {
 	}
 
 	setAll(value: boolean) {
-		this.shrink();
-		for (let r = 0; r < this.grid.length; r++) {
-			for (let c = 0; c < this.grid[r].length; c++) {
-				this.grid[r][c] = value;
+		for (let r = 0; r < this.rows; r++) {
+			for (let c = 0; c < this.columns; c++) {
+				const tile = this.tile(r, c, false);
+				if (tile !== null) this.grid.set(tile, value);
 			}
 		}
 	}
 
 	randomize(p: number, symmetric: boolean = false) {
-		this.shrink();
 		const rowLimit = symmetric ? Math.ceil((this.rows + 1) / 2) : this.rows;
 		for (let r = 0; r < rowLimit; r++) {
 			for (let c = 0; c < this.columns; c++) {
-				if (this.variantOf(r, c) === null) continue;
-				this.grid[r][c] = Math.random() < p;
+				const tile = this.tile(r, c, false);
+				if (tile === null) continue;
+				this.grid.set(tile, Math.random() < p);
 				if (symmetric) {
-					const { r: refR, c: refC } = this.symmetricTile(r, c);
-					this.grid[refR][refC] = this.grid[r][c];
+					this.grid.set(this.symmetricTile(tile), this.grid.get(tile));
 				}
 			}
 		}
@@ -209,9 +261,10 @@ export class PlaneTiling {
 		let total = 0;
 		for (let r = 0; r < this.rows; r++) {
 			for (let c = 0; c < this.columns; c++) {
-				if (this.variantOf(r, c) === null) continue;
+				const tile = this.tile(r, c, false);
+				if (tile === null) continue;
 				total++;
-				if (this.grid[r][c]) count++;
+				if (this.grid.get(tile)) count++;
 			}
 		}
 		return {
