@@ -43,9 +43,20 @@
 		}
 	}
 
+	// lets us use fewer event listeners by grabbing row/column from event target dataset
+	function attachData<E extends Event>(event: E, fn?: (r: number, c: number, event: E) => any) {
+		if (fn === undefined || !event.target) return;
+		if (event.target instanceof SVGUseElement) {
+			const r = event.target.dataset["r"];
+			const c = event.target.dataset["c"];
+			if (r === undefined || c === undefined) return;
+			fn(parseInt(r), parseInt(c), event);
+		}
+	}
+
 	let bottomHalfFocus = false;
 
-	function handleInput(event: KeyboardEvent, r: number, c: number) {
+	function handleInput(r: number, c: number, event: KeyboardEvent) {
 		if (event.key === "Enter") {
 			if (onclick !== undefined) onclick(r, c);
 			return;
@@ -102,6 +113,13 @@
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 {boundingBox.width} {boundingBox.height}"
 	role="grid"
+	tabindex="-1"
+	onclick={(e) => attachData(e, onclick)}
+	onkeydown={(e) => attachData(e, handleInput)}
+	onmouseover={(e) => attachData(e, onselect)}
+	onfocus={(e) => attachData(e, onselect)}
+	onmouseout={(e) => attachData(e, ondeselect)}
+	onblur={(e) => attachData(e, ondeselect)}
 >
 	<g style="display: none">
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
@@ -117,15 +135,9 @@
 			{let pos = $derived(tiling.rhombusCenter(r, c, scale))}
 			{#if variant !== null && pos !== null}
 				<use
+					data-r={r}
+					data-c={c}
 					bind:this={polygons[r + "," + c]}
-					onclick={() => {
-						if (onclick !== undefined) onclick(r, c);
-					}}
-					onkeydown={(event) => handleInput(event, r, c)}
-					onmouseover={() => onselect?.(r, c)}
-					onfocus={() => onselect?.(r, c)}
-					onmouseout={() => ondeselect?.(r, c)}
-					onblur={() => ondeselect?.(r, c)}
 					tabindex={r === 0 && c === 0 ? 0 : -1}
 					role="gridcell"
 					class={[tiling.get(r, c) ? "filled" : "empty", tileHighlighted?.(r, c) ? "hover" : ""]}
