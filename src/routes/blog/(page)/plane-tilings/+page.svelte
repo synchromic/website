@@ -39,7 +39,7 @@
 	<li>it is periodic (corresponding to the actual ceiling tiles)</li>
 	<li>it is rotationally symmetric about the center of each period</li>
 	<li>
-		the connected areas of empty {rhombs()} are small (at most 5 {rhombs()} large, ignoring the period
+		the connected areas of empty {rhombs()} are small (at most 4 {rhombs()} large, ignoring the period
 		boundary).
 	</li>
 </ol>

@@ -99,6 +99,13 @@ class TilingGrid {
 		this.shrink();
 		this.grid[tile.r][tile.c] = filled;
 	}
+
+	copy(): TilingGrid {
+		this.shrink();
+		let copy = new TilingGrid(this.grid[0]?.length ?? 0, this.grid.length);
+		copy.grid = structuredClone($state.snapshot(this.grid));
+		return copy;
+	}
 }
 
 export class PlaneTiling {
@@ -176,7 +183,8 @@ export class PlaneTiling {
 	// ordered top-to-bottom left-to-right, bits are little-endian within bytes
 	setCode(code: string) {
 		const bytes = Uint8Array.fromBase64(code);
-		let curByte = 0, curBit = 0;
+		let curByte = 0,
+			curBit = 0;
 		this.setAll(false);
 		for (let r = 0; r < this.rows; r++) {
 			for (let c = 0; c < this.columns; c++) {
@@ -258,6 +266,20 @@ export class PlaneTiling {
 			total,
 		};
 	}
+
+	adjacentTiles(tile: Tile) {
+		let drs, dcs;
+		if (tile.variant() === TileVariant.Vertical) {
+			drs = [0, 0, 1, 1];
+			dcs = [-1, 1, -1, 1];
+		} else {
+			drs = [0, 1, 0, -1];
+			dcs = [1, 0, -1, 0];
+		}
+		return drs
+			.map((_, i) => this.tile(tile.r + drs[i], tile.c + dcs[i], true))
+			.filter((t) => t !== null);
+	}
 }
 
 export enum TileVariant {
@@ -299,4 +321,28 @@ export function vertexOffsets(variant: TileVariant, size: number = 1): { x: numb
 			y: y * size,
 		};
 	});
+}
+
+export function largestEmptyComponent(tiling: PlaneTiling): number {
+	let grid = tiling.grid.copy();
+	let size = 0,
+		maxSize = 0;
+	function dfs(tile: Tile) {
+		if (grid.get(tile)) return;
+		grid.set(tile, true);
+		size++;
+		for (const adjTile of tiling.adjacentTiles(tile)) {
+			dfs(adjTile);
+		}
+	}
+	for (let r = 0; r < tiling.rows; r++) {
+		for (let c = 0; c < tiling.columns; c++) {
+			let tile = tiling.tile(r, c, false);
+			if (tile === null) continue;
+			size = 0;
+			dfs(tile);
+			if (size > maxSize) maxSize = size;
+		}
+	}
+	return maxSize;
 }

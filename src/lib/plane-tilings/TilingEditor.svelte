@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PlaneTiling, Tile } from "./tiling.svelte";
+	import { largestEmptyComponent, PlaneTiling, Tile } from "./tiling.svelte";
 	import TilingDisplay from "./TilingDisplay.svelte";
 
 	const defaultCode =
@@ -222,6 +222,7 @@
 		<h3>Stats</h3>
 		<p>Filled: {tileCounts.filled} ({Math.round((tileCounts.filled / tileCounts.total) * 100)}%)</p>
 		<p>Empty: {tileCounts.empty} ({Math.round((tileCounts.empty / tileCounts.total) * 100)}%)</p>
+		<p>Largest empty component: {largestEmptyComponent(tiling)}</p>
 	</div>
 </div>
 
