@@ -1,8 +1,11 @@
-const urls = import.meta.glob(["/src/lib/assets/**/*.png", "/src/lib/assets/**/*.jpg", "/src/lib/assets/**/*.webp"], {
-	query: "?url",
-	import: "default",
-	eager: true,
-});
+const urls = import.meta.glob(
+	["/src/lib/assets/**/*.png", "/src/lib/assets/**/*.jpg", "/src/lib/assets/**/*.webp"],
+	{
+		query: "?url",
+		import: "default",
+		eager: true,
+	},
+);
 
 export function getUrls(path: string) {
 	const extension = path.endsWith(".jpg") ? "jpg" : "png";

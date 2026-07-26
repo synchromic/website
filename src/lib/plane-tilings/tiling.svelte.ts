@@ -72,12 +72,18 @@ export class PlaneTiling {
 	}
 
 	// returns null if not a valid tile
-	variantOf(r: number, c: number): TileVariant | null {
+	variantOf(r: number, c: number, fix: boolean = false): TileVariant | null {
 		if (r < 0 || r >= this.rows || c < 0 || c >= this.columns) return null;
 		const offset = (2 * r + c) % 4;
-		// special case: bottom of grid
-		if (offset == 1 && r == this.rows - 1) return null;
-		return [TileVariant.Forward, TileVariant.Vertical, TileVariant.Backward, null][offset];
+		// special cases: bottom/top of grid
+		if (r === 0 && offset === 3) return null;
+		if (r === this.rows - 1 && offset === 1) return null;
+		return [
+			TileVariant.Forward,
+			TileVariant.Vertical,
+			TileVariant.Backward,
+			fix ? TileVariant.Vertical : null,
+		][offset];
 	}
 
 	// checks if an otherwise invalid tile is the bottom half of a valid tile

@@ -59,11 +59,11 @@
 
 	let hoveredTile: { r: number; c: number } | null = $state(null);
 
-	function onselect(r: number, c: number) {
+	function onhoverstart(r: number, c: number) {
 		hoveredTile = { r, c };
 	}
 
-	function ondeselect() {
+	function onhoverend() {
 		hoveredTile = null;
 	}
 
@@ -87,8 +87,8 @@
 			{onclick}
 			{hideOutlines}
 			{scrolling}
-			{onselect}
-			{ondeselect}
+			{onhoverstart}
+			{onhoverend}
 			{tileHighlighted}
 		/>
 	</div>
@@ -210,6 +210,6 @@
 	}
 
 	input.error {
-		border: 1px solid red;
+		background-color: #ffcccc;
 	}
 </style>

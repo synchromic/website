@@ -4,16 +4,16 @@
 	let {
 		tiling,
 		onclick,
-		onselect,
-		ondeselect,
+		onhoverstart: onhoverstart,
+		onhoverend: onhoverend,
 		tileHighlighted,
 		hideOutlines,
 		scrolling,
 	}: {
 		tiling: PlaneTiling;
 		onclick?: (r: number, c: number) => void;
-		onselect?: (r: number, c: number) => void;
-		ondeselect?: (r: number, c: number) => void;
+		onhoverstart?: (r: number, c: number) => void;
+		onhoverend?: () => void;
 		tileHighlighted?: (r: number, c: number) => boolean;
 		hideOutlines?: boolean;
 		scrolling?: boolean;
@@ -54,54 +54,48 @@
 		}
 	}
 
-	let bottomHalfFocus = false;
+	// TODO: move focus control stuff to the editor
+	let focusedCell: { r: number; c: number } | null = $state(null);
+
+	function onfocus(r: number, c: number) {
+		focusedCell = { r, c };
+		onhoverstart?.(r, c);
+	}
+
+	function onblur() {
+		focusedCell = null;
+		onhoverend?.();
+	}
+
+	function shouldSkip(r: number, c: number) {
+		return tiling.variantOf(r, c) === null && tiling.variantOf(r - 1, c) === null;
+	}
 
 	function handleInput(r: number, c: number, event: KeyboardEvent) {
 		if (event.key === "Enter") {
-			if (onclick !== undefined) onclick(r, c);
+			onclick?.(r, c);
 			return;
 		}
-		const variant = tiling.variantOf(r, c);
-		if (variant === null) return;
-		let nr = r,
-			nc = c;
-		switch (event.key) {
-			case "ArrowUp":
-				nr = variant === TileVariant.Vertical ? r - 2 : r - 1;
-				break;
-			case "ArrowDown":
-				nr = variant === TileVariant.Vertical ? r + 2 : r + 1;
-				break;
-			case "ArrowLeft":
-				// skip past empty spots on top/bottom rows
-				if (tiling.variantOf(r, c - 1) === null && tiling.variantOf(r - 1, c - 1) === null) {
-					nc = c - 2;
-				} else {
-					nc = c - 1;
-					if (variant === TileVariant.Vertical && bottomHalfFocus) nr = r + 1;
-				}
-				break;
-			case "ArrowRight":
-				// skip past empty spots on top/bottom rows
-				if (tiling.variantOf(r, c + 1) === null && tiling.variantOf(r - 1, c + 1) === null) {
-					nc = c + 2;
-				} else {
-					nc = c + 1;
-					if (variant === TileVariant.Vertical && bottomHalfFocus) nr = r + 1;
-				}
-				break;
-			default:
-				return;
-		}
-		if (tiling.bottomHalf(nr, nc)) {
-			bottomHalfFocus = true;
-			nr--;
-		} else {
-			bottomHalfFocus = false;
-		}
-		if (tiling.variantOf(nr, nc) === null) return;
+		if (!event.key.startsWith("Arrow")) return;
+		// use focused row/column for source of truth here
+		if (focusedCell === null) return;
+		r = focusedCell.r;
+		c = focusedCell.c;
+		let [dr, dc] = {
+			ArrowUp: [-1, 0],
+			ArrowDown: [1, 0],
+			ArrowLeft: [0, -1],
+			ArrowRight: [0, 1],
+		}[event.key]!;
+		if (shouldSkip(r + dr, c + dc)) dc *= 2;
+		if (tiling.variantOf(r, c, true) === TileVariant.Vertical) dr *= 2;
+		let tr = tiling.bottomHalf(r + dr, c + dc) ? r + dr - 1 : r + dr;
+		let tc = c + dc;
+		if (tiling.variantOf(tr, tc) === null) return; // out of bounds or something
 		event.preventDefault();
-		polygons[nr + "," + nc].focus();
+		polygons[tr + "," + tc].focus();
+		// focusedCell must be set after polygon focus else it gets overridden
+		focusedCell = { r: r + dr, c: c + dc };
 	}
 </script>
 
@@ -116,10 +110,14 @@
 	tabindex="-1"
 	onclick={(e) => attachData(e, onclick)}
 	onkeydown={(e) => attachData(e, handleInput)}
-	onmouseover={(e) => attachData(e, onselect)}
-	onfocus={(e) => attachData(e, onselect)}
-	onmouseout={(e) => attachData(e, ondeselect)}
-	onblur={(e) => attachData(e, ondeselect)}
+	onmouseover={(e) => attachData(e, onhoverstart)}
+	onmouseout={(e) => attachData(e, onhoverend)}
+	// aria tells us we need an onfocus/onblur
+	// but in reality everything happens on the <use></svg> elements
+	onfocus={() => {}}
+	onblur={() => {}}
+	onfocusin={(e) => attachData(e, onfocus)}
+	onfocusout={(e) => attachData(e, onblur)}
 >
 	<g style="display: none">
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
