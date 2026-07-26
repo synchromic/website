@@ -4,20 +4,23 @@
 	let {
 		tiling,
 		onclick,
-		reflecting,
+		onselect,
+		ondeselect,
+		tileHighlighted,
 		hideOutlines,
 		scrolling,
 	}: {
 		tiling: PlaneTiling;
 		onclick?: (r: number, c: number) => void;
-		reflecting?: boolean;
+		onselect?: (r: number, c: number) => void;
+		ondeselect?: (r: number, c: number) => void;
+		tileHighlighted?: (r: number, c: number) => boolean;
 		hideOutlines?: boolean;
 		scrolling?: boolean;
 	} = $props();
 
 	const scale = 20;
 	const boundingBox = $derived(tiling.boundingBox(scale));
-	let hoveredTile: { r: number; c: number } | null = $state(null);
 
 	let polygons: { [key: string]: SVGElement } = $state({});
 
@@ -38,28 +41,6 @@
 			case TileVariant.Vertical:
 				return "vertical";
 		}
-	}
-
-	function startHover(r: number, c: number) {
-		hoveredTile = { r, c };
-	}
-
-	function endHover(r: number, c: number) {
-		if (hoveredTile?.r === r && hoveredTile?.c === c) {
-			hoveredTile = null;
-		}
-	}
-
-	function shouldShowHover(r: number, c: number) {
-		if (hoveredTile === null) return false;
-		if (hoveredTile.r === r && hoveredTile.c === c) {
-			return true;
-		}
-		if (reflecting) {
-			const { r: refR, c: refC } = tiling.reflected(hoveredTile.r, hoveredTile.c);
-			if (r === refR && c === refC) return true;
-		}
-		return false;
 	}
 
 	let bottomHalfFocus = false;
@@ -141,13 +122,13 @@
 						if (onclick !== undefined) onclick(r, c);
 					}}
 					onkeydown={(event) => handleInput(event, r, c)}
-					onmouseover={() => startHover(r, c)}
-					onfocus={() => startHover(r, c)}
-					onmouseout={() => endHover(r, c)}
-					onblur={() => endHover(r, c)}
+					onmouseover={() => onselect?.(r, c)}
+					onfocus={() => onselect?.(r, c)}
+					onmouseout={() => ondeselect?.(r, c)}
+					onblur={() => ondeselect?.(r, c)}
 					tabindex={r === 0 && c === 0 ? 0 : -1}
 					role="gridcell"
-					class={[tiling.get(r, c) ? "filled" : "empty", shouldShowHover(r, c) ? "hover" : ""]}
+					class={[tiling.get(r, c) ? "filled" : "empty", tileHighlighted?.(r, c) ? "hover" : ""]}
 					href="#{variantToId(variant)}"
 					x={pos.x}
 					y={pos.y}

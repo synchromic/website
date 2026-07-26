@@ -56,11 +56,41 @@
 			}
 		}
 	}
+
+	let hoveredTile: { r: number; c: number } | null = $state(null);
+
+	function onselect(r: number, c: number) {
+		hoveredTile = { r, c };
+	}
+
+	function ondeselect() {
+		hoveredTile = null;
+	}
+
+	function tileHighlighted(r: number, c: number) {
+		if (hoveredTile === null) return false;
+		if (hoveredTile.r === r && hoveredTile.c === c) {
+			return true;
+		}
+		if (reflecting) {
+			const { r: refR, c: refC } = tiling.reflected(hoveredTile.r, hoveredTile.c);
+			if (r === refR && c === refC) return true;
+		}
+		return false;
+	}
 </script>
 
 <div class={{ container: true, scrolling }}>
 	<div class={{ left: true, scrolling }}>
-		<TilingDisplay {tiling} {onclick} {reflecting} {hideOutlines} {scrolling} />
+		<TilingDisplay
+			{tiling}
+			{onclick}
+			{hideOutlines}
+			{scrolling}
+			{onselect}
+			{ondeselect}
+			{tileHighlighted}
+		/>
 	</div>
 	<div class="right">
 		<h2>Tiling Editor</h2>
