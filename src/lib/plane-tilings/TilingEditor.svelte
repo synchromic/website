@@ -4,9 +4,9 @@
 
 	const defaultCode =
 		"Xa2cN0T1219L6v9afirsmy8vVftoenV9fH31UfGuO0f3xllx3nnXejtu21was+Wr74nx+/hvxM333VDVVp12";
-	const sizeLimit = { width: 40, height: 80 };
+	const sizeLimit = { columns: 40, rows: 80 };
 	let tiling = new PlaneTiling(15, 44, defaultCode);
-	let reflecting = $state(false);
+	let symmetric = $state(false);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
 	let randomizeP = $state(0.5);
@@ -34,23 +34,23 @@
 		tiling.setCode(code);
 	}
 
-	let widthInput = $state(15);
-	let heightInput = $state(44);
+	let columnsInput = $state(15);
+	let rowsInput = $state(44);
 
-	function onWidthChange() {
-		widthInput = Math.max(1, Math.min(sizeLimit.width, widthInput));
-		tiling.width = widthInput;
+	function onColumnsChange() {
+		columnsInput = Math.max(1, Math.min(sizeLimit.columns, columnsInput));
+		tiling.columns = columnsInput;
 	}
 
-	function onHeightChange() {
-		heightInput = Math.max(1, Math.min(sizeLimit.height, heightInput));
-		tiling.height = heightInput;
+	function onRowsChange() {
+		rowsInput = Math.max(1, Math.min(sizeLimit.rows, rowsInput));
+		tiling.rows = rowsInput;
 	}
 
 	function onclick(r: number, c: number) {
 		tiling.toggle(r, c);
-		if (reflecting) {
-			const { r: refR, c: refC } = tiling.reflected(r, c);
+		if (symmetric) {
+			const { r: refR, c: refC } = tiling.symmetricTile(r, c);
 			if (refR !== r || refC !== c) {
 				tiling.toggle(refR, refC);
 			}
@@ -72,8 +72,8 @@
 		if (hoveredTile.r === r && hoveredTile.c === c) {
 			return true;
 		}
-		if (reflecting) {
-			const { r: refR, c: refC } = tiling.reflected(hoveredTile.r, hoveredTile.c);
+		if (symmetric) {
+			const { r: refR, c: refC } = tiling.symmetricTile(hoveredTile.r, hoveredTile.c);
 			if (r === refR && c === refC) return true;
 		}
 		return false;
@@ -104,14 +104,14 @@
 			<button onclick={() => tiling.setAll(true)}>Fill</button>
 			<button
 				onclick={() => {
-					tiling.width = widthInput = 15;
-					tiling.height = heightInput = 44;
+					tiling.columns = columnsInput = 15;
+					tiling.rows = rowsInput = 44;
 					tiling.setCode(defaultCode);
 				}}>Default</button
 			>
 		</p>
 		<p>
-			<button onclick={() => tiling.randomize(randomizeP, reflecting)}>Randomize</button>
+			<button onclick={() => tiling.randomize(randomizeP, symmetric)}>Randomize</button>
 			<input
 				id="randomizePInput"
 				type="range"
@@ -123,26 +123,26 @@
 			<label for="randomizePInput">p: {randomizeP}</label>
 		</p>
 		<p>
-			<label for="widthInput">Width:</label>
+			<label for="columnsInput">Columns:</label>
 			<input
-				id="widthInput"
+				id="columnsInput"
 				type="number"
-				bind:value={widthInput}
-				onchange={onWidthChange}
+				bind:value={columnsInput}
+				onchange={onColumnsChange}
 				min={1}
-				max={sizeLimit.width}
+				max={sizeLimit.columns}
 				autocomplete="off"
 			/>
 		</p>
 		<p>
-			<label for="heightInput">Height:</label>
+			<label for="rowsInput">Rows:</label>
 			<input
-				id="heightInput"
+				id="rowsInput"
 				type="number"
-				bind:value={heightInput}
-				onchange={onHeightChange}
+				bind:value={rowsInput}
+				onchange={onRowsChange}
 				min={1}
-				max={sizeLimit.height}
+				max={sizeLimit.rows}
 				autocomplete="off"
 			/>
 		</p>
@@ -151,8 +151,8 @@
 			<input id="scrollingInput" type="checkbox" bind:checked={scrolling} />
 		</p>
 		<p>
-			<label for="reflectingInput">Keep symmetry:</label>
-			<input id="reflectingInput" type="checkbox" bind:checked={reflecting} />
+			<label for="symmetricInput">Keep symmetry:</label>
+			<input id="symmetricInput" type="checkbox" bind:checked={symmetric} />
 		</p>
 		<p>
 			<label for="outlineInput">Hide empty outlines:</label>

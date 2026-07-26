@@ -111,8 +111,8 @@
 			/>
 		{/each}
 	</g>
-	{#each { length: tiling.height } as _, r}
-		{#each { length: tiling.width } as _, c}
+	{#each { length: tiling.rows } as _, r}
+		{#each { length: tiling.columns } as _, c}
 			{let variant = $derived(tiling.variantOf(r, c))}
 			{let pos = $derived(tiling.rhombusCenter(r, c, scale))}
 			{#if variant !== null && pos !== null}
