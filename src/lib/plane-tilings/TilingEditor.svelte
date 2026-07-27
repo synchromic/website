@@ -53,7 +53,7 @@
 		tiling.toggle(tile);
 		if (symmetric) {
 			const newTile = tiling.symmetricTile(tile);
-			if (!tile.equalTo(newTile)) {
+			if (newTile !== null && !tile.equalTo(newTile)) {
 				tiling.toggle(newTile);
 			}
 		}
@@ -249,7 +249,6 @@
 
 	.right {
 		flex-grow: 1;
-		min-height: 600px;
 
 		padding: 0.7em;
 		display: flex;
@@ -257,6 +256,16 @@
 		gap: 0.5em;
 
 		border: 1px solid var(--foreground-color-d);
+	}
+
+	@media (max-width: 700px) {
+		.container {
+			flex-direction: column-reverse;
+		}
+
+		.left {
+			max-width: 90vw;
+		}
 	}
 
 	input.error {

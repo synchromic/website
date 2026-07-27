@@ -101,9 +101,10 @@ class TilingGrid {
 	}
 
 	copy(): TilingGrid {
-		this.shrink();
 		let copy = new TilingGrid(this.grid[0]?.length ?? 0, this.grid.length);
 		copy.grid = structuredClone($state.snapshot(this.grid));
+		copy.shrinkColumns = this.shrinkColumns;
+		copy.shrinkRows = this.shrinkRows;
 		return copy;
 	}
 }
@@ -158,12 +159,10 @@ export class PlaneTiling {
 	}
 
 	// TODO: figure out wtf to do if grid isn't symmetric :p
-	symmetricTile(tile: Tile): Tile {
+	symmetricTile(tile: Tile): Tile | null {
 		const newR = this.rows - 1 - tile.r;
 		const newC = this.columns - 1 - tile.c;
-		const newTile = this.tile(newR, newC, true);
-		if (newTile === null) throw new Error("screwed up finding symmetric tile");
-		return newTile;
+		return this.tile(newR, newC, true);
 	}
 
 	// returns width/height of tiling if each rhombus has side length 1
@@ -243,7 +242,10 @@ export class PlaneTiling {
 				if (tile === null) continue;
 				this.grid.set(tile, Math.random() < p);
 				if (symmetric) {
-					this.grid.set(this.symmetricTile(tile), this.grid.get(tile));
+					const otherTile = this.symmetricTile(tile);
+					if (otherTile !== null) {
+						this.grid.set(otherTile, this.grid.get(tile));
+					}
 				}
 			}
 		}
