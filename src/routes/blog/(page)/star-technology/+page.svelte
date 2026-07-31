@@ -12,6 +12,7 @@
 <script lang="ts">
 	import imgIVBase from "$lib/assets/blog/star-technology/initial-progress/iv-base.webp";
 	import imgLuVBase from "$lib/assets/blog/star-technology/luv/luv-base.webp";
+	import imgZPMBase from "$lib/assets/blog/star-technology/zpm/stargate.webp";
 </script>
 
 <p>
@@ -47,6 +48,15 @@
 	</h2>
 	<a href="/blog/star-technology/luv">
 		<img class="full-width" src={imgLuVBase} alt="Navigate to LuV blog post" />
+	</a>
+
+	<hr />
+
+	<h2>
+		<a href="/blog/star-technology/zpm">ZPM and Classic Stargate</a>
+	</h2>
+	<a href="/blog/star-technology/zpm">
+		<img class="full-width" src={imgZPMBase} alt="Navigate to ZPM blog post" />
 	</a>
 </nav>
 

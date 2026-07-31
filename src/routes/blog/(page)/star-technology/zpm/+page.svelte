@@ -2,11 +2,11 @@
 	import type { Metadata } from "$lib/blogIndex";
 
 	export const metadata: Metadata = {
-		title: "Star Technology: ZPM",
+		title: "Star Technology: ZPM and Classic Stargate",
 		date: new Date("2026-07-29T23:20:53-07:00"),
 		parent: "star-technology",
 		description:
-			"A journal of my playthrough of the Minecraft modpack Star Technology through the ZPM voltage tier.",
+			"A journal of my playthrough of the Minecraft modpack Star Technology during the ZPM tier and up to the Classic Stargate.",
 	};
 </script>
 
@@ -80,7 +80,7 @@
 	src="{data.slug}/assline"
 	imgClass="landscape"
 	alt="Eight parallel assembly lines"
-	caption="I could not have figured this out myself"
+	caption="We finally learned that we can rotate multiblocks. Chaos ensues"
 />
 
 <BlogFigure
@@ -115,3 +115,134 @@
 	alt="Nether star looping setup with parallel multiblocks"
 	caption="There are four heat chambers hiding behind the multiblocks. I should take better screenshots"
 />
+
+<BlogFigure
+	src="{data.slug}/chapter-4"
+	imgClass="landscape"
+	alt="Completed chapter 4 of the quest book"
+	caption="Futuristic Mechanisms chapter complete! (July 26)"
+/>
+
+<p>With all the main ZPM infrastructure done, it was time to begin crafting components for the Classic Stargate. This thing is expensive! The bottlenecks are making 23 thousand weapon grade naquadah (6.3 days of processing time in one UV CAT) and 485 stargate rods, but there are also lots of other challenges along the way.
+</p>
+
+<p>
+	First of all, for two of the multiblocks, we need these Runic Wave Generators. The hardest part of this craft is remembering to make large enough input hatches for the assembly line. Our AE2 infrastructure is a little bit behind, as we're still using the perfect overclocking multiblocks for most crafts.
+</p>
+
+<BlogFigure
+	src="{data.slug}/runic-wave"
+	imgClass="landscape"
+	alt="Autocrafting screen for runic wave generator"
+	caption="One of the most complex crafts yet"
+/>
+
+<p>
+	Next, Maz made some Component Part Assemblies as well as the Runic Circuitry Assembly Station.
+</p>
+
+<BlogFigure
+	src="{data.slug}/cpa"
+	imgClass="landscape"
+	alt="Eight component part assemblies in parallel"
+	caption="The Haph setup is for the RCAS, not this"
+/>
+
+<BlogFigure
+	src="{data.slug}/rcas"
+	imgClass="landscape"
+	alt="The completed Runic Circuitry Assembly Stations"
+	caption="Looks kind of like a shulker"
+/>
+
+<p>
+	Then I set up the Large Rotor Machine. I used another design by Haph from the Star Technology Discord that allows us to autocraft recipes with layered inputs. I feel a little bad about not trying to come up with autocrafting solutions myself, but these are just too ingenious. We eventually upgraded this to run four in parallel, as it became a bottleneck.
+</p>
+
+<BlogFigure
+	src="{data.slug}/lrm"
+	imgClass="landscape"
+	alt="Large Rotor Machine with an autocrafting setup attached"
+	caption="I accidentally veinmined the cables soon after"
+/>
+
+<p>
+	We completely ran out of trinium, so Maz rebuilt the naquadah line with all the parallel multiblocks.
+</p>
+
+<BlogFigure
+	src="{data.slug}/naqline-upgrade"
+	imgClass="landscape"
+	alt="Overview of upgraded naquadah line"
+	caption="He's much better at building at scale than I am"
+/>
+
+<p>
+	Yet another multiblock: the Dimensional Finder gives us the coordinates to enter into the Stargate. I think this multiblock looks really cool.
+</p>
+
+<BlogFigure
+	src="{data.slug}/finder"
+	imgClass="landscape"
+	alt="Dimensional Finder multiblock"
+	caption="Also pictured: our donut stack"
+/>
+
+<p>
+	At this point, we were mostly just waiting for the stargate rods and weapon grade naquadah, so I went on a little side quest to try out the Modular Combustion Frame. It only generates around 7.5M EU/t, which is around the same amount as seven of the plasma turbines, so it wasn't really worth it for the energy, but I still thought it was fun.
+</p>
+
+<BlogFigure
+	src="{data.slug}/combustion"
+	imgClass="landscape"
+	alt="Modular Combustion Frame as well as the gas to power it"
+	caption="I love the massive tower of chemical reactors"
+/>
+
+<p>
+	Here we have the Stargate Component Assembly, the multiblock that finally makes the stargate blocks. Unfortunately, we still don't have the materials for those!
+</p>
+
+<BlogFigure
+	src="{data.slug}/sca"
+	imgClass="landscape"
+	alt="Exterior of the Stargate Component Assembly"
+	caption="It would have been funnier to build this sideways"
+/>
+
+<p>
+	While we continued to wait, we worked on some quality of life automation. Mazerak built this upgraded manual crafting setup.
+</p>
+
+<BlogFigure
+	src="{data.slug}/manual"
+	imgClass="landscape"
+	alt="A row of ZPM single block machines, with some decoration"
+	caption="The black machines fit well with the base theme"
+/>
+
+<p>
+	Meanwhile, I designed this little thing. I call it MultIKEA: you can order a multiblock (or several) and it delivers all the required blocks to this terminal.
+</p>
+
+<BlogFigure
+	src="{data.slug}/multikea"
+	imgClass="landscape"
+	alt="A small station for collecting multiblocks"
+	caption="The top terminal contains hatches and other common items"
+/>
+
+<p>
+	Since I designed this myself from scratch (for once), I'll elaborate on how it works. The key technique that makes this work is that filling and emptying fluid cells does not change their custom name. This is important because I want to make the patterns that request the multiblocks searchable in my terminal. Each multiblock pattern has an empty fluid cell in the input and a filled fluid cell in the output. When the pattern provider deposits all the multiblock materials into the yellow subnet, the canner fills the cell and dumps it into the main net, completing the recipe. Then the main net automatically empties all the filled cells it finds.
+</p>
+
+<BlogFigure
+	src="{data.slug}/multikea-bottom"
+	imgClass="landscape"
+	alt="Underside of the terminal, with a colossal chest"
+	caption="Never thought I'd need one of these after unlocking AE2"
+/>
+
+<p>
+	A funny quirk of this system is that when we empty the fluid cells, we need to use the Pipez item pipe to filter for cells with water in them. (I couldn't find any way to do this using AE2 only.) So, I put a storage bus with a fuzzy card on a colossal chest to store all fluid cells, and then used an item pipe to extract filled ones. This lets us use a larger number of different multiblock patterns, since with a normal chest we can only have 27 differently-named fluid cells.
+</p>
