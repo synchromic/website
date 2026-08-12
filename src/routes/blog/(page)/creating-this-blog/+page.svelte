@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import imgDesign from "$lib/assets/blog/creating-this-blog/design.png";
+	import imgDesign from "$lib/assets/blog/creating-this-blog/design.webp";
 
 	export const metadata: Metadata = {
 		title: "Creating this blog",
