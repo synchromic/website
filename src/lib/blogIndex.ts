@@ -5,9 +5,8 @@ export interface Metadata {
 	description: string;
 	date: Date;
 
-	// url of thumbnail, should use vite import to get
-	// considering making this non-optional but i'd imagine i'll have posts where i don't have a thumbnail idea
-	thumbnail?: string;
+	// *relative* url of thumbnail, should use vite import to get
+	thumbnail: string;
 
 	parent?: Slug;
 	hidden?: boolean;

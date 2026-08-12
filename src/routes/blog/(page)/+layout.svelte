@@ -5,9 +5,8 @@
 
 	let { data, children }: LayoutProps = $props();
 
-	let thumbnail: URL | undefined = $derived(
-		data.meta.thumbnail ? new URL(data.meta.thumbnail, data.url) : undefined,
-	);
+	let canonURL = $derived(data.url.origin + data.url.pathname);
+	let thumbnail: URL = $derived(new URL(data.meta.thumbnail, data.url));
 </script>
 
 <svelte:head>
@@ -15,9 +14,15 @@
 	{#if data.meta.description}
 		<meta name="description" content={data.meta.description} />
 	{/if}
-	{#if thumbnail}
-		<meta property="og:image" content={thumbnail.toString()} />
-	{/if}
+
+	<!-- OpenGraph metadata: https://ogp.me/ -->
+	<meta property="og:title" content={data.meta.title} />
+
+	<!-- maybe `article` would be more accurate but i don't understand the namespace stuff -->
+	<meta property="og:type" content="website" />
+
+	<meta property="og:image" content={thumbnail.href} />
+	<meta property="og:url" content={canonURL} />
 </svelte:head>
 
 <header>
