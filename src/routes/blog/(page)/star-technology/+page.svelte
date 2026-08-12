@@ -26,7 +26,7 @@
 		if (!path.endsWith(".png")) {
 			throw new Error("Thumbnail image is not a .png: " + path);
 		}
-		return path.slice(-4) + ".webp";
+		return path.slice(0, -4) + ".webp";
 	}
 </script>
 
