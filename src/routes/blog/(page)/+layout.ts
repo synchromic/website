@@ -4,7 +4,7 @@ import type { LayoutLoad } from "./$types";
 
 const slugRegex = /\/blog\/\(page\)\/(.+)/;
 
-export const load: LayoutLoad = async ({ route }) => {
+export const load: LayoutLoad = async ({ route, url }) => {
 	const slugMatch = slugRegex.exec(route.id);
 	if (slugMatch === null) {
 		error(404, {
@@ -27,5 +27,6 @@ export const load: LayoutLoad = async ({ route }) => {
 		newer: blogIndex.newer(slug),
 		older: blogIndex.older(slug),
 		parent,
+		url, // necessary for thumbnail metadata
 	};
 };

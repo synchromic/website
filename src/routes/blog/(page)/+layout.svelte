@@ -4,12 +4,19 @@
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
+
+	let thumbnail: URL | undefined = $derived(
+		data.meta.thumbnail ? new URL(data.meta.thumbnail, data.url) : undefined,
+	);
 </script>
 
 <svelte:head>
 	<title>{data.meta.title}</title>
 	{#if data.meta.description}
 		<meta name="description" content={data.meta.description} />
+	{/if}
+	{#if thumbnail}
+		<meta property="og:image" content={thumbnail.toString()} />
 	{/if}
 </svelte:head>
 

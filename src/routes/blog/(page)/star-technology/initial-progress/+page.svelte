@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
+	import imgIVBase from "$lib/assets/blog/star-technology/initial-progress/iv-base.webp";
 
 	export const metadata: Metadata = {
 		title: "Star Technology Initial Progress (LV-IV)",
@@ -7,6 +8,7 @@
 		parent: "star-technology",
 		description:
 			"A journal of my playthrough of the Minecraft modpack Star Technology up through the IV voltage tier.",
+		thumbnail: imgIVBase,
 	};
 </script>
 
