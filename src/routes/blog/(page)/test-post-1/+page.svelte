@@ -1,13 +1,12 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import thumbnail from "$lib/assets/favicon.png";
 
 	export const metadata: Metadata = {
 		title: "Test post 1",
 		date: new Date("2026-06-18T19:27:49.184Z"),
 		hidden: true,
 		description: "Test page because I needed something to put in my index.",
-		thumbnail,
+		thumbnail: "favicon",
 	};
 </script>
 

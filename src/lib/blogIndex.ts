@@ -5,7 +5,8 @@ export interface Metadata {
 	description: string;
 	date: Date;
 
-	// *relative* url of thumbnail, should use vite import to get
+	// url of thumbnail starting from assets/ and NO EXTENSION
+	// will automatically pick png, falls back to webp
 	thumbnail: string;
 
 	parent?: Slug;

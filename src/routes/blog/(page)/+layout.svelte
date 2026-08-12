@@ -1,12 +1,17 @@
 <script lang="ts">
 	import "$lib/css/blog.css";
 	import { formatLongDate } from "$lib/dates";
+	import { getUrls } from "$lib/images";
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
 
 	let canonURL = $derived(data.url.origin + data.url.pathname);
-	let thumbnail: URL = $derived(new URL(data.meta.thumbnail, data.url));
+	let thumbnailPath = $derived.by(() => {
+		const { png, webp } = getUrls(data.meta.thumbnail);
+		return png ?? webp;
+	});
+	let thumbnail: URL = $derived(new URL(thumbnailPath, data.url));
 </script>
 
 <svelte:head>

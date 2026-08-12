@@ -13,7 +13,7 @@
 		src: string;
 	} = $props();
 
-	let urls = $derived(getUrls(src));
+	let urls = $derived(getUrls("blog/" + src));
 </script>
 
 <figure>

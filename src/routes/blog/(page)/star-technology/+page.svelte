@@ -1,33 +1,24 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import thumbnail from "$lib/assets/blog/star-technology/thumbnail.png";
 
 	export const metadata: Metadata = {
 		title: "Star Technology index",
 		date: new Date("2026-07-14T20:00:00.000Z"),
 		description:
 			"Index page for all my Star Technology blog posts. Star Technology is a Minecraft modpack focused on technology and progression.",
-		thumbnail,
+		thumbnail: "blog/star-technology/thumbnail",
 	};
 </script>
 
 <script lang="ts">
 	import blogIndex from "$lib/blogIndex";
+	import { getUrls } from "$lib/images";
 	import type { PageProps } from "./$types";
 
 	let { data }: PageProps = $props();
 
 	const childSlugs = ["initial-progress", "luv", "zpm"];
 	const childPosts = childSlugs.map((s) => blogIndex.pageMap.get(data.slug + "/" + s)!);
-
-	// thumbnail images are pngs for compatibility, but on this page we want to use the webp edition
-	// returns the webp path
-	function thumbnailWebp(path: string) {
-		if (!path.endsWith(".png")) {
-			throw new Error("Thumbnail image is not a .png: " + path);
-		}
-		return path.slice(0, -4) + ".webp";
-	}
 </script>
 
 <p>
@@ -60,7 +51,7 @@
 		<a href={post.slug}>
 			<img
 				class="full-width"
-				src={thumbnailWebp(post.meta.thumbnail)}
+				src={getUrls(post.meta.thumbnail).webp}
 				alt="Navigate to {shortTitle} blog post"
 			/>
 		</a>

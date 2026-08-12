@@ -1,6 +1,5 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import imgLuVBase from "$lib/assets/blog/star-technology/luv/luv-base.png";
 
 	export const metadata: Metadata = {
 		title: "Star Technology: LuV",
@@ -8,7 +7,7 @@
 		parent: "star-technology",
 		description:
 			"A journal of my playthrough of the Minecraft modpack Star Technology through the LuV voltage tier.",
-		thumbnail: imgLuVBase,
+		thumbnail: "blog/star-technology/luv/luv-base",
 	};
 </script>
 
