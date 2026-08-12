@@ -20,6 +20,7 @@
 		<meta name="description" content={data.meta.description} />
 		<meta property="og:description" content={data.meta.description} />
 	{/if}
+	<meta name="theme-color" content="#a61b86" />
 
 	<!-- OpenGraph metadata: https://ogp.me/ -->
 	<meta property="og:title" content={data.meta.title} />
@@ -29,6 +30,9 @@
 
 	<meta property="og:image" content={thumbnail.href} />
 	<meta property="og:url" content={canonURL} />
+
+	<!-- I HATE METADATA -->
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
 <header>
