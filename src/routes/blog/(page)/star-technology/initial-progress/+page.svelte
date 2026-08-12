@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import imgIVBase from "$lib/assets/blog/star-technology/initial-progress/iv-base.webp";
+	import imgIVBase from "$lib/assets/blog/star-technology/initial-progress/iv-base.png";
 
 	export const metadata: Metadata = {
 		title: "Star Technology: Initial Progress (LV-IV)",

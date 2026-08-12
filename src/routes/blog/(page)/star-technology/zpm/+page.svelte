@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import imgZPMBase from "$lib/assets/blog/star-technology/zpm/stargate.webp";
+	import imgZPMBase from "$lib/assets/blog/star-technology/zpm/stargate.png";
 
 	export const metadata: Metadata = {
 		title: "Star Technology: ZPM and Classic Stargate",

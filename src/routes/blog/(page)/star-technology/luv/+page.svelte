@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import imgLuVBase from "$lib/assets/blog/star-technology/luv/luv-base.webp";
+	import imgLuVBase from "$lib/assets/blog/star-technology/luv/luv-base.png";
 
 	export const metadata: Metadata = {
 		title: "Star Technology: LuV",

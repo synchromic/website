@@ -13,6 +13,7 @@
 	<title>{data.meta.title}</title>
 	{#if data.meta.description}
 		<meta name="description" content={data.meta.description} />
+		<meta property="og:description" content={data.meta.description} />
 	{/if}
 
 	<!-- OpenGraph metadata: https://ogp.me/ -->

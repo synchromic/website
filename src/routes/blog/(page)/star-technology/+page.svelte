@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
-	import thumbnail from "$lib/assets/blog/star-technology/thumbnail.webp";
+	import thumbnail from "$lib/assets/blog/star-technology/thumbnail.png";
 
 	export const metadata: Metadata = {
 		title: "Star Technology index",
@@ -19,6 +19,15 @@
 
 	const childSlugs = ["initial-progress", "luv", "zpm"];
 	const childPosts = childSlugs.map((s) => blogIndex.pageMap.get(data.slug + "/" + s)!);
+
+	// thumbnail images are pngs for compatibility, but on this page we want to use the webp edition
+	// returns the webp path
+	function thumbnailWebp(path: string) {
+		if (!path.endsWith(".png")) {
+			throw new Error("Thumbnail image is not a .png: " + path);
+		}
+		return path.slice(-4) + ".webp";
+	}
 </script>
 
 <p>
@@ -49,7 +58,11 @@
 			<a href={post.slug}>{shortTitle}</a>
 		</h2>
 		<a href={post.slug}>
-			<img class="full-width" src={post.meta.thumbnail} alt="Navigate to {shortTitle} blog post" />
+			<img
+				class="full-width"
+				src={thumbnailWebp(post.meta.thumbnail)}
+				alt="Navigate to {shortTitle} blog post"
+			/>
 		</a>
 	{/each}
 </nav>
