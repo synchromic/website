@@ -3,7 +3,7 @@
 
 	export const metadata: Metadata = {
 		title: "Star Technology: ZPM and Classic Stargate",
-		date: new Date("2026-07-29T23:20:53-07:00"),
+		date: new Date("2026-08-11T19:04:21-07:00"),
 		parent: "star-technology",
 		description:
 			"A journal of my playthrough of the Minecraft modpack Star Technology during the ZPM tier and up to the Classic Stargate.",
@@ -13,6 +13,7 @@
 <script lang="ts">
 	import BlogFigure from "$lib/components/BlogFigure.svelte";
 	import type { PageProps } from "./$types";
+	import imgColorBars from "$lib/assets/blog/star-technology/zpm/SMPTE_Color_Bars.svg";
 
 	let { data }: PageProps = $props();
 </script>
@@ -123,11 +124,20 @@
 	caption="Futuristic Mechanisms chapter complete! (July 26)"
 />
 
-<p>With all the main ZPM infrastructure done, it was time to begin crafting components for the Classic Stargate. This thing is expensive! The bottlenecks are making 23 thousand weapon grade naquadah (6.3 days of processing time in one UV CAT) and 485 stargate rods, but there are also lots of other challenges along the way.
+<hr />
+
+<p>
+	With all the main ZPM infrastructure done, it was time to begin crafting components for the
+	Classic Stargate. This thing is expensive! The bottlenecks are making 23 thousand weapon grade
+	naquadah (6.3 days of processing time in one UV CAT) and 485 stargate rods, but there are also
+	lots of other challenges along the way.
 </p>
 
 <p>
-	First of all, for two of the multiblocks, we need these Runic Wave Generators. The hardest part of this craft is remembering to make large enough input hatches for the assembly line. Our AE2 infrastructure is a little bit behind, as we're still using the perfect overclocking multiblocks for most crafts.
+	First of all, for two of the multiblocks, we need these Runic Wave Generators. The hardest part of
+	this craft is remembering to make large enough input hatches for the assembly line. Our AE2
+	infrastructure is a little bit behind, as we're still using the perfect overclocking multiblocks
+	for most crafts, rather than the upgraded parallel multiblocks.
 </p>
 
 <BlogFigure
@@ -156,7 +166,10 @@
 />
 
 <p>
-	Then I set up the Large Rotor Machine. I used another design by Haph from the Star Technology Discord that allows us to autocraft recipes with layered inputs. I feel a little bad about not trying to come up with autocrafting solutions myself, but these are just too ingenious. We eventually upgraded this to run four in parallel, as it became a bottleneck.
+	Then I set up the Large Rotor Machine. I used another design by Haph from the Star Technology
+	Discord that allows us to autocraft recipes with layered inputs. I feel a little bad about not
+	trying to come up with autocrafting solutions myself, but these are just too ingenious. We
+	eventually upgraded this to run four in parallel, as it became a bottleneck.
 </p>
 
 <BlogFigure
@@ -167,7 +180,8 @@
 />
 
 <p>
-	We completely ran out of trinium, so Maz rebuilt the naquadah line with all the parallel multiblocks.
+	We completely ran out of trinium, so Maz rebuilt the naquadah line with all the parallel
+	multiblocks.
 </p>
 
 <BlogFigure
@@ -178,7 +192,8 @@
 />
 
 <p>
-	Yet another multiblock: the Dimensional Finder gives us the coordinates to enter into the Stargate. I think this multiblock looks really cool.
+	Yet another multiblock: the Dimensional Finder gives us the coordinates to enter into the
+	Stargate. I think this multiblock looks really cool.
 </p>
 
 <BlogFigure
@@ -189,7 +204,10 @@
 />
 
 <p>
-	At this point, we were mostly just waiting for the stargate rods and weapon grade naquadah, so I went on a little side quest to try out the Modular Combustion Frame. It only generates around 7.5M EU/t, which is around the same amount as seven of the plasma turbines, so it wasn't really worth it for the energy, but I still thought it was fun.
+	At this point, we were mostly just waiting for the stargate rods and weapon grade naquadah, so I
+	went on a little side quest to try out the Modular Combustion Frame. It only generates around 7.5M
+	EU/t, which is around the same amount as seven of the plasma turbines, so it wasn't really worth
+	it for the energy, but I still thought it was fun.
 </p>
 
 <BlogFigure
@@ -200,7 +218,8 @@
 />
 
 <p>
-	Here we have the Stargate Component Assembly, the multiblock that finally makes the stargate blocks. Unfortunately, we still don't have the materials for those!
+	Here we have the Stargate Component Assembly, the multiblock that finally makes the stargate
+	blocks. Unfortunately, we still don't have the materials for those!
 </p>
 
 <BlogFigure
@@ -211,7 +230,8 @@
 />
 
 <p>
-	While we continued to wait, we worked on some quality of life automation. Mazerak built this upgraded manual crafting setup.
+	While we continued to wait, we worked on some quality of life automation. Mazerak built this
+	upgraded manual crafting setup.
 </p>
 
 <BlogFigure
@@ -222,7 +242,8 @@
 />
 
 <p>
-	Meanwhile, I designed this little thing. I call it MultIKEA: you can order a multiblock (or several) and it delivers all the required blocks to this terminal.
+	Meanwhile, I designed this little thing. I call it MultIKEA: you can order a multiblock (or
+	several) and it delivers all the required blocks to this terminal.
 </p>
 
 <BlogFigure
@@ -233,7 +254,13 @@
 />
 
 <p>
-	Since I designed this myself from scratch (for once), I'll elaborate on how it works. The key technique that makes this work is that filling and emptying fluid cells does not change their custom name. This is important because I want to make the patterns that request the multiblocks searchable in my terminal. Each multiblock pattern has an empty fluid cell in the input and a filled fluid cell in the output. When the pattern provider deposits all the multiblock materials into the yellow subnet, the canner fills the cell and dumps it into the main net, completing the recipe. Then the main net automatically empties all the filled cells it finds.
+	Since I designed this myself from scratch (for once), I'll elaborate on how it works. The key
+	technique that makes this work is that filling and emptying fluid cells does not change their
+	custom name. This is important because I want to make the patterns that request the multiblocks
+	searchable in my terminal. Each multiblock pattern has an empty fluid cell in the input and a
+	filled fluid cell in the output. When the pattern provider deposits all the multiblock materials
+	into the yellow subnet, the canner fills the cell and dumps it into the main net, completing the
+	recipe. Then the main net automatically empties all the filled cells it finds.
 </p>
 
 <BlogFigure
@@ -244,5 +271,55 @@
 />
 
 <p>
-	A funny quirk of this system is that when we empty the fluid cells, we need to use the Pipez item pipe to filter for cells with water in them. (I couldn't find any way to do this using AE2 only.) So, I put a storage bus with a fuzzy card on a colossal chest to store all fluid cells, and then used an item pipe to extract filled ones. This lets us use a larger number of different multiblock patterns, since with a normal chest we can only have 27 differently-named fluid cells.
+	A funny quirk of this system is that when we empty the fluid cells, we need to use the Pipez item
+	pipe to filter for cells with water in them. (I couldn't find any way to do this using AE2 only.)
+	So, I put a storage bus with a fuzzy card on a colossal chest to store all fluid cells, and then
+	used an item pipe to extract filled ones. This lets us use a larger number of different multiblock
+	patterns, since with a normal chest we can only have 27 differently-named fluid cells.
+</p>
+
+<p>
+	(Side note: I recently learned of the Auto Complete Card, which totally lets us skip the fluid
+	cells. Oops. It still works well enough, though.)
+</p>
+
+<BlogFigure
+	src="{data.slug}/sca-crafting"
+	imgClass="landscape"
+	alt="Stargate Component Assembly crafting some components"
+	caption="SCA finishing up the last few pieces of the stargate"
+/>
+
+<BlogFigure
+	src="{data.slug}/stargate-built"
+	imgClass="landscape"
+	alt="Stargate multiblock completed but not yet activated"
+	caption="There it is!"
+/>
+
+<p>And on July 29, 2026, at 11:48 PM PDT, we have officially- uh-</p>
+
+<BlogFigure
+	src="{data.slug}/death"
+	imgClass="landscape"
+	alt="We got killed by the stargate opening animation"
+	caption="wtf?"
+/>
+
+<figure>
+	<img class="landscape-small" src={imgColorBars} alt="SMPTE color bars (technical difficulties)" />
+	<figcaption>PLEASE STAND BY</figcaption>
+</figure>
+
+<BlogFigure
+	src="{data.slug}/stargate-real"
+	imgClass="landscape"
+	alt="Stargate multiblock completed and activated"
+	caption="Nothing happened"
+/>
+
+<p>
+	...we have officially opened our Classic Stargate!! Even though we have had UV circuits for some
+	time already, we can now actually begin the tier using the new materials we get from Abydos. But
+	that'll need to wait until the next post!
 </p>

@@ -29,6 +29,11 @@ img.landscape {
 	height: auto;
 }
 
+img.landscape-small {
+	width: 40%;
+	height: auto;
+}
+
 img.portrait {
 	width: 400px;
 	max-width: 70vw;
