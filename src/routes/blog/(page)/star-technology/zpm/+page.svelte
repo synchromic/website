@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
+	import imgZPMBase from "$lib/assets/blog/star-technology/zpm/stargate.webp";
 
 	export const metadata: Metadata = {
 		title: "Star Technology: ZPM and Classic Stargate",
@@ -7,6 +8,7 @@
 		parent: "star-technology",
 		description:
 			"A journal of my playthrough of the Minecraft modpack Star Technology during the ZPM tier and up to the Classic Stargate.",
+		thumbnail: imgZPMBase,
 	};
 </script>
 
