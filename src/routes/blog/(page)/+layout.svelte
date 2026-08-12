@@ -9,7 +9,7 @@
 	let canonURL = $derived(data.url.origin + data.url.pathname);
 	let thumbnailPath = $derived.by(() => {
 		const { png, webp } = getUrls(data.meta.thumbnail);
-		return png ?? webp;
+		return webp ?? png;
 	});
 	let thumbnail: URL = $derived(new URL(thumbnailPath, data.url));
 </script>
