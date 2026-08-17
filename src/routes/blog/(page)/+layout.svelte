@@ -1,4 +1,6 @@
 <script lang="ts">
+	import FootnoteList from "$lib/components/footnote/FootnoteList.svelte";
+	import FootnoteWrapper from "$lib/components/footnote/FootnoteWrapper.svelte";
 	import "$lib/css/blog.css";
 	import { formatLongDate } from "$lib/dates";
 	import { getUrls } from "$lib/images";
@@ -49,35 +51,39 @@
 	</div>
 {/if}
 
-{@render children()}
+<FootnoteWrapper>
+	{@render children()}
 
-<footer>
-	<nav>
-		<div class="footer footer-left">
-			{#if data.newer !== null}
-				<a href="/blog/{data.newer.slug}">
-					Newer post:<br />
-					{data.newer.meta.title}
-				</a>
-			{/if}
-		</div>
-		<div class="footer footer-center">
-			{#if data.parent !== undefined}
-				<a href="/blog/{data.parent.slug}">Back to {data.parent.meta.title}</a>
-				<div style="height: 0.5em"></div>
-			{/if}
-			<a href="/blog">Back to blog index</a>
-		</div>
-		<div class="footer footer-right">
-			{#if data.older !== null}
-				<a href="/blog/{data.older.slug}">
-					Older post:<br />
-					{data.older.meta.title}
-				</a>
-			{/if}
-		</div>
-	</nav>
-</footer>
+	<footer>
+		<hr />
+		<FootnoteList />
+		<nav>
+			<div class="footer footer-left">
+				{#if data.newer !== null}
+					<a href="/blog/{data.newer.slug}">
+						Newer post:<br />
+						{data.newer.meta.title}
+					</a>
+				{/if}
+			</div>
+			<div class="footer footer-center">
+				{#if data.parent !== undefined}
+					<a href="/blog/{data.parent.slug}">Back to {data.parent.meta.title}</a>
+					<div style="height: 0.5em"></div>
+				{/if}
+				<a href="/blog">Back to blog index</a>
+			</div>
+			<div class="footer footer-right">
+				{#if data.older !== null}
+					<a href="/blog/{data.older.slug}">
+						Older post:<br />
+						{data.older.meta.title}
+					</a>
+				{/if}
+			</div>
+		</nav>
+	</footer>
+</FootnoteWrapper>
 
 <style>
 	.warning {
