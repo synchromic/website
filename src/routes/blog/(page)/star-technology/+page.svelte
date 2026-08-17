@@ -17,7 +17,7 @@
 
 	let { data }: PageProps = $props();
 
-	const childSlugs = ["initial-progress", "luv", "zpm"];
+	const childSlugs = ["initial-progress", "luv", "zpm", "uv"];
 	const childPosts = childSlugs.map((s) => blogIndex.pageMap.get(data.slug + "/" + s)!);
 </script>
 
