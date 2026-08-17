@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FootnoteWrapper from "$lib/components/footnote/FootnoteWrapper.svelte";
 	import "$lib/css/blog.css";
 	import { formatLongDate } from "$lib/dates";
 	import { getUrls } from "$lib/images";
@@ -49,7 +50,9 @@
 	</div>
 {/if}
 
-{@render children()}
+<FootnoteWrapper>
+	{@render children()}
+</FootnoteWrapper>
 
 <footer>
 	<nav>
