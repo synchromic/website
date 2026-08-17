@@ -139,3 +139,25 @@
 	alt="Bacteria mutating and breeding multiblocks"
 	caption="The big bacteria multiblocks"
 />
+
+<p>
+	Our next task is to use the bacteria fluid to produce sterilized growth medium and stem cells. For
+	small, self-contained builds like these, I've began working out the ratios of the materials
+	beforehand so that I know what the bottleneck is and how many machines to make. It also helped in
+	this case because one option here is to feed some of the growth medium back in a loop to make
+	bacterial sludge, producing stem cells as a byproduct, and I worked out the right ratios to leave
+	us with enough of both the growth medium and stem cells.
+</p>
+
+<BlogFigure
+	src="{data.slug}/growth-medium"
+	imgClass="landscape"
+	alt="Sterile cleanroom decorated with a bacterium"
+	caption="I also learned that doors placed sideways still form a cleanroom"
+/>
+
+<p>
+	With that out of the way, the final step of UV (that I worked on) is making the next tier of
+	circuits. Our circuit infrastructure is horribly dated, with the lowest tier circuits still being
+	made by a build all the way back from HV. It was time for an overhaul.
+</p>
