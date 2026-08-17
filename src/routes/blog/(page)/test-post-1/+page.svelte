@@ -1,7 +1,6 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
 	import Footnote from "$lib/components/footnote/Footnote.svelte";
-	import FootnoteRef from "$lib/components/footnote/FootnoteRef.svelte";
 
 	export const metadata: Metadata = {
 		title: "Test post 1",
@@ -12,6 +11,10 @@
 	};
 </script>
 
-<p>Hello, world!<FootnoteRef id="hi" /></p>
+<p>Hello, world!<Footnote name="hi">This is a footnote!</Footnote></p>
 
-<Footnote id="hi">This is a footnote!</Footnote>
+<p>Goodbye, world!<Footnote name="bye">This is another footnote!</Footnote></p>
+
+<p>Here's a big spacer:</p>
+
+<div style="height: 120vh"></div>

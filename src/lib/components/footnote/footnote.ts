@@ -3,66 +3,70 @@
    Articles are all wrapped in a FootnoteWrapper, which uses Svelte's context system
    to keep track of footnote numbers.
 
-   In the text, use <FootnoteRef id="someString" /> to refer to a footnote, defined in the footer.
+	 In the text, use <Footnote name="blah">blah blah blah</Footnote> to write a footnote. It will appear as
+	 a superscripted number with a link to the actual footnote.
 
-   At the bottom of the page (or anywhere after the ref, but bottom makes the most sense), use
-   <Footnote id="someString">blah blah blah</Footnote>
-   to write the actual text of the footnote. The FootnoteRef will link to the Footnote,
-   and the Footnote will have a backlink to the FootnoteRef.
+	 Near the bottom, inside the FootnoteWrapper, put a <FootnoteList /> element, which will contain
+	 the actual texts of the footnotes.
 
-   Multiple references are supported, the footnote will contain a list of sequential backlinks.
+   For implementation, we use <a href="#fn:name" /> and <a href="#fnref:name" /> for the links.
 
-   For implementation, we use <a href="#id" /> for the links. We generate unique ids for each
-   footnote and ref, of the form `footnoteNUM` and `footnoteNUMrefNUM`. Instead of the string id, we
-   use the numerical index; the string id is more of an implemetation detail as only the numerical
-   id is actually displayed. These numbers should all be 1-indexed.
+	 At first, I wanted a design where I have footnote references in the text and then putting the
+	 actual footnote body at the bottom, but it seemed rather unclean to track all the references
+	 and all the backlinks, so I went with this simpler design instead.
 
-	 Having the id as a string is useful for letting you move references around the document without
-	 worrying about screwing up the ordering of the footnote numbers.
+	 Nested footnotes are NOT SUPPORTED!! There are some issues with reactivity that I can't quite
+	 figure out.
 
-	 I'm separating footnotes and references for two reasons: first, so that footnotes can
-	 be referred to multiple times (useful for citations, though I don't know how often I'll
-	 actually use this), and because I want the blog code to look as similar to the output as possible.
-	 Having inline footnotes may be more convenient, but it kinda makes the text look weird with an
-	 interjection in the middle of the sentence, and I think having it placed like in a real article
-	 will make it more natural to look at.
-
-	 There is no error checking for if a reference actually refers to a footnote, so be diligent.
+	 Credit to https://shkspr.mobi/blog/2020/07/usability-of-footnotes/ for some design stuff
 */
 
-import { createContext } from "svelte";
+import { createContext, type Snippet } from "svelte";
+
+// When rendering the list, we need to sort the footnotes by their index.
+interface FootnoteListItem {
+	name: string;
+	index: number;
+	snippet: Snippet;
+}
 
 export class FootnoteContext {
-	// Stores the number of references of any id.
-	refs: Map<string, number>;
-
-	// Maps from an id to a footnote number (index). This is set by the reference or
-	// the footnote itself, depending on which is loaded first.
+	// Maps from a name to a footnote number (index).
 	indices: Map<string, number>;
+	private indexCounter = 1;
+
+	snippets: Map<string, Snippet>;
 
 	constructor() {
-		this.refs = new Map();
 		this.indices = new Map();
+		this.snippets = new Map();
 	}
 
-	getOrAddIndex(id: string) {
-		let index = this.indices.get(id);
+	// If multiple footnotes are given the same name, it uses the first index but the last snippet.
+	// I could make it error in this case but I prefer idempotency.
+	// Returns the index.
+	addFootnote(name: string, children: Snippet): number {
+		let index = this.indices.get(name);
 		if (index === undefined) {
-			index = this.indices.size + 1;
-			this.indices.set(id, index);
+			index = this.indexCounter++;
+			this.indices.set(name, index);
 		}
+		this.snippets.set(name, children);
 		return index;
 	}
 
-	// Returns the new count
-	addRef(id: string): number {
-		let oldCount = this.refs.get(id) ?? 0;
-		this.refs.set(id, oldCount + 1);
-		return oldCount + 1;
-	}
-
-	getRefCount(id: string): number {
-		return this.refs.get(id) ?? 0;
+	// Returns a list of footnote items, sorted by index.
+	getFootnoteList(): FootnoteListItem[] {
+		console.log(this.indices.size);
+		return this.indices
+			.entries()
+			.map(([name, index]) => ({
+				name,
+				index,
+				snippet: this.snippets.get(name)!,
+			}))
+			.toArray()
+			.sort((a, b) => a.index - b.index);
 	}
 }
 
