@@ -39,7 +39,7 @@
 
 <header>
 	<h1>{data.meta.title}</h1>
-	<p>{formatLongDate(data.meta.date)}</p>
+	<p><time datetime={data.meta.date.toISOString()}>{formatLongDate(data.meta.date)}</time></p>
 </header>
 
 {#if data.meta.hidden}
@@ -54,9 +54,12 @@
 <FootnoteWrapper>
 	{@render children()}
 
-	<footer>
+	<div>
 		<hr />
 		<FootnoteList />
+	</div>
+
+	<footer>
 		<nav>
 			<div class="footer footer-left">
 				{#if data.newer !== null}
@@ -93,10 +96,6 @@
 
 		color: var(--foreground-color-warn);
 		background-color: var(--background-color-warn);
-	}
-
-	footer {
-		width: 100%;
 	}
 
 	.footer {

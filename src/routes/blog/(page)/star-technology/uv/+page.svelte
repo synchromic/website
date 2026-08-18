@@ -3,7 +3,7 @@
 
 	export const metadata: Metadata = {
 		title: "Star Technology: UV",
-		date: new Date("2026-08-16T13:38:03-07:00"),
+		date: new Date("2026-08-17T16:59:20-07:00"),
 		parent: "star-technology",
 		description:
 			"A journal of my playthrough of the Minecraft modpack Star Technology during the UV tier.",
@@ -13,6 +13,7 @@
 
 <script lang="ts">
 	import BlogFigure from "$lib/components/BlogFigure.svelte";
+	import Footnote from "$lib/components/footnote/Footnote.svelte";
 	import type { PageProps } from "./$types";
 
 	let { data }: PageProps = $props();
@@ -22,19 +23,19 @@
 	We are now in UV, with a whole new dimension to explore: Abydos. It contains an endless desert,
 	scattered with various structures containing important loot. Within some of the treasure chests
 	are bacteria, which we must cultivate to harvest stem cells for highly advanced circuits. There
-	are also four new liquids filled with new minerals that can be extracted and processed. Let's get
-	started!
+	are also four drillable liquids filled with new minerals that can be extracted and processed.
+	Let's get started!
 </p>
 
 <p>
-	With the stargate newly opened, we spent some time flying around and exploring Abydos. The
-	dimension has an eternal sandstorm that occasionally damages you, but because we are playing in
-	peaceful mode (as intended), it never hurt enough to become a problem, even without crafting the
-	fancy armor from last tier. The two structures that contain loot are the tombs and the pyramids.
-	The most important item to obtain from the chests is the dormant bacteria. There are some other
-	useful items, such as the ruined components and the naquadah armor, but those aren't used until
-	later tiers. We can also get the Pharaoh's Necklace which stops the sandstorm damage, although
-	it's rare and not really a necessity.
+	With the stargate newly opened, we spent some time exploring Abydos. The dimension has an eternal
+	sandstorm that occasionally damages you, but because we are playing in peaceful mode (as
+	intended), it never hurt enough to become a problem, even without crafting the fancy armor from
+	last tier. The two structures that contain loot are the tombs and the pyramids. The most important
+	item to obtain from the chests is the dormant bacteria. There are some other useful items, such as
+	the ruined components and the naquadah armor, but those aren't used until later tiers. We can also
+	get the Pharaoh's Necklace which stops the sandstorm damage, although it's rare and not really a
+	necessity.
 </p>
 
 <BlogFigure
@@ -51,8 +52,8 @@
 	can convert the magma into raw ores directly, or we can use the more efficient recipe of turning
 	it into residue first with the cyclonic sifter. We do need some thallium first to craft the
 	cyclonic sifter, and thallium is a product of the reactivity dense magma, so you must either use
-	the inefficient recipe first or manually mine a little bit of crookesite from Abydos. (I found
-	this a bit confusing at first.)
+	the inefficient recipe first or manually mine some crookesite from Abydos. (I found this a bit
+	confusing at first.)
 </p>
 
 <BlogFigure
@@ -159,5 +160,66 @@
 <p>
 	With that out of the way, the final step of UV (that I worked on) is making the next tier of
 	circuits. Our circuit infrastructure is horribly dated, with the lowest tier circuits still being
-	made by a build all the way back from HV. It was time for an overhaul.
+	made by a build all the way back from HV. It's time for an overhaul. Welcome to Circuittown!<Footnote
+		name="circuittown"
+		>Okay, that's not its <i>real</i> name, but I'm trying to keep this blog family-friendly.</Footnote
+	>
+</p>
+
+<BlogFigure
+	src="{data.slug}/circuittown-front"
+	imgClass="landscape"
+	alt="Front view of Circuittown, with towers of parallel machines"
+	caption="Front view"
+/>
+
+<BlogFigure
+	src="{data.slug}/circuittown"
+	imgClass="landscape"
+	alt="Back view of Circuittown, with more towers and a cleanroom"
+	caption="Back view"
+/>
+
+<p>
+	In this region, we craft everything from ULV to UHV circuits, using the best available recipes and
+	best available machines. To save on the number of machines in this build, I used a bunch of
+	requesters and AE2 autocrafting to stock up on the basic components like bolts and wires.
+	Unfortunately, I couldn't do this for every machine, so I ended up with a ton of cutters and
+	assemblers and other machines anyways. It was a huge chore to build and configure every single one
+	of these machines, but the MultIKEA system I created last tier helped immensely.
+</p>
+
+<p>
+	While I was working on this (it took 4 days or so), Mazerak made a bunch of other improvements
+	around the base. He built processing lines for a bunch of random chemicals, overhauled our ore
+	processing system, redesigned our ingot freezing setup, and built even more fusion reactors. You
+	can tell which builds Maz made because he keeps the AE2 cables aboveground while I always hide
+	them underground.
+</p>
+
+<BlogFigure
+	src="{data.slug}/oreproc"
+	imgClass="landscape"
+	alt="New ore processing system"
+	caption="New ore processing system"
+/>
+
+<BlogFigure
+	src="{data.slug}/freezer"
+	imgClass="landscape"
+	alt="New freezer setup with requesters"
+	caption="This also uses the requester system to limit outputs"
+/>
+
+<BlogFigure
+	src="{data.slug}/fusion"
+	imgClass="landscape"
+	alt="View down center of enormous stack of fusion reactors"
+	caption="We have so many of these"
+/>
+
+<p>
+	With UHV circuits acquired, we were immediately able to craft the new MK III fusion reactors,
+	getting us neutronium and putting us into a new tier. There's a lot to do here, and we don't get
+	into UEV until after the Ancient Stargate. So once we've done that, I'll see you in the next post!
 </p>
