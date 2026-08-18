@@ -220,6 +220,7 @@
 
 <p>
 	With UHV circuits acquired, we were immediately able to craft the new MK III fusion reactors,
-	getting us neutronium and putting us into a new tier. There's a lot to do here, and we don't get
-	into UEV until after the Ancient Stargate. So once we've done that, I'll see you in the next post!
+	getting us neutronium and putting us into a new tier on August 11. There's a lot to do here, and
+	we don't get into UEV until after the Ancient Stargate. So once we've done that, I'll see you in
+	the next post!
 </p>
