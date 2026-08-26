@@ -20,11 +20,16 @@
 </script>
 
 <p>
-	UHV is here, and it's going to be here for a while, since UEV components require some funky nether alloys which are locked behind the Ancient Stargate. The stargate is, of course, going to take plenty of work, but there are also some other challenges on the way, such as making Utopian Akreyrium and UEV circuits.
+	UHV is here, and it's going to be here for a while, since UEV components require some funky nether
+	alloys which are locked behind the Ancient Stargate. The stargate is, of course, going to take
+	plenty of work, but there are also some other challenges on the way, such as making Utopian
+	Akreyrium and UEV circuits.
 </p>
 
 <p>
-	As the one who made the UHV circuit setup, I was naturally given the task of expanding it to craft UEV circuits as well. Before that, though, we need an ingredient called Runic Convergence Infusion. Compared to what I went through earlier, this was a pretty simple processing line.
+	As the one who made the UHV circuit setup, I was naturally given the task of expanding it to craft
+	UEV circuits as well. Before that, though, we need an ingredient called Runic Convergence
+	Infusion. Compared to what I went through earlier, this was a pretty simple processing line.
 </p>
 
 <BlogFigure
@@ -35,7 +40,13 @@
 />
 
 <p>
-	Now for the UEV circuits themselves. Thanks to my awesome infrastructure from the UHV circuit setup, most of my work was simplified to just adding patterns for various random plates and bolts and putting those in the requesters. For assembling the circuits, I decided to use the new Compact Assembly Lines, which are 2.5 times faster than the regular assembly lines (if my understanding is correct). Unfortunately, these take forever to craft, requiring lots of expensive UHV components, so I ran the autocrafting overnight. I also upgraded the old circuits to use the new neutronium wafers.
+	Now for the UEV circuits themselves. Thanks to my awesome infrastructure from the UHV circuit
+	setup, most of my work was simplified to just adding patterns for various random plates and bolts
+	and putting those in the requesters. For assembling the circuits, I decided to use the new Compact
+	Assembly Lines, which are 2.5 times faster than the regular assembly lines (if my understanding is
+	correct). Unfortunately, these take forever to craft, requiring lots of expensive UHV components,
+	so I ran the autocrafting overnight. I also upgraded the old circuits to use the new neutronium
+	wafers.
 </p>
 
 <BlogFigure
@@ -46,7 +57,14 @@
 />
 
 <p>
-	While I was working on that, and was also getting distracted by writing the UV blog post, Mazerak set up some basic Utopian Akreyrium<Footnote name="akreyrium">Learning how to spell this correctly took concerningly long.</Footnote>. There are two ways to craft it: the horrible slow way, which takes almost two hours per bucket<Footnote name="rates">Assuming 1 UHV machine</Footnote>, and the actually decent way which takes a handful of seconds. Unfortunately, the decent way requires both UEV circuits <i>and</i> having some amount of akreyrium already, so the slow way will have to do for now.
+	While I was working on that, and was also getting distracted by writing the UV blog post, Mazerak
+	set up some basic Utopian Akreyrium<Footnote name="akreyrium"
+		>Learning how to spell this correctly took concerningly long.</Footnote
+	>. There are two ways to craft it: the horrible slow way, which takes almost two hours per bucket<Footnote
+		name="rates">Assuming 1 UHV machine</Footnote
+	>, and the actually decent way which takes a handful of seconds. Unfortunately, the decent way
+	requires both UEV circuits <i>and</i> having some amount of akreyrium already, so the slow way will
+	have to do for now.
 </p>
 
 <BlogFigure
@@ -57,7 +75,10 @@
 />
 
 <p>
-	Maz also set up nuclear reactors for echo shards, which are used for void ingots, an important material for the Ancient Stargate. We had been completely neglecting nuclear reactors for this whole run, so this was quite the project. It's too bad their power output is negligible at this point. Oh, and part of that process was making de-ionized water as well.
+	Maz also set up nuclear reactors for echo shards, which are used for void ingots, an important
+	material for the Ancient Stargate. We had been completely neglecting nuclear reactors for this
+	whole run, so this was quite the project. It's too bad their power output is negligible at this
+	point. Oh, and part of that process was making de-ionized water as well.
 </p>
 
 <BlogFigure
@@ -68,7 +89,8 @@
 />
 
 <p>
-	Now that we have a decent supply of UEV circuits, it only takes a bit of random crafting to finish off the Abydos chapter in the questbook. Look at how far we've come!
+	Now that we have a decent supply of UEV circuits, it only takes a bit of random crafting to finish
+	off the Abydos chapter in the questbook. Look at how far we've come!
 </p>
 
 <BlogFigure
@@ -79,7 +101,12 @@
 />
 
 <p>
-	That leaves us with the next chapter, which is all about crafting the Ancient Stargate. Before we get into that, though, I put down a couple Component Nexuses, which are one of the new multiblocks. They help massively in crafting the LuV, ZPM, and UV components, as they run at double the speed and we don't have to send them ordered inputs like the assembly line. If you're making one, <b>beware</b>: the recipes for the UV pump and UV robot arm are <i>slightly</i> different than the assembly line recipes (this is a bug).
+	That leaves us with the next chapter, which is all about crafting the Ancient Stargate. Before we
+	get into that, though, I put down a couple Component Nexuses, which are one of the new
+	multiblocks. They help massively in crafting the LuV, ZPM, and UV components, as they run at
+	double the speed and we don't have to send them ordered inputs like the assembly line. If you're
+	making one, <b>beware</b>: the recipes for the UV pump and UV robot arm are <i>slightly</i> different
+	than the assembly line recipes (this is a bug).
 </p>
 
 <BlogFigure
@@ -90,7 +117,9 @@
 />
 
 <p>
-	The first important resource for the Ancient Stargate is void ingots. I tacked this on to the echo shard production; it wasn't all too difficult. I needed more industrial TNT, but we have an endless supply of toluene from bacteria so this isn't as hard as before.
+	The first important resource for the Ancient Stargate is void ingots. I tacked this on to the echo
+	shard production; it wasn't all too difficult. I needed more industrial TNT, but we have an
+	endless supply of toluene from bacteria so this isn't as hard as before.
 </p>
 
 <BlogFigure
@@ -101,7 +130,8 @@
 />
 
 <p>
-	Next, I made some Titan Forges. These are necessary to craft dense plates, but they also make other stargate components faster using the foil ream and wire spool recipes.
+	Next, I made some Titan Forges. These are necessary to craft dense plates, but they also make
+	other stargate components faster using the foil ream and wire spool recipes.
 </p>
 
 <BlogFigure
@@ -112,7 +142,8 @@
 />
 
 <p>
-	Mazerak built some Auxiliary Boosted Fusion Reactors, which are darn fast and will greatly help with our power production in the future.
+	Mazerak built some Auxiliary Boosted Fusion Reactors, which are darn fast and will greatly help
+	with our power production in the future.
 </p>
 
 <BlogFigure
@@ -123,7 +154,8 @@
 />
 
 <p>
-	He also upgraded the akreyrium production to use the better recipe. The stargate needs thousands of buckets of akreyrium, and the bad recipe is <i>really</i> not going to cut it.
+	He also upgraded the akreyrium production to use the better recipe. The stargate needs thousands
+	of buckets of akreyrium, and the bad recipe is <i>really</i> not going to cut it.
 </p>
 
 <BlogFigure
