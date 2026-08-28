@@ -13,6 +13,7 @@ figure {
 
 figcaption {
 	font-style: italic;
+	text-align: center;
 }
 
 img {
@@ -25,12 +26,14 @@ img.full-width {
 }
 
 img.landscape {
-	width: 80%;
+	width: 100%;
+	max-width: 800px;
 	height: auto;
 }
 
 img.landscape-small {
-	width: 40%;
+	width: 100%;
+	max-width: 400px;
 	height: auto;
 }
 

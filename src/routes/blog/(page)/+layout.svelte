@@ -62,10 +62,10 @@
 	<footer>
 		<nav>
 			<div class="footer footer-left">
-				{#if data.newer !== null}
-					<a href="/blog/{data.newer.slug}">
-						Newer post:<br />
-						{data.newer.meta.title}
+				{#if data.older !== null}
+					<a href="/blog/{data.older.slug}">
+						Older post:<br />
+						{data.older.meta.title}
 					</a>
 				{/if}
 			</div>
@@ -77,10 +77,10 @@
 				<a href="/blog">Back to blog index</a>
 			</div>
 			<div class="footer footer-right">
-				{#if data.older !== null}
-					<a href="/blog/{data.older.slug}">
-						Older post:<br />
-						{data.older.meta.title}
+				{#if data.newer !== null}
+					<a href="/blog/{data.newer.slug}">
+						Newer post:<br />
+						{data.newer.meta.title}
 					</a>
 				{/if}
 			</div>
@@ -112,6 +112,7 @@
 
 	.footer-center {
 		align-items: center;
+		text-align: center;
 		grid-area: center;
 	}
 
