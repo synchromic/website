@@ -23,13 +23,15 @@
 	>
 </p>
 
-<p>
-	Nested footnotes:
-	<Footnote name="nested1">
-		Hello!
-		<Footnote name="nested2">Hi!</Footnote>
-	</Footnote>
-</p>
+<!--
+	<p>
+		Nested footnotes:
+		<Footnote name="nested1">
+			Hello!
+			<Footnote name="nested2">Hi!</Footnote>
+		</Footnote>
+	</p>
+-->
 
 <p>Here's a big spacer:</p>
 

@@ -15,6 +15,10 @@
 	 actual footnote body at the bottom, but it seemed rather unclean to track all the references
 	 and all the backlinks, so I went with this simpler design instead.
 
+	 Nested footnotes *almost* work, but they only appear after reactivity triggers, but their id
+	 is referenced before reactivity triggers, causing errors when building the page since there
+	 is an id referenced that doesn't yet exist. Sigh. I'll maybe fix this later.
+
 	 Credit to https://shkspr.mobi/blog/2020/07/usability-of-footnotes/ for some design stuff
 */
 
