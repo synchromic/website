@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getFootnoteContext } from "./footnote";
+	import { getFootnoteContext } from "./footnote.svelte.ts";
 
 	const context = getFootnoteContext();
 	let items = $derived(context.getFootnoteList());

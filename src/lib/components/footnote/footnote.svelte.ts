@@ -7,7 +7,7 @@
 	 a superscripted number with a link to the actual footnote.
 
 	 Near the bottom, inside the FootnoteWrapper, put a <FootnoteList /> element, which will contain
-	 the actual texts of the footnotes.
+	 the actual texts of the footnotes. (This is done in the blog page +layout.svelte.)
 
    For implementation, we use <a href="#fn:name" /> and <a href="#fnref:name" /> for the links.
 
@@ -15,13 +15,11 @@
 	 actual footnote body at the bottom, but it seemed rather unclean to track all the references
 	 and all the backlinks, so I went with this simpler design instead.
 
-	 Nested footnotes are NOT SUPPORTED!! There are some issues with reactivity that I can't quite
-	 figure out.
-
 	 Credit to https://shkspr.mobi/blog/2020/07/usability-of-footnotes/ for some design stuff
 */
 
 import { createContext, type Snippet } from "svelte";
+import { SvelteMap } from "svelte/reactivity";
 
 // When rendering the list, we need to sort the footnotes by their index.
 interface FootnoteListItem {
@@ -32,14 +30,14 @@ interface FootnoteListItem {
 
 export class FootnoteContext {
 	// Maps from a name to a footnote number (index).
-	indices: Map<string, number>;
+	indices: SvelteMap<string, number>;
 	private indexCounter = 1;
 
-	snippets: Map<string, Snippet>;
+	snippets: SvelteMap<string, Snippet>;
 
 	constructor() {
-		this.indices = new Map();
-		this.snippets = new Map();
+		this.indices = new SvelteMap();
+		this.snippets = new SvelteMap();
 	}
 
 	// If multiple footnotes are given the same name, it uses the first index but the last snippet.
@@ -57,7 +55,6 @@ export class FootnoteContext {
 
 	// Returns a list of footnote items, sorted by index.
 	getFootnoteList(): FootnoteListItem[] {
-		console.log(this.indices.size);
 		return this.indices
 			.entries()
 			.map(([name, index]) => ({
@@ -67,6 +64,14 @@ export class FootnoteContext {
 			}))
 			.toArray()
 			.sort((a, b) => a.index - b.index);
+	}
+
+	// We need to reset this component on navigates because otherwise footnotes
+	// are preserved between pages.
+	reset() {
+		this.indices.clear();
+		this.snippets.clear();
+		this.indexCounter = 1;
 	}
 }
 

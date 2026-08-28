@@ -9,11 +9,27 @@
 		description: "Test page because I needed something to put in my index.",
 		thumbnail: "favicon",
 	};
+
+	let counter = $state(0);
 </script>
 
 <p>Hello, world!<Footnote name="hi">This is a footnote!</Footnote></p>
 
 <p>Goodbye, world!<Footnote name="bye">This is another footnote!</Footnote></p>
+
+<p>
+	<button onclick={() => (counter += 1)}>Increment</button><Footnote name="counter"
+		>Counter: {counter}</Footnote
+	>
+</p>
+
+<p>
+	Nested footnotes:
+	<Footnote name="nested1">
+		Hello!
+		<Footnote name="nested2">Hi!</Footnote>
+	</Footnote>
+</p>
 
 <p>Here's a big spacer:</p>
 
