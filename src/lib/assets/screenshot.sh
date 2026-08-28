@@ -2,7 +2,7 @@
 
 # Prompts to pick a file, give it a name, copy it to the blog folder, then convert it to webp.
 SCREENSHOT_DIR='~/.local/share/PrismLauncher/instances/Star Technology/minecraft/screenshots/'
-OUTPUT_DIR='./blog/star-technology/uv'
+OUTPUT_DIR='./blog/star-technology/uhv'
 
 screenshotfile="$(zenity --file-selection)"
 if [ -z "$screenshotfile" ]; then
