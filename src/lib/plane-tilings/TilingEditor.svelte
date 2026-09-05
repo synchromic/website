@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { largestEmptyComponent, PlaneTiling, Tile } from "./tiling.svelte";
 	import TilingDisplay from "./TilingDisplay.svelte";
+	import TilingSimulator from "./TilingSimulator.svelte";
 
 	const defaultCode =
 		"Xa2cN0T1219L6v9afirsmy8vVftoenV9fH31UfGuO0f3xllx3nnXejtu21was+Wr74nx+/hvxM333VDVVp12";
@@ -36,6 +38,7 @@
 		tiling.setCode(code);
 	}
 
+	// prefer using tiling.columns/rows over these directly
 	let columnsInput = $state(15);
 	let rowsInput = $state(44);
 
@@ -223,6 +226,19 @@
 		<p>Filled: {tileCounts.filled} ({Math.round((tileCounts.filled / tileCounts.total) * 100)}%)</p>
 		<p>Empty: {tileCounts.empty} ({Math.round((tileCounts.empty / tileCounts.total) * 100)}%)</p>
 		<p>Largest empty component: {largestEmptyComponent(tiling)}</p>
+
+		{#if browser && window.Worker}
+			<TilingSimulator
+				settings={{
+					columns: tiling.columns,
+					rows: tiling.rows,
+					randomizeP,
+					symmetric,
+				}}
+			/>
+		{:else}
+			<p>Could not load simulation as Web Workers are not available</p>
+		{/if}
 	</div>
 </div>
 
