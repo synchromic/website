@@ -8,6 +8,7 @@
 		date: new Date("2026-07-22T20:00:00.000Z"),
 		description:
 			"I noticed some interesting roof decorations while sleep deprived on a plane flight and looked into it a bit too much",
+		thumbnail: "blog/plane-tilings/tilings-thumbnail",
 	};
 </script>
 
@@ -23,11 +24,7 @@
 	Delta flight's Airbus A320neo:
 </p>
 
-<BlogFigure
-	src="plane-tilings/ceiling.jpg"
-	imgClass="portrait"
-	alt="Cool ceiling tiles on my flight"
-/>
+<BlogFigure src="plane-tilings/ceiling" imgClass="portrait" alt="Cool ceiling tiles on my flight" />
 
 <p>
 	If you fill in the blanks, this tiling is a <a

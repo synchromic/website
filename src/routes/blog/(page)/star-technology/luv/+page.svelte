@@ -7,6 +7,7 @@
 		parent: "star-technology",
 		description:
 			"A journal of my playthrough of the Minecraft modpack Star Technology through the LuV voltage tier.",
+		thumbnail: "blog/star-technology/luv/luv-base",
 	};
 </script>
 

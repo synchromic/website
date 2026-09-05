@@ -8,11 +8,10 @@ const urls = import.meta.glob(
 );
 
 export function getUrls(path: string) {
-	const extension = path.endsWith(".jpg") ? "jpg" : "png";
-	const fixedPath = path.endsWith(".jpg") ? path.slice(0, -4) : path;
-	const fullPath = `/src/lib/assets/blog/${fixedPath}`;
+	const fullPath = `/src/lib/assets/${path}`;
 	return {
-		original: urls[`${fullPath}.${extension}`] as string,
-		webp: urls[`${fullPath}.webp`] as string,
+		jpg: urls[`${fullPath}.jpg`] as string | undefined,
+		png: urls[`${fullPath}.png`] as string | undefined,
+		webp: urls[`${fullPath}.webp`] as string | undefined,
 	};
 }

@@ -13,14 +13,18 @@
 		src: string;
 	} = $props();
 
-	let urls = $derived(getUrls(src));
+	let urls = $derived(getUrls("blog/" + src));
+	let original = $derived(urls.png ?? urls.jpg);
 </script>
 
 <figure>
 	<img class={imgClass} src={urls.webp} {alt} />
-	{#if caption === undefined}
-		<figcaption><a href={urls.original}>View original</a></figcaption>
-	{:else}
-		<figcaption>{caption} · <a href={urls.original}>View original</a></figcaption>
+	{#if caption !== undefined && original !== undefined}
+		<figcaption>{caption} · <a href={original}>View original</a></figcaption>
+	{:else if caption !== undefined}
+		<figcaption>{caption}</figcaption>
+	{:else if original !== undefined}
+		<figcaption><a href={original}>View original</a></figcaption>
+		<!-- else no caption -->
 	{/if}
 </figure>

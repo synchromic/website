@@ -13,6 +13,7 @@ figure {
 
 figcaption {
 	font-style: italic;
+	text-align: center;
 }
 
 img,
@@ -25,8 +26,15 @@ svg {
 	height: auto;
 }
 
-.landscape {
-	width: 80%;
+img.landscape {
+	width: 100%;
+	max-width: 800px;
+	height: auto;
+}
+
+img.landscape-small {
+	width: 100%;
+	max-width: 400px;
 	height: auto;
 }
 

@@ -3,6 +3,15 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
 import path from "path";
 
+// bugfix: svelte uses "http://svelte-prerender" as the origin when prerendering
+// which is useless when trying to use the page url in meta tags
+// so we can change that using the cloudflare env variable and the prerender.origin config
+// const origin = process.env.CF_PAGES_URL ?? "http://localhost:4173";
+
+// never mind that doesn't work because cloudflare doesn't supply it with my actual domain
+// hence i will just hardcode my domain and hope nothing goes wrong
+const origin = "https://synchromic.ca";
+
 export default defineConfig({
 	resolve: {
 		alias: {
@@ -18,6 +27,9 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes("node_modules") ? undefined : true,
 			},
 			adapter: adapter(),
+			prerender: {
+				origin,
+			},
 		}),
 	],
 });

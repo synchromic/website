@@ -1,16 +1,14 @@
 <script module lang="ts">
 	import type { Metadata } from "$lib/blogIndex";
+	import imgDesign from "$lib/assets/blog/creating-this-blog/design.webp";
 
 	export const metadata: Metadata = {
 		title: "Creating this blog",
 		date: new Date("2026-06-20T20:00:00.000Z"),
 		hidden: true,
 		description: "Notes on how I created this blog.",
+		thumbnail: "blog/creating-this-blog/design",
 	};
-</script>
-
-<script lang="ts">
-	import imgDesign from "$lib/assets/blog/creating-this-blog/design.webp";
 </script>
 
 <p>

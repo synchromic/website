@@ -4,6 +4,11 @@ export interface Metadata {
 	title: string;
 	description: string;
 	date: Date;
+
+	// url of thumbnail starting from assets/ and NO EXTENSION
+	// will automatically pick webp, falls back to png
+	thumbnail: string;
+
 	parent?: Slug;
 	hidden?: boolean;
 }

@@ -6,12 +6,19 @@
 		date: new Date("2026-07-14T20:00:00.000Z"),
 		description:
 			"Index page for all my Star Technology blog posts. Star Technology is a Minecraft modpack focused on technology and progression.",
+		thumbnail: "blog/star-technology/thumbnail",
 	};
 </script>
 
 <script lang="ts">
-	import imgIVBase from "$lib/assets/blog/star-technology/initial-progress/iv-base.webp";
-	import imgLuVBase from "$lib/assets/blog/star-technology/luv/luv-base.webp";
+	import blogIndex from "$lib/blogIndex";
+	import { getUrls } from "$lib/images";
+	import type { PageProps } from "./$types";
+
+	let { data }: PageProps = $props();
+
+	const childSlugs = ["initial-progress", "luv", "zpm", "uv", "uhv"];
+	const childPosts = childSlugs.map((s) => blogIndex.pageMap.get(data.slug + "/" + s)!);
 </script>
 
 <p>
@@ -33,21 +40,22 @@
 <hr />
 
 <nav>
-	<h2>
-		<a href="/blog/star-technology/initial-progress">Initial progress (LV-IV)</a>
-	</h2>
-	<a href="/blog/star-technology/initial-progress">
-		<img class="full-width" src={imgIVBase} alt="Navigate to initial progress blog post" />
-	</a>
-
-	<hr />
-
-	<h2>
-		<a href="/blog/star-technology/luv">LuV</a>
-	</h2>
-	<a href="/blog/star-technology/luv">
-		<img class="full-width" src={imgLuVBase} alt="Navigate to LuV blog post" />
-	</a>
+	{#each childPosts as post, index}
+		{#if index > 0}
+			<hr />
+		{/if}
+		{const shortTitle = post.meta.title.slice("Star Technology: ".length)}
+		<h2>
+			<a href={post.slug}>{shortTitle}</a>
+		</h2>
+		<a href={post.slug}>
+			<img
+				class="full-width"
+				src={getUrls(post.meta.thumbnail).webp}
+				alt="Navigate to {shortTitle} blog post"
+			/>
+		</a>
+	{/each}
 </nav>
 
 <style>

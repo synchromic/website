@@ -1,21 +1,45 @@
 <script lang="ts">
+	import FootnoteList from "$lib/components/footnote/FootnoteList.svelte";
+	import FootnoteWrapper from "$lib/components/footnote/FootnoteWrapper.svelte";
 	import "$lib/css/blog.css";
 	import { formatLongDate } from "$lib/dates";
+	import { getUrls } from "$lib/images";
 	import type { LayoutProps } from "./$types";
 
 	let { data, children }: LayoutProps = $props();
+
+	let canonURL = $derived(data.url.origin + data.url.pathname);
+	let thumbnailPath = $derived.by(() => {
+		const { png, webp } = getUrls(data.meta.thumbnail);
+		return webp ?? png;
+	});
+	let thumbnail: URL = $derived(new URL(thumbnailPath, data.url));
 </script>
 
 <svelte:head>
 	<title>{data.meta.title}</title>
 	{#if data.meta.description}
 		<meta name="description" content={data.meta.description} />
+		<meta property="og:description" content={data.meta.description} />
 	{/if}
+	<meta name="theme-color" content="#a61b86" />
+
+	<!-- OpenGraph metadata: https://ogp.me/ -->
+	<meta property="og:title" content={data.meta.title} />
+
+	<!-- maybe `article` would be more accurate but i don't understand the namespace stuff -->
+	<meta property="og:type" content="website" />
+
+	<meta property="og:image" content={thumbnail.href} />
+	<meta property="og:url" content={canonURL} />
+
+	<!-- I HATE METADATA -->
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
 <header>
 	<h1>{data.meta.title}</h1>
-	<p>{formatLongDate(data.meta.date)}</p>
+	<p><time datetime={data.meta.date.toISOString()}>{formatLongDate(data.meta.date)}</time></p>
 </header>
 
 {#if data.meta.hidden}
@@ -27,35 +51,42 @@
 	</div>
 {/if}
 
-{@render children()}
+<FootnoteWrapper>
+	{@render children()}
 
-<footer>
-	<nav>
-		<div class="footer footer-left">
-			{#if data.newer !== null}
-				<a href="/blog/{data.newer.slug}">
-					Newer post:<br />
-					{data.newer.meta.title}
-				</a>
-			{/if}
-		</div>
-		<div class="footer footer-center">
-			{#if data.parent !== undefined}
-				<a href="/blog/{data.parent.slug}">Back to {data.parent.meta.title}</a>
-				<div style="height: 0.5em"></div>
-			{/if}
-			<a href="/blog">Back to blog index</a>
-		</div>
-		<div class="footer footer-right">
-			{#if data.older !== null}
-				<a href="/blog/{data.older.slug}">
-					Older post:<br />
-					{data.older.meta.title}
-				</a>
-			{/if}
-		</div>
-	</nav>
-</footer>
+	<div>
+		<hr />
+		<FootnoteList />
+	</div>
+
+	<footer>
+		<nav>
+			<div class="footer footer-left">
+				{#if data.older !== null}
+					<a href="/blog/{data.older.slug}">
+						Older post:<br />
+						{data.older.meta.title}
+					</a>
+				{/if}
+			</div>
+			<div class="footer footer-center">
+				{#if data.parent !== undefined}
+					<a href="/blog/{data.parent.slug}">Back to {data.parent.meta.title}</a>
+					<div style="height: 0.5em"></div>
+				{/if}
+				<a href="/blog">Back to blog index</a>
+			</div>
+			<div class="footer footer-right">
+				{#if data.newer !== null}
+					<a href="/blog/{data.newer.slug}">
+						Newer post:<br />
+						{data.newer.meta.title}
+					</a>
+				{/if}
+			</div>
+		</nav>
+	</footer>
+</FootnoteWrapper>
 
 <style>
 	.warning {
@@ -65,10 +96,6 @@
 
 		color: var(--foreground-color-warn);
 		background-color: var(--background-color-warn);
-	}
-
-	footer {
-		width: 100%;
 	}
 
 	.footer {
@@ -85,6 +112,7 @@
 
 	.footer-center {
 		align-items: center;
+		text-align: center;
 		grid-area: center;
 	}
 
