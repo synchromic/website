@@ -1,7 +1,7 @@
 import type { PageLoad } from "./$types";
 import blogIndex from "$lib/blogIndex";
 
-const NUM_RECENT_POSTS = 7;
+const NUM_RECENT_POSTS = 5;
 
 export const load: PageLoad = async () => {
 	return {
