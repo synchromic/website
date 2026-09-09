@@ -1,28 +1,30 @@
 <script lang="ts">
-	import type { SimulationSettings } from "./worker";
+	import type { SimulationMessage, SimulationSettings } from "./worker";
 
 	let { settings }: { settings: Omit<SimulationSettings, "count"> } = $props();
 
-	let result: Map<number, number> | null = $state(null);
+	let message: SimulationMessage | null = $state(null);
 	let sortedResults: [number, number][] | null = $derived.by(() => {
-		if (result === null) return null;
-		return [...result.entries()].sort(([a, _a], [b, _b]) => a - b);
+		if (message?.kind !== "result") return null;
+		return [...message.result.entries()].sort(([a, _a], [b, _b]) => a - b);
 	});
 	let countInput: number = $state(100);
 
 	const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 	worker.addEventListener("message", (event) => {
-		result = event.data;
+		message = event.data;
 	});
 
 	function runSimulation(count: number) {
-		result = null;
+		message = null;
 		worker.postMessage({
 			...settings,
 			count,
 		});
 	}
 </script>
+
+<h3>Simulator</h3>
 
 <p>
 	<label for="simulationCountInput">Simulation count:</label>
@@ -31,7 +33,9 @@
 
 <p><button onclick={() => runSimulation(countInput)}>Run simulation</button></p>
 
-{#if result}
+{#if message?.kind === "progress"}
+	<p>Progress: {message.completed}/{message.total}</p>
+{:else if message?.kind === "result"}
 	<div class="fixed-table">
 		<table>
 			<thead>

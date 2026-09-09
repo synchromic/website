@@ -10,10 +10,10 @@
 	let tiling = new PlaneTiling(15, 44, defaultCode);
 	let display: TilingDisplay;
 
-	let symmetric = $state(false);
+	let symmetric = $state(true);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
-	let randomizeP = $state(0.5);
+	let randomizeP = $state(0.62);
 	let tileCounts = $derived(tiling.countTiles());
 
 	let code = $derived(tiling.getCode());
