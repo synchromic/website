@@ -2,6 +2,7 @@ import adapter from "@sveltejs/adapter-cloudflare";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
 import path from "path";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 // bugfix: svelte uses "http://svelte-prerender" as the origin when prerendering
 // which is useless when trying to use the page url in meta tags
@@ -32,4 +33,8 @@ export default defineConfig({
 			},
 		}),
 	],
+	worker: {
+		plugins: () => [svelte()],
+		format: "es"
+	}
 });

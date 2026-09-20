@@ -61,6 +61,11 @@ class TilingGrid {
 					this.grid[r].push(false);
 				}
 			}
+		} else {
+			// annoying bug before this was added:
+			// setting columns default -> 2 -> pressing default would keep shrinkColumns = 2,
+			// causing it to shrink to the wrong size
+			this.shrinkColumns = null;
 		}
 	}
 
@@ -76,6 +81,8 @@ class TilingGrid {
 					this.grid[r].push(false);
 				}
 			}
+		} else {
+			this.shrinkRows = null;
 		}
 	}
 

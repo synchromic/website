@@ -21,16 +21,25 @@ async function runSimulation(settings: SimulationSettings, tracker: SimulationTr
 	// scheduler.yield looks nice but isn't supported on safari yet
 	const channel = new MessageChannel();
 	return new Promise((res, _) => {
-		const runOnce = () => {
-			tiling.randomize(settings.randomizeP, settings.symmetric);
-			const size = largestEmptyComponent(tiling);
-			results.set(size, (results.get(size) ?? 0) + 1);
-			tracker.completed++;
-			if (tracker.completed >= settings.count) res(results);
-			channel.port2.postMessage("");
+		let lastUpdate = new Date().getTime();
+		const runBatch = () => {
+			while (true) {
+				tiling.randomize(settings.randomizeP, settings.symmetric);
+				const size = largestEmptyComponent(tiling);
+				results.set(size, (results.get(size) ?? 0) + 1);
+				tracker.completed++;
+				if (tracker.completed >= settings.count) {
+					res(results);
+					return;
+				} else if (new Date().getTime() - lastUpdate >= 50) {
+					lastUpdate = new Date().getTime();
+					channel.port2.postMessage("");
+					break;
+				}
+			}
 		};
-		channel.port1.onmessage = runOnce;
-		runOnce();
+		channel.port1.onmessage = runBatch;
+		runBatch();
 	});
 }
 
