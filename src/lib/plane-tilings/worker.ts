@@ -12,9 +12,16 @@ interface SimulationTracker {
 	completed: number;
 }
 
-async function runSimulation(settings: SimulationSettings, tracker: SimulationTracker) {
+async function runSimulation(
+	settings: SimulationSettings,
+	tracker: SimulationTracker,
+): Promise<Omit<SimulationMessageResult, "kind">> {
 	const tiling = new PlaneTiling(settings.columns, settings.rows);
 	const results = new Map<number, number>();
+	let smallest = settings.rows * settings.columns;
+	let smallestCode = "";
+	let largest = 0;
+	let largestCode = "";
 	tracker.completed = 0;
 	// in order for the progress bar interval to work, we need to yield to the scheduler sometimes
 	// MessageChannel is a better way to do this than setTimeout
@@ -27,9 +34,23 @@ async function runSimulation(settings: SimulationSettings, tracker: SimulationTr
 				tiling.randomize(settings.randomizeP, settings.symmetric);
 				const size = largestEmptyComponent(tiling);
 				results.set(size, (results.get(size) ?? 0) + 1);
+				if (size < smallest) {
+					smallest = size;
+					smallestCode = tiling.getCode();
+				}
+				if (size > largest) {
+					largest = size;
+					largestCode = tiling.getCode();
+				}
 				tracker.completed++;
 				if (tracker.completed >= settings.count) {
-					res(results);
+					res({
+						counts: results,
+						smallest,
+						smallestCode,
+						largest,
+						largestCode,
+					});
 					return;
 				} else if (new Date().getTime() - lastUpdate >= 50) {
 					lastUpdate = new Date().getTime();
@@ -49,9 +70,13 @@ interface SimulationMessageProgress {
 	total: number;
 }
 
-interface SimulationMessageResult {
+export interface SimulationMessageResult {
 	kind: "result";
-	result: Map<number, number>;
+	counts: Map<number, number>;
+	smallest: number;
+	smallestCode: string;
+	largest: number;
+	largestCode: string;
 }
 
 export type SimulationMessage = SimulationMessageProgress | SimulationMessageResult;
@@ -69,6 +94,6 @@ onmessage = async (event: MessageEvent<SimulationSettings>) => {
 	clearInterval(progressHandle);
 	postMessage({
 		kind: "result",
-		result,
+		...result,
 	});
 };

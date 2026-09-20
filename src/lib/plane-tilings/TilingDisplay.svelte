@@ -27,6 +27,7 @@
 
 	const scale = 20;
 	const boundingBox = $derived(tiling.boundingBox(scale));
+	const id = $props.id();
 
 	let polygons: { [key: string]: SVGElement } = $state({});
 
@@ -47,11 +48,11 @@
 	function variantToId(variant: TileVariant): string {
 		switch (variant) {
 			case TileVariant.Forward:
-				return "forward";
+				return "forward-" + id;
 			case TileVariant.Backward:
-				return "backward";
+				return "backward-" + id;
 			case TileVariant.Vertical:
-				return "vertical";
+				return "vertical-" + id;
 		}
 	}
 
@@ -89,7 +90,9 @@
 	onfocusin={(e) => attachData(e, onfocus)}
 	onfocusout={(e) => attachData(e, onblur)}
 >
+	<!-- use <use> to hopefully improve performance on large svgs -->
 	<g style="display: none">
+		<!-- display: none might sometimes cause rendering issues? hard to test -->
 		{#each [TileVariant.Forward, TileVariant.Backward, TileVariant.Vertical] as variant}
 			<polygon
 				id={variantToId(variant)}

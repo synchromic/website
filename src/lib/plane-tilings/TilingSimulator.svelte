@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { SimulationMessage, SimulationSettings } from "./worker";
+	import type { PlaneTiling } from "./tiling.svelte";
+	import type { SimulationMessage, SimulationMessageResult, SimulationSettings } from "./worker";
 
-	let { settings }: { settings: Omit<SimulationSettings, "count"> } = $props();
+	let { settings, tiling }: { settings: Omit<SimulationSettings, "count">; tiling: PlaneTiling } =
+		$props();
 
 	let message: SimulationMessage | null = $state(null);
 	let sortedResults: [number, number][] | null = $derived.by(() => {
 		if (message?.kind !== "result") return null;
-		return [...message.result.entries()].sort(([a, _a], [b, _b]) => a - b);
+		return [...message.counts.entries()].sort(([a, _a], [b, _b]) => a - b);
 	});
 	let countInput: number = $state(100);
 
@@ -36,6 +38,20 @@
 {#if message?.kind === "progress"}
 	<p>Progress: {message.completed}/{message.total}</p>
 {:else if message?.kind === "result"}
+	<p>
+		<label for="smallestComponentInput">Smallest: {message.smallest}</label>
+		<input id="smallestComponentInput" type="text" bind:value={message.smallestCode} />
+		<button onclick={() => tiling.setCode((message as SimulationMessageResult).smallestCode)}
+			>Load</button
+		>
+	</p>
+	<p>
+		<label for="largestComponentInput">Largest: {message.largest}</label>
+		<input id="largestComponentInput" type="text" bind:value={message.largestCode} />
+		<button onclick={() => tiling.setCode((message as SimulationMessageResult).largestCode)}
+			>Load</button
+		>
+	</p>
 	<div class="fixed-table">
 		<table>
 			<thead>

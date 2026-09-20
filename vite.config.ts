@@ -35,6 +35,6 @@ export default defineConfig({
 	],
 	worker: {
 		plugins: () => [svelte()],
-		format: "es"
-	}
+		format: "es",
+	},
 });

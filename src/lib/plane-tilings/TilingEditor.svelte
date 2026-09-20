@@ -235,6 +235,7 @@
 					randomizeP,
 					symmetric,
 				}}
+				{tiling}
 			/>
 		{:else}
 			<p>Could not load simulation as Web Workers are not available</p>
