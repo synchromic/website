@@ -1,4 +1,5 @@
-import { largestEmptyComponent, PlaneTiling } from "./tiling.svelte";
+import { makeRandomizer } from "./randomizer";
+import { largestEmptyComponent, PlaneTiling, Tile } from "./tiling.svelte";
 
 interface SimulationTracker {
 	completed: number;
@@ -13,6 +14,14 @@ async function runSimulation(
 	tracker: SimulationTracker,
 ): Promise<Omit<SimulationMessageResult, "kind">> {
 	const tiling = new PlaneTiling(settings.columns, settings.rows);
+	const randomizer = makeRandomizer({
+		columns: settings.columns,
+		rows: settings.rows,
+		symmetric: settings.symmetric,
+		...(settings.useFilled
+			? { kind: "fixed", count: settings.tileCounts.filled }
+			: { kind: "random", p: settings.randomizeP }),
+	});
 	const results = new Map<number, number>();
 	let smallest = settings.rows * settings.columns;
 	let smallestCode = "";
@@ -27,7 +36,7 @@ async function runSimulation(
 		let lastUpdate = new Date().getTime();
 		const runBatch = () => {
 			while (true) {
-				tiling.randomize(settings.randomizeP, settings.symmetric);
+				randomizer(tiling);
 				const size = largestEmptyComponent(tiling);
 				results.set(size, (results.get(size) ?? 0) + 1);
 				if (size < smallest) {
@@ -69,6 +78,8 @@ export interface SimulationMessageSettings {
 	rows: number;
 	randomizeP: number;
 	symmetric: boolean;
+	useFilled: boolean;
+	tileCounts: { filled: number; empty: number; total: number };
 }
 
 export interface SimulationMessageCancel {

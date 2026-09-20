@@ -13,6 +13,17 @@ export class Tile {
 		this.c = c;
 	}
 
+	// if fix is true, returns the top half if (r, c) is a bottom half of vertical rhombus
+	static compute(rows: number, columns: number, r: number, c: number, fix: boolean): Tile | null {
+		if (r < 0 || r >= rows || c < 0 || c >= columns) return null;
+		const offset = (2 * r + c) % 4;
+		// special cases: bottom/top of grid
+		if (r === 0 && offset === 3) return null;
+		if (r === rows - 1 && offset === 1) return null;
+		if (offset === 3) return fix ? new Tile(r - 1, c) : null;
+		return new Tile(r, c);
+	}
+
 	equalTo(other: any) {
 		return other instanceof Tile && this.r === other.r && this.c === other.c;
 	}
@@ -22,6 +33,13 @@ export class Tile {
 		const variant = [TileVariant.Forward, TileVariant.Vertical, TileVariant.Backward, null][offset];
 		if (variant === null) throw new Error(`Invalid tile: ${this.r}, ${this.c}`);
 		return variant;
+	}
+
+	// TODO: figure out wtf to do if grid isn't symmetric :p
+	symmetric(rows: number, columns: number): Tile | null {
+		const newR = rows - 1 - this.r;
+		const newC = columns - 1 - this.c;
+		return Tile.compute(rows, columns, newR, newC, true);
 	}
 
 	centerPos(scale: number = 1): { x: number; y: number } {
@@ -148,15 +166,8 @@ export class PlaneTiling {
 		this._rows = rows;
 	}
 
-	// if fix is true, returns the top half if (r, c) is a bottom half of vertical rhombus
 	tile(r: number, c: number, fix: boolean): Tile | null {
-		if (r < 0 || r >= this.rows || c < 0 || c >= this.columns) return null;
-		const offset = (2 * r + c) % 4;
-		// special cases: bottom/top of grid
-		if (r === 0 && offset === 3) return null;
-		if (r === this.rows - 1 && offset === 1) return null;
-		if (offset === 3) return fix ? new Tile(r - 1, c) : null;
-		return new Tile(r, c);
+		return Tile.compute(this.rows, this.columns, r, c, fix);
 	}
 
 	// checks if a tile is the bottom half of a valid tile
@@ -165,11 +176,8 @@ export class PlaneTiling {
 		return (2 * r + c) % 4 === 3;
 	}
 
-	// TODO: figure out wtf to do if grid isn't symmetric :p
 	symmetricTile(tile: Tile): Tile | null {
-		const newR = this.rows - 1 - tile.r;
-		const newC = this.columns - 1 - tile.c;
-		return this.tile(newR, newC, true);
+		return tile.symmetric(this.rows, this.columns);
 	}
 
 	// returns width/height of tiling if each rhombus has side length 1

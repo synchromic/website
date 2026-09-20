@@ -6,18 +6,21 @@
 		SimulationMessageSettings,
 	} from "./worker";
 
-	let {
-		settings,
-		tiling,
-	}: { settings: Omit<SimulationMessageSettings, "count" | "kind">; tiling: PlaneTiling } =
-		$props();
+	interface SimulatorProps {
+		tiling: PlaneTiling;
+		randomizeP: number;
+		symmetric: boolean;
+	}
+
+	let props: SimulatorProps = $props();
 
 	let message: SimulationMessage | null = $state(null);
 	let sortedResults: [number, number][] | null = $derived.by(() => {
 		if (message?.kind !== "result") return null;
 		return [...message.counts.entries()].sort(([a, _a], [b, _b]) => a - b);
 	});
-	let countInput: number = $state(100);
+	let countInput: number = $state(1000);
+	let useFilled: boolean = $state(true);
 
 	const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 	worker.addEventListener("message", (event) => {
@@ -33,8 +36,13 @@
 		message = null;
 		workerPostMessage({
 			kind: "settings",
-			...settings,
 			count,
+			columns: props.tiling.columns,
+			rows: props.tiling.rows,
+			randomizeP: props.randomizeP,
+			symmetric: props.symmetric,
+			useFilled,
+			tileCounts: props.tiling.countTiles(),
 		});
 	}
 
@@ -50,6 +58,11 @@
 <p>
 	<label for="simulationCountInput">Simulation count:</label>
 	<input id="simulationCountInput" type="number" bind:value={countInput} />
+</p>
+
+<p>
+	<label for="useFilledInput">Match filled count exactly?</label>
+	<input id="useFilledInput" type="checkbox" bind:checked={useFilled} />
 </p>
 
 <p>
@@ -69,14 +82,14 @@
 	<p>
 		<label for="smallestComponentInput">Smallest: {message.smallest}</label>
 		<input id="smallestComponentInput" type="text" bind:value={message.smallestCode} />
-		<button onclick={() => tiling.setCode((message as SimulationMessageResult).smallestCode)}
+		<button onclick={() => props.tiling.setCode((message as SimulationMessageResult).smallestCode)}
 			>Load</button
 		>
 	</p>
 	<p>
 		<label for="largestComponentInput">Largest: {message.largest}</label>
 		<input id="largestComponentInput" type="text" bind:value={message.largestCode} />
-		<button onclick={() => tiling.setCode((message as SimulationMessageResult).largestCode)}
+		<button onclick={() => props.tiling.setCode((message as SimulationMessageResult).largestCode)}
 			>Load</button
 		>
 	</p>

@@ -228,15 +228,7 @@
 		<p>Largest empty component: {largestEmptyComponent(tiling)}</p>
 
 		{#if browser && window.Worker}
-			<TilingSimulator
-				settings={{
-					columns: tiling.columns,
-					rows: tiling.rows,
-					randomizeP,
-					symmetric,
-				}}
-				{tiling}
-			/>
+			<TilingSimulator {tiling} {randomizeP} {symmetric} />
 		{:else}
 			<p>Could not load simulation as Web Workers are not available</p>
 		{/if}
