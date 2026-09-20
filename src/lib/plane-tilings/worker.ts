@@ -1,19 +1,14 @@
 import { largestEmptyComponent, PlaneTiling } from "./tiling.svelte";
 
-export interface SimulationSettings {
-	count: number;
-	columns: number;
-	rows: number;
-	randomizeP: number;
-	symmetric: boolean;
-}
-
 interface SimulationTracker {
 	completed: number;
+	cancelled: boolean;
+	// typescript doesn't like just using number here
+	progressHandle?: ReturnType<typeof setInterval>;
 }
 
 async function runSimulation(
-	settings: SimulationSettings,
+	settings: SimulationMessageSettings,
 	tracker: SimulationTracker,
 ): Promise<Omit<SimulationMessageResult, "kind">> {
 	const tiling = new PlaneTiling(settings.columns, settings.rows);
@@ -27,7 +22,7 @@ async function runSimulation(
 	// MessageChannel is a better way to do this than setTimeout
 	// scheduler.yield looks nice but isn't supported on safari yet
 	const channel = new MessageChannel();
-	return new Promise((res, _) => {
+	return new Promise((res, rej) => {
 		let lastUpdate = new Date().getTime();
 		const runBatch = () => {
 			while (true) {
@@ -43,7 +38,10 @@ async function runSimulation(
 					largestCode = tiling.getCode();
 				}
 				tracker.completed++;
-				if (tracker.completed >= settings.count) {
+				if (tracker.cancelled) {
+					rej();
+					return;
+				} else if (tracker.completed >= settings.count) {
 					res({
 						counts: results,
 						smallest,
@@ -64,6 +62,19 @@ async function runSimulation(
 	});
 }
 
+export interface SimulationMessageSettings {
+	kind: "settings";
+	count: number;
+	columns: number;
+	rows: number;
+	randomizeP: number;
+	symmetric: boolean;
+}
+
+export interface SimulationMessageCancel {
+	kind: "cancel";
+}
+
 interface SimulationMessageProgress {
 	kind: "progress";
 	completed: number;
@@ -79,21 +90,47 @@ export interface SimulationMessageResult {
 	largestCode: string;
 }
 
-export type SimulationMessage = SimulationMessageProgress | SimulationMessageResult;
+export type SimulationMessage =
+	| SimulationMessageSettings
+	| SimulationMessageCancel
+	| SimulationMessageProgress
+	| SimulationMessageResult;
 
-onmessage = async (event: MessageEvent<SimulationSettings>) => {
-	const tracker = { completed: 0 };
-	let progressHandle = setInterval(() => {
+let currentSimulation: SimulationTracker | null = null;
+
+function cancelSimulation() {
+	if (currentSimulation !== null) {
+		currentSimulation.cancelled = true;
+		clearInterval(currentSimulation.progressHandle);
+	}
+}
+
+onmessage = async (event: MessageEvent<SimulationMessage>) => {
+	if (event.data.kind === "cancel") {
+		cancelSimulation();
+	} else if (event.data.kind === "settings") {
+		cancelSimulation();
+		const tracker: SimulationTracker = { completed: 0, cancelled: false };
+		tracker.progressHandle = setInterval(() => {
+			postMessage({
+				kind: "progress",
+				completed: tracker.completed,
+				total: (event.data as SimulationMessageSettings).count,
+			});
+		}, 20);
+		currentSimulation = tracker;
+		let result;
+		try {
+			result = await runSimulation(event.data, tracker);
+		} catch (_) {
+			// simulation cancelled, probably
+			return;
+		}
+		clearInterval(tracker.progressHandle);
+		currentSimulation = null;
 		postMessage({
-			kind: "progress",
-			completed: tracker.completed,
-			total: event.data.count,
+			kind: "result",
+			...result,
 		});
-	}, 20);
-	const result = await runSimulation(event.data, tracker);
-	clearInterval(progressHandle);
-	postMessage({
-		kind: "result",
-		...result,
-	});
+	}
 };

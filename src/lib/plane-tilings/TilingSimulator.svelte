@@ -1,8 +1,15 @@
 <script lang="ts">
 	import type { PlaneTiling } from "./tiling.svelte";
-	import type { SimulationMessage, SimulationMessageResult, SimulationSettings } from "./worker";
+	import type {
+		SimulationMessage,
+		SimulationMessageResult,
+		SimulationMessageSettings,
+	} from "./worker";
 
-	let { settings, tiling }: { settings: Omit<SimulationSettings, "count">; tiling: PlaneTiling } =
+	let {
+		settings,
+		tiling,
+	}: { settings: Omit<SimulationMessageSettings, "count" | "kind">; tiling: PlaneTiling } =
 		$props();
 
 	let message: SimulationMessage | null = $state(null);
@@ -17,11 +24,23 @@
 		message = event.data;
 	});
 
+	// for type safety, do not use worker.postMessage itself
+	function workerPostMessage(message: SimulationMessage) {
+		worker.postMessage(message);
+	}
+
 	function runSimulation(count: number) {
 		message = null;
-		worker.postMessage({
+		workerPostMessage({
+			kind: "settings",
 			...settings,
 			count,
+		});
+	}
+
+	function cancelSimulation() {
+		workerPostMessage({
+			kind: "cancel",
 		});
 	}
 </script>
@@ -33,7 +52,10 @@
 	<input id="simulationCountInput" type="number" bind:value={countInput} />
 </p>
 
-<p><button onclick={() => runSimulation(countInput)}>Run simulation</button></p>
+<p>
+	<button onclick={() => runSimulation(countInput)}>Run simulation</button>
+	<button onclick={() => cancelSimulation()}>Cancel simulation</button>
+</p>
 
 {#if message?.kind === "progress"}
 	<p>Progress: {message.completed}/{message.total}</p>
