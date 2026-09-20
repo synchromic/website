@@ -2,9 +2,10 @@ import { largestEmptyComponent, PlaneTiling } from "./tiling.svelte";
 
 interface SimulationTracker {
 	completed: number;
-	cancelled: boolean;
+	cancelled: false | "reset" | "cancelled";
 	// typescript doesn't like just using number here
 	progressHandle?: ReturnType<typeof setInterval>;
+	startTime: number | null;
 }
 
 async function runSimulation(
@@ -38,11 +39,9 @@ async function runSimulation(
 					largestCode = tiling.getCode();
 				}
 				tracker.completed++;
-				if (tracker.cancelled) {
-					rej();
-					return;
-				} else if (tracker.completed >= settings.count) {
+				if (tracker.cancelled || tracker.completed >= settings.count) {
 					res({
+						total: tracker.completed,
 						counts: results,
 						smallest,
 						smallestCode,
@@ -58,6 +57,7 @@ async function runSimulation(
 			}
 		};
 		channel.port1.onmessage = runBatch;
+		tracker.startTime = new Date().getTime();
 		runBatch();
 	});
 }
@@ -79,10 +79,12 @@ interface SimulationMessageProgress {
 	kind: "progress";
 	completed: number;
 	total: number;
+	speed?: number;
 }
 
 export interface SimulationMessageResult {
 	kind: "result";
+	total: number;
 	counts: Map<number, number>;
 	smallest: number;
 	smallestCode: string;
@@ -98,39 +100,43 @@ export type SimulationMessage =
 
 let currentSimulation: SimulationTracker | null = null;
 
-function cancelSimulation() {
+function cancelSimulation(reset: boolean) {
 	if (currentSimulation !== null) {
-		currentSimulation.cancelled = true;
+		currentSimulation.cancelled = reset ? "reset" : "cancelled";
 		clearInterval(currentSimulation.progressHandle);
 	}
 }
 
 onmessage = async (event: MessageEvent<SimulationMessage>) => {
 	if (event.data.kind === "cancel") {
-		cancelSimulation();
+		cancelSimulation(false);
 	} else if (event.data.kind === "settings") {
-		cancelSimulation();
-		const tracker: SimulationTracker = { completed: 0, cancelled: false };
+		cancelSimulation(true);
+		const tracker: SimulationTracker = { completed: 0, cancelled: false, startTime: null };
 		tracker.progressHandle = setInterval(() => {
+			let speed;
+			if (tracker.startTime !== null) {
+				const curTime = new Date().getTime();
+				speed = (tracker.completed / (curTime - tracker.startTime)) * 1000;
+			}
 			postMessage({
 				kind: "progress",
 				completed: tracker.completed,
 				total: (event.data as SimulationMessageSettings).count,
+				speed,
 			});
 		}, 20);
 		currentSimulation = tracker;
-		let result;
-		try {
-			result = await runSimulation(event.data, tracker);
-		} catch (_) {
-			// simulation cancelled, probably
-			return;
+		let result = await runSimulation(event.data, tracker);
+		if (!tracker.cancelled || tracker.cancelled === "cancelled") {
+			if (!tracker.cancelled) {
+				clearInterval(tracker.progressHandle);
+				currentSimulation = null;
+			}
+			postMessage({
+				kind: "result",
+				...result,
+			});
 		}
-		clearInterval(tracker.progressHandle);
-		currentSimulation = null;
-		postMessage({
-			kind: "result",
-			...result,
-		});
 	}
 };

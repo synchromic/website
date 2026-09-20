@@ -58,8 +58,14 @@
 </p>
 
 {#if message?.kind === "progress"}
-	<p>Progress: {message.completed}/{message.total}</p>
+	<p>
+		Progress: {message.completed}/{message.total}
+		{#if message.speed !== undefined}
+			({message.speed.toFixed(2)}/s)
+		{/if}
+	</p>
 {:else if message?.kind === "result"}
+	<p>Total: {message.total}</p>
 	<p>
 		<label for="smallestComponentInput">Smallest: {message.smallest}</label>
 		<input id="smallestComponentInput" type="text" bind:value={message.smallestCode} />
