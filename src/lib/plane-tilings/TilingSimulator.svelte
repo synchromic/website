@@ -1,14 +1,11 @@
 <script lang="ts">
 	import type { PlaneTiling } from "./tiling.svelte";
-	import type {
-		SimulationMessage,
-		SimulationMessageResult,
-		SimulationMessageSettings,
-	} from "./worker";
+	import TilingRandomizer from "./TilingRandomizer.svelte";
+	import type { SimulationMessage, SimulationMessageResult } from "./worker";
 
 	interface SimulatorProps {
 		tiling: PlaneTiling;
-		randomizeP: number;
+		randomizer: TilingRandomizer;
 		symmetric: boolean;
 	}
 
@@ -20,7 +17,6 @@
 		return [...message.counts.entries()].sort(([a, _a], [b, _b]) => a - b);
 	});
 	let countInput: number = $state(1000);
-	let useFilled: boolean = $state(true);
 
 	const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 	worker.addEventListener("message", (event) => {
@@ -39,9 +35,8 @@
 			count,
 			columns: props.tiling.columns,
 			rows: props.tiling.rows,
-			randomizeP: props.randomizeP,
 			symmetric: props.symmetric,
-			useFilled,
+			randomizer: props.randomizer.getSettings(),
 			tileCounts: props.tiling.countTiles(),
 		});
 	}
@@ -55,14 +50,11 @@
 
 <h3>Simulator</h3>
 
+<i>Simulation copies settings from above</i>
+
 <p>
 	<label for="simulationCountInput">Simulation count:</label>
 	<input id="simulationCountInput" type="number" bind:value={countInput} />
-</p>
-
-<p>
-	<label for="useFilledInput">Match filled count exactly?</label>
-	<input id="useFilledInput" type="checkbox" bind:checked={useFilled} />
 </p>
 
 <p>

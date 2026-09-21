@@ -2,6 +2,7 @@
 	import { browser } from "$app/environment";
 	import { largestEmptyComponent, PlaneTiling, Tile } from "./tiling.svelte";
 	import TilingDisplay from "./TilingDisplay.svelte";
+	import TilingRandomizer from "./TilingRandomizer.svelte";
 	import TilingSimulator from "./TilingSimulator.svelte";
 
 	const defaultCode =
@@ -13,11 +14,12 @@
 	let symmetric = $state(true);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
-	let randomizeP = $state(0.62);
 	let tileCounts = $derived(tiling.countTiles());
 
 	let code = $derived(tiling.getCode());
 	let codeError = $state(false);
+
+	let randomizer: TilingRandomizer | undefined = $state();
 
 	function testBase64(code: string): boolean {
 		try {
@@ -163,18 +165,6 @@
 			>
 		</p>
 		<p>
-			<button onclick={() => tiling.randomize(randomizeP, symmetric)}>Randomize</button>
-			<input
-				id="randomizePInput"
-				type="range"
-				bind:value={randomizeP}
-				min={0}
-				max={1}
-				step={0.01}
-			/>
-			<label for="randomizePInput">p: {randomizeP}</label>
-		</p>
-		<p>
 			<label for="columnsInput">Columns:</label>
 			<input
 				id="columnsInput"
@@ -199,16 +189,8 @@
 			/>
 		</p>
 		<p>
-			<label for="scrollingInput">Enable scrolling:</label>
-			<input id="scrollingInput" type="checkbox" bind:checked={scrolling} />
-		</p>
-		<p>
 			<label for="symmetricInput">Keep symmetry:</label>
 			<input id="symmetricInput" type="checkbox" bind:checked={symmetric} />
-		</p>
-		<p>
-			<label for="outlineInput">Hide empty outlines:</label>
-			<input id="outlineInput" type="checkbox" bind:checked={hideOutlines} />
 		</p>
 		<p>
 			<label for="codeInput">Code:</label>
@@ -222,13 +204,26 @@
 				autocomplete="off"
 			/>
 		</p>
+
+		<TilingRandomizer {symmetric} {tiling} {tileCounts} bind:this={randomizer} />
+
+		<h3>Visual settings</h3>
+		<p>
+			<label for="scrollingInput">Enable scrolling:</label>
+			<input id="scrollingInput" type="checkbox" bind:checked={scrolling} />
+		</p>
+		<p>
+			<label for="outlineInput">Hide empty outlines:</label>
+			<input id="outlineInput" type="checkbox" bind:checked={hideOutlines} />
+		</p>
+
 		<h3>Stats</h3>
 		<p>Filled: {tileCounts.filled} ({Math.round((tileCounts.filled / tileCounts.total) * 100)}%)</p>
 		<p>Empty: {tileCounts.empty} ({Math.round((tileCounts.empty / tileCounts.total) * 100)}%)</p>
 		<p>Largest empty component: {largestEmptyComponent(tiling)}</p>
 
 		{#if browser && window.Worker}
-			<TilingSimulator {tiling} {randomizeP} {symmetric} />
+			<TilingSimulator {tiling} {randomizer} {symmetric} />
 		{:else}
 			<p>Could not load simulation as Web Workers are not available</p>
 		{/if}

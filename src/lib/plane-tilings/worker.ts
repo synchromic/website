@@ -1,5 +1,5 @@
-import { makeRandomizer } from "./randomizer";
-import { largestEmptyComponent, PlaneTiling, Tile } from "./tiling.svelte";
+import { makeRandomizer, type RandomizerSettings } from "./randomizer";
+import { largestEmptyComponent, PlaneTiling } from "./tiling.svelte";
 
 interface SimulationTracker {
 	completed: number;
@@ -14,14 +14,14 @@ async function runSimulation(
 	tracker: SimulationTracker,
 ): Promise<Omit<SimulationMessageResult, "kind">> {
 	const tiling = new PlaneTiling(settings.columns, settings.rows);
-	const randomizer = makeRandomizer({
-		columns: settings.columns,
-		rows: settings.rows,
-		symmetric: settings.symmetric,
-		...(settings.useFilled
-			? { kind: "fixed", count: settings.tileCounts.filled }
-			: { kind: "random", p: settings.randomizeP }),
-	});
+	const randomizer = makeRandomizer(
+		{
+			columns: settings.columns,
+			rows: settings.rows,
+			symmetric: settings.symmetric,
+		},
+		settings.randomizer,
+	);
 	const results = new Map<number, number>();
 	let smallest = settings.rows * settings.columns;
 	let smallestCode = "";
@@ -32,7 +32,7 @@ async function runSimulation(
 	// MessageChannel is a better way to do this than setTimeout
 	// scheduler.yield looks nice but isn't supported on safari yet
 	const channel = new MessageChannel();
-	return new Promise((res, rej) => {
+	return new Promise((res, _) => {
 		let lastUpdate = new Date().getTime();
 		const runBatch = () => {
 			while (true) {
@@ -76,9 +76,8 @@ export interface SimulationMessageSettings {
 	count: number;
 	columns: number;
 	rows: number;
-	randomizeP: number;
 	symmetric: boolean;
-	useFilled: boolean;
+	randomizer: RandomizerSettings;
 	tileCounts: { filled: number; empty: number; total: number };
 }
 
