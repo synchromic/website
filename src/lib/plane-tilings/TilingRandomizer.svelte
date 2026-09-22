@@ -34,7 +34,7 @@
 				{ columns: tiling.columns, rows: tiling.rows, symmetric },
 				getSettings(),
 			);
-			randomize(tiling);
+			randomize(tiling.grid);
 			error = "";
 		} catch (err) {
 			if (err instanceof Error) {

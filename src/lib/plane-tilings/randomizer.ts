@@ -1,6 +1,7 @@
-import { PlaneTiling, Tile } from "./tiling.svelte.ts";
+import type { FastGrid } from "./calculator.ts";
+import { PlaneTiling, Tile, TilingGrid } from "./tiling.svelte.ts";
 
-type Randomizer = (tiling: PlaneTiling, seed?: [number, number, number, number]) => void;
+type Randomizer = (grid: TilingGrid | FastGrid, seed?: [number, number, number, number]) => void;
 
 // config is for tiling options, settings is for randomizer-specific options
 export interface RandomizerConfig {
@@ -80,20 +81,20 @@ export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSet
 
 	if (settings.kind === "random") {
 		if (!config.symmetric) {
-			return (tiling, seed) => {
+			return (grid, seed) => {
 				let rand = sfc32(...(seed ?? seedgen()));
 				for (const tile of randomizedTiles) {
-					tiling.grid.set(tile, rand() < settings.p);
+					grid.set(tile, rand() < settings.p);
 				}
 			};
 		} else {
-			return (tiling, seed) => {
+			return (grid, seed) => {
 				let rand = sfc32(...(seed ?? seedgen()));
 				for (const tile of randomizedTiles) {
 					const value = rand() < settings.p;
-					tiling.grid.set(tile, value);
+					grid.set(tile, value);
 					const symmetric = tile.symmetric(config.rows, config.columns);
-					if (symmetric !== null) tiling.grid.set(symmetric, value);
+					if (symmetric !== null) grid.set(symmetric, value);
 				}
 			};
 		}
@@ -101,19 +102,19 @@ export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSet
 		if (config.symmetric && centerTile === null && settings.count % 2 === 1) {
 			throw new Error("cannot have odd filled tiles in a symmetric grid without a center tile");
 		}
-		return (tiling, seed) => {
+		return (grid, seed) => {
 			let rand = sfc32(...(seed ?? seedgen()));
 			let leftToPick = config.symmetric ? Math.floor(settings.count / 2) : settings.count;
 			if (config.symmetric && centerTile !== null) {
-				tiling.grid.set(centerTile, settings.count % 2 === 1);
+				grid.set(centerTile, settings.count % 2 === 1);
 			}
 			for (let i = 0; i < randomizedTiles.length; i++) {
 				const remaining = randomizedTiles.length - i;
 				const picked = rand() < leftToPick / remaining;
-				tiling.grid.set(randomizedTiles[i], picked);
+				grid.set(randomizedTiles[i], picked);
 				if (config.symmetric) {
 					const symmetric = randomizedTiles[i].symmetric(config.rows, config.columns);
-					if (symmetric !== null) tiling.grid.set(symmetric, picked);
+					if (symmetric !== null) grid.set(symmetric, picked);
 				}
 				if (picked) leftToPick--;
 			}

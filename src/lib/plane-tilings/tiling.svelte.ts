@@ -51,7 +51,7 @@ export class Tile {
 	}
 }
 
-class TilingGrid {
+export class TilingGrid {
 	// if the user resizes, don't delete extra cells instantly
 	// wait until grid cell gets toggled first
 	shrinkRows: number | null = null;

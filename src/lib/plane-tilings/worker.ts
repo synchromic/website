@@ -1,6 +1,5 @@
-import { makeLECCalculator } from "./calculator";
+import { FastGrid, makeLECCalculator } from "./calculator";
 import { makeRandomizer, seedgen, type RandomizerSettings } from "./randomizer";
-import { PlaneTiling } from "./tiling.svelte";
 
 interface SimulationTracker {
 	completed: number;
@@ -14,7 +13,7 @@ async function runSimulation(
 	settings: SimulationMessageSettings,
 	tracker: SimulationTracker,
 ): Promise<Omit<SimulationMessageResult, "kind">> {
-	const tiling = new PlaneTiling(settings.columns, settings.rows);
+	const grid = new FastGrid(settings.rows, settings.columns);
 	const randomizer = makeRandomizer(
 		{
 			columns: settings.columns,
@@ -39,18 +38,18 @@ async function runSimulation(
 		const runBatch = () => {
 			while (true) {
 				let seed = seedgen();
-				randomizer(tiling, seed);
-				const size = calculator(tiling);
+				randomizer(grid, seed);
+				const size = calculator(grid);
 				results.set(size, (results.get(size) ?? 0) + 1);
 				if (size < smallest) {
 					smallest = size;
-					randomizer(tiling, seed);
-					smallestCode = tiling.getCode();
+					randomizer(grid, seed);
+					smallestCode = grid.getCode();
 				}
 				if (size > largest) {
 					largest = size;
-					randomizer(tiling, seed);
-					largestCode = tiling.getCode();
+					randomizer(grid, seed);
+					largestCode = grid.getCode();
 				}
 				tracker.completed++;
 				if (tracker.cancelled || tracker.completed >= settings.count) {

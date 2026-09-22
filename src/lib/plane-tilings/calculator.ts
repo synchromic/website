@@ -1,4 +1,55 @@
-import { PlaneTiling, type Tile } from "./tiling.svelte";
+import { PlaneTiling, Tile } from "./tiling.svelte";
+
+export class FastGrid {
+	grid: boolean[][];
+
+	// i give up following columns,rows convention its a stupid mistake
+	constructor(rows: number, columns: number) {
+		this.grid = [];
+		for (let r = 0; r < rows; r++) {
+			this.grid.push([]);
+			for (let c = 0; c < columns; c++) {
+				this.grid[r].push(false);
+			}
+		}
+	}
+
+	get(tile: Tile) {
+		return this.grid[tile.r][tile.c];
+	}
+
+	set(tile: Tile, value: boolean) {
+		this.grid[tile.r][tile.c] = value;
+	}
+
+	// screw DRY
+	getCode() {
+		let bytes = [];
+		let curByte = 0,
+			curBit = 0;
+		let rows = this.grid.length,
+			columns = this.grid[0].length;
+		for (let r = 0; r < rows; r++) {
+			for (let c = 0; c < columns; c++) {
+				const tile = Tile.compute(rows, columns, r, c, false);
+				if (tile === null) continue;
+				if (this.get(tile)) {
+					curByte += 1 << curBit;
+				}
+				curBit++;
+				if (curBit >= 8) {
+					bytes.push(curByte);
+					curByte = curBit = 0;
+				}
+			}
+		}
+		if (curBit > 0) bytes.push(curByte);
+		// strip trailing zeros
+		const lastNonzero = bytes.findLastIndex((b) => b > 0);
+		bytes = bytes.slice(0, lastNonzero + 1);
+		return new Uint8Array(bytes).toBase64();
+	}
+}
 
 export function largestEmptyComponent(tiling: PlaneTiling, canMangle: boolean): number {
 	let grid = canMangle ? tiling.grid : tiling.grid.copy();
@@ -28,7 +79,7 @@ export function largestEmptyComponent(tiling: PlaneTiling, canMangle: boolean): 
 }
 
 // assumes can mangle
-export function makeLECCalculator(rows: number, columns: number): (tiling: PlaneTiling) => number {
+export function makeLECCalculator(rows: number, columns: number): (grid: FastGrid) => number {
 	const tempTiling = new PlaneTiling(columns, rows);
 	// precompute adjacent tiles
 	if (rows >= 256) throw new Error("Precomputer requires small row count");
@@ -44,8 +95,7 @@ export function makeLECCalculator(rows: number, columns: number): (tiling: Plane
 		}
 	}
 
-	return (tiling) => {
-		let grid = tiling.grid;
+	return (grid) => {
 		let size = 0,
 			maxSize = 0;
 		let dfsQueue: Tile[] = [];
