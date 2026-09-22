@@ -11,7 +11,9 @@
 	let tiling = new PlaneTiling(15, 44, defaultCode);
 	let display: TilingDisplay;
 
-	let symmetric = $state(true);
+	let symmetricInput = $state(true);
+	let canBeSymmetric = $derived(tiling.canBeSymmetric());
+	let symmetric = $derived(symmetricInput && canBeSymmetric);
 	let hideOutlines = $state(false);
 	let scrolling = $state(false);
 	let tileCounts = $derived(tiling.countTiles());
@@ -190,7 +192,15 @@
 		</p>
 		<p>
 			<label for="symmetricInput">Keep symmetry:</label>
-			<input id="symmetricInput" type="checkbox" bind:checked={symmetric} />
+			<input
+				id="symmetricInput"
+				type="checkbox"
+				bind:checked={symmetricInput}
+				disabled={!canBeSymmetric}
+			/>
+			{#if !canBeSymmetric}
+				<i>Grid is rotationally asymmetric</i>
+			{/if}
 		</p>
 		<p>
 			<label for="codeInput">Code:</label>
@@ -223,7 +233,7 @@
 		<p>Largest empty component: {largestEmptyComponent(tiling)}</p>
 
 		{#if browser && window.Worker}
-			<TilingSimulator {tiling} {randomizer} {symmetric} />
+			<TilingSimulator {tiling} getRandomizerSettings={randomizer.getSettings} {symmetric} />
 		{:else}
 			<p>Could not load simulation as Web Workers are not available</p>
 		{/if}

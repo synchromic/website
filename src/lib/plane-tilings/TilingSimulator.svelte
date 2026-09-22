@@ -1,11 +1,11 @@
 <script lang="ts">
+	import type { RandomizerSettings } from "./randomizer";
 	import type { PlaneTiling } from "./tiling.svelte";
-	import TilingRandomizer from "./TilingRandomizer.svelte";
 	import type { SimulationMessage, SimulationMessageResult } from "./worker";
 
 	interface SimulatorProps {
 		tiling: PlaneTiling;
-		randomizer: TilingRandomizer;
+		getRandomizerSettings: () => RandomizerSettings;
 		symmetric: boolean;
 	}
 
@@ -36,7 +36,7 @@
 			columns: props.tiling.columns,
 			rows: props.tiling.rows,
 			symmetric: props.symmetric,
-			randomizer: props.randomizer.getSettings(),
+			randomizer: props.getRandomizerSettings(),
 			tileCounts: props.tiling.countTiles(),
 		});
 	}

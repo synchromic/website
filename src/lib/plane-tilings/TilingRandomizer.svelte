@@ -15,6 +15,7 @@
 	let kind: "fixed" | "random" = $state("fixed");
 	let filledCount = $state(312);
 	let probability = $state(0.62);
+	let error = $state("");
 
 	$effect(() => {
 		if (filledCount > tileCounts.total) {
@@ -28,11 +29,18 @@
 	}
 
 	function randomize() {
-		let randomize = makeRandomizer(
-			{ columns: tiling.columns, rows: tiling.rows, symmetric },
-			getSettings(),
-		);
-		randomize(tiling);
+		try {
+			let randomize = makeRandomizer(
+				{ columns: tiling.columns, rows: tiling.rows, symmetric },
+				getSettings(),
+			);
+			randomize(tiling);
+			error = "";
+		} catch (err) {
+			if (err instanceof Error) {
+				error = err.message;
+			}
+		}
 	}
 
 	function loadSettings() {
@@ -59,7 +67,7 @@
 			type="range"
 			min={0}
 			max={tileCounts.total}
-			step={1}
+			step={symmetric && !tiling.hasCenterTile() ? 2 : 1}
 			bind:value={filledCount}
 		/>
 		{filledCount}
@@ -83,3 +91,7 @@
 	<button onclick={randomize}>Randomize</button>
 	<button onclick={loadSettings}>Load values from grid</button>
 </p>
+
+{#if error}
+	<p style="color: red">Error: {error}</p>
+{/if}

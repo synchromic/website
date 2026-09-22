@@ -35,7 +35,6 @@ export class Tile {
 		return variant;
 	}
 
-	// TODO: figure out wtf to do if grid isn't symmetric :p
 	symmetric(rows: number, columns: number): Tile | null {
 		const newR = rows - 1 - this.r;
 		const newC = columns - 1 - this.c;
@@ -249,23 +248,6 @@ export class PlaneTiling {
 		}
 	}
 
-	randomize(p: number, symmetric: boolean = false) {
-		const rowLimit = symmetric ? Math.ceil((this.rows + 1) / 2) : this.rows;
-		for (let r = 0; r < rowLimit; r++) {
-			for (let c = 0; c < this.columns; c++) {
-				const tile = this.tile(r, c, false);
-				if (tile === null) continue;
-				this.grid.set(tile, Math.random() < p);
-				if (symmetric) {
-					const otherTile = this.symmetricTile(tile);
-					if (otherTile !== null) {
-						this.grid.set(otherTile, this.grid.get(tile));
-					}
-				}
-			}
-		}
-	}
-
 	countTiles() {
 		let count = 0;
 		let total = 0;
@@ -296,6 +278,22 @@ export class PlaneTiling {
 		return drs
 			.map((_, i) => this.tile(tile.r + drs[i], tile.c + dcs[i], true))
 			.filter((t) => t !== null);
+	}
+
+	hasCenterTile(): boolean {
+		return (
+			(this.rows === 1 && this.columns === 1) ||
+			(this.rows % 4 === 0 && this.columns % 8 === 7) ||
+			(this.rows % 4 === 2 && this.columns % 8 === 3)
+		);
+	}
+
+	canBeSymmetric(): boolean {
+		// technically 1 row/2 columns is symmetric too but the naive symmetry code doesnt like it
+		// and i dont care enough to fix it
+		return (
+			(this.columns % 4 === 3 && this.rows % 2 === 0) || (this.rows === 1 && this.columns === 1)
+		);
 	}
 }
 

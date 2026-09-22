@@ -34,10 +34,6 @@ export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSet
 	} else {
 		// im lazy so stupid solution: check all tiles and see which ones havent been
 		// added already
-
-		// FIXME: this assumes symmetry works both ways, which yknow it *should*, but currently
-		// my buggy ass implementation means that we can ask for symmetry in a not symmetric grid
-		// which breaks things and is annoying. ill fix it later
 		const seenTiles = new Set<string>();
 		for (let r = 0; r < config.rows; r++) {
 			for (let c = 0; c < config.columns; c++) {
@@ -79,7 +75,7 @@ export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSet
 		}
 	} else {
 		if (config.symmetric && centerTile === null && settings.count % 2 === 1) {
-			throw new Error("cannot get odd parity in a symmetric grid without a center tile");
+			throw new Error("cannot have odd filled tiles in a symmetric grid without a center tile");
 		}
 		return (tiling) => {
 			let leftToPick = config.symmetric ? Math.floor(settings.count / 2) : settings.count;
