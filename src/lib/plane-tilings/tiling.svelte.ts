@@ -337,27 +337,3 @@ export function vertexOffsets(variant: TileVariant, size: number = 1): { x: numb
 		};
 	});
 }
-
-export function largestEmptyComponent(tiling: PlaneTiling): number {
-	let grid = tiling.grid.copy();
-	let size = 0,
-		maxSize = 0;
-	function dfs(tile: Tile) {
-		if (grid.get(tile)) return;
-		grid.set(tile, true);
-		size++;
-		for (const adjTile of tiling.adjacentTiles(tile)) {
-			dfs(adjTile);
-		}
-	}
-	for (let r = 0; r < tiling.rows; r++) {
-		for (let c = 0; c < tiling.columns; c++) {
-			let tile = tiling.tile(r, c, false);
-			if (tile === null) continue;
-			size = 0;
-			dfs(tile);
-			if (size > maxSize) maxSize = size;
-		}
-	}
-	return maxSize;
-}

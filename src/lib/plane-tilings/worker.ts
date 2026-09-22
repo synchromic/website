@@ -1,5 +1,6 @@
-import { makeRandomizer, type RandomizerSettings } from "./randomizer";
-import { largestEmptyComponent, PlaneTiling } from "./tiling.svelte";
+import { makeLECCalculator } from "./calculator";
+import { makeRandomizer, seedgen, type RandomizerSettings } from "./randomizer";
+import { PlaneTiling } from "./tiling.svelte";
 
 interface SimulationTracker {
 	completed: number;
@@ -22,6 +23,7 @@ async function runSimulation(
 		},
 		settings.randomizer,
 	);
+	const calculator = makeLECCalculator(settings.rows, settings.columns);
 	const results = new Map<number, number>();
 	let smallest = settings.rows * settings.columns;
 	let smallestCode = "";
@@ -36,15 +38,18 @@ async function runSimulation(
 		let lastUpdate = new Date().getTime();
 		const runBatch = () => {
 			while (true) {
-				randomizer(tiling);
-				const size = largestEmptyComponent(tiling);
+				let seed = seedgen();
+				randomizer(tiling, seed);
+				const size = calculator(tiling);
 				results.set(size, (results.get(size) ?? 0) + 1);
 				if (size < smallest) {
 					smallest = size;
+					randomizer(tiling, seed);
 					smallestCode = tiling.getCode();
 				}
 				if (size > largest) {
 					largest = size;
+					randomizer(tiling, seed);
 					largestCode = tiling.getCode();
 				}
 				tracker.completed++;
