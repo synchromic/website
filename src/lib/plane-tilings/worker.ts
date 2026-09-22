@@ -22,7 +22,7 @@ async function runSimulation(
 		},
 		settings.randomizer,
 	);
-	const calculator = makeLECCalculator(settings.rows, settings.columns);
+	const calculator = makeLECCalculator(settings.rows, settings.columns, settings.symmetric);
 	const results = new Map<number, number>();
 	let smallest = settings.rows * settings.columns;
 	let smallestCode = "";

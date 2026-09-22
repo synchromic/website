@@ -43,8 +43,11 @@ export function seedgen(): [number, number, number, number] {
 }
 
 export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSettings): Randomizer {
+	if (config.rows >= 256) throw new Error("Precomputer requires small row count");
+
 	let randomizedTiles: Tile[] = [];
 	let centerTile: Tile | null = null;
+	const symmetricMap = new Map<number, Tile>();
 	if (!config.symmetric) {
 		for (let r = 0; r < config.rows; r++) {
 			for (let c = 0; c < config.columns; c++) {
@@ -57,23 +60,28 @@ export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSet
 	} else {
 		// im lazy so stupid solution: check all tiles and see which ones havent been
 		// added already
-		const seenTiles = new Set<string>();
+		const seenTiles = new Set<number>();
 		for (let r = 0; r < config.rows; r++) {
 			for (let c = 0; c < config.columns; c++) {
 				// good luck following this
 				const tile = Tile.compute(config.rows, config.columns, r, c, false);
-				if (tile === null || seenTiles.has(tile.r + "," + tile.c)) continue;
-				seenTiles.add(tile.r + "," + tile.c);
+				if (tile === null) continue;
+				const tileId = (tile.r << 8) + tile.c;
+				if (seenTiles.has(tileId)) continue;
+				seenTiles.add(tileId);
 				const symmetric = tile.symmetric(config.rows, config.columns);
 				// we don't want to randomize this tile if we need to fix it for parity
 				if (!(symmetric !== null && settings.kind === "fixed" && tile.equalTo(symmetric))) {
 					randomizedTiles.push(tile);
 				}
 				if (symmetric === null) continue;
-				seenTiles.add(symmetric.r + "," + symmetric.c);
+				const symmetricId = (symmetric.r << 8) + symmetric.c;
+				seenTiles.add(symmetricId);
 				if (tile.equalTo(symmetric)) {
 					if (centerTile !== null) throw new Error("multiple center tiles found");
 					centerTile = tile;
+				} else {
+					symmetricMap.set(tileId, symmetric);
 				}
 			}
 		}
@@ -111,10 +119,12 @@ export function makeRandomizer(config: RandomizerConfig, settings: RandomizerSet
 			for (let i = 0; i < randomizedTiles.length; i++) {
 				const remaining = randomizedTiles.length - i;
 				const picked = rand() < leftToPick / remaining;
-				grid.set(randomizedTiles[i], picked);
+				const tile = randomizedTiles[i];
+				grid.set(tile, picked);
 				if (config.symmetric) {
-					const symmetric = randomizedTiles[i].symmetric(config.rows, config.columns);
-					if (symmetric !== null) grid.set(symmetric, picked);
+					const tileId = (tile.r << 8) + tile.c;
+					const symmetric = symmetricMap.get(tileId)!;
+					grid.set(symmetric, picked);
 				}
 				if (picked) leftToPick--;
 			}

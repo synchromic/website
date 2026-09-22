@@ -79,17 +79,22 @@ export function largestEmptyComponent(tiling: PlaneTiling, canMangle: boolean): 
 }
 
 // assumes can mangle
-export function makeLECCalculator(rows: number, columns: number): (grid: FastGrid) => number {
+export function makeLECCalculator(
+	rows: number,
+	columns: number,
+	symmetric: boolean,
+): (grid: FastGrid) => number {
 	const tempTiling = new PlaneTiling(columns, rows);
 	// precompute adjacent tiles
 	if (rows >= 256) throw new Error("Precomputer requires small row count");
-	const allTiles: Tile[] = [];
+	const searchedTiles: Tile[] = [];
 	const adjTileMap = new Map<number, Tile[]>();
+	const rowLimit = symmetric ? rows / 2 : rows;
 	for (let r = 0; r < rows; r++) {
 		for (let c = 0; c < columns; c++) {
 			let tile = tempTiling.tile(r, c, false);
 			if (tile === null) continue;
-			allTiles.push(tile);
+			if (r < rowLimit) searchedTiles.push(tile);
 			const tileId = (tile.r << 8) + tile.c;
 			adjTileMap.set(tileId, tempTiling.adjacentTiles(tile));
 		}
@@ -99,7 +104,7 @@ export function makeLECCalculator(rows: number, columns: number): (grid: FastGri
 		let size = 0,
 			maxSize = 0;
 		let dfsQueue: Tile[] = [];
-		for (const start of allTiles) {
+		for (const start of searchedTiles) {
 			if (grid.get(start)) continue;
 			size = 0;
 			dfsQueue.push(start);
