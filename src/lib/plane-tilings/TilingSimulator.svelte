@@ -16,7 +16,7 @@
 		if (message?.kind !== "result") return null;
 		return [...message.counts.entries()].sort(([a, _a], [b, _b]) => a - b);
 	});
-	let countInput: number = $state(1000);
+	let countInput: number = $state(100000);
 
 	const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 	worker.addEventListener("message", (event) => {
